@@ -1,0 +1,91 @@
+.title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin: 30px 0 0;
+text-align: center;
+}
+
+.title a{
+text-decoration: none;
+color: #212529;
+}
+.title a h1{
+font-size: 3rem;
+}
+.title a h1:hover{
+color: #434c55;  
+}
+
+/* **** SECOND CARD **** */
+
+.second-card{
+margin: 3% 20%;
+background: #f7f1f0; 
+
+animation-name: view;
+animation-duration: 1.5s;
+}
+
+
+.information h2{
+font-size: 3rem;
+font-weight: 600;
+text-align: center;
+}
+
+.information p{
+margin: 2em 0;
+font-size: 1.1em;
+text-align: inherit;
+line-height: 2em;
+}
+
+.second-card .leadership{
+margin: 4rem 0 0 0;
+}
+.leadership h3{
+font-size: 2.5rem;
+font-weight: 600;
+text-align: center;
+}
+.leadership .img,
+.leadership .description{
+margin: 3rem 0 0 0;
+}
+.leadership .img{
+text-align: center;
+}
+.leadership .description h6{
+color: gray;
+}
+
+@keyframes view{
+    from{visibility: hidden;  opacity: 0; transform: translateX(-5%);}
+    to  {visibility: visible; opacity: 1; transform: translateX(0);}
+}
+
+
+/* ****   MEDIA  QUERY  **** */
+@media (max-width:768px){    
+.second-card{
+    margin: 3% 10%;
+}
+}
+
+@media (max-width:575px){   
+
+.second-card .leadership .img{
+    flex: none;
+    margin: 1rem 0;
+}
+
+}
+@media (max-width:463px){    
+.second-card {
+    margin: 3% 5%;
+} 
+.second-card .leadership .img,
+.second-card .leadership .description{
+margin: 1rem 0;
+}
+}

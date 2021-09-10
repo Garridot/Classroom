@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+<div class="title">
+    <a href="{% url 'main_page' %}">
+      <h1>AcademiaWeb</h1>
+    </a>   
+</div>
+<div class="third-card row">
+    {% if name  %}
+        <div class="message">
+            <h3>Thanks {{name}}!</h3>
+            <p>We have successfully received your email.</p>
+        </div>
+    {% endif %}
+    <div class="text col">
+        <h2>Contact</h2>
+        <p>E-mail:<br> academiaweb101@gmail.com </p>
+        <p>Address:<br> 123 fake street</p>
+        <p>Telephone:<br> 555-7334</p>
+        <ul>
+            <li><i class="fab fa-facebook-f"></i></li>
+            <li><i class="fab fa-twitter"></i></li>
+            <li><i class="fab fa-instagram"></i></li>
+            <li><i class="fab fa-google-plus-g"></i></li>
+        </ul>
+    </div>
+
+    <div class="form-contact col">       
+        
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" class="form-control" placeholder="Your name...">
+            <input type="email" name="email" class="form-control" placeholder="Your email...">
+            <textarea name="message" class="form-control" placeholder="Your message..." rows="5"></textarea>
+            <input type="submit" id="submit" value="Send email">
+        </form>
+        
+    </div>
+    
+</div> 
+{% endblock %}

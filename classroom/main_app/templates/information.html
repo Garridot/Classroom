@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/information.css' %}">
+<div class="title">
+    <a href="{% url 'main_page' %}">
+      <h1>AcademiaWeb</h1>
+    </a>   
+</div> 
+<div class="second-card">      
+    <div class="information">
+        <h2>Information</h2>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat soluta molestiae 
+            expedita ipsum modi. Recusandae numquam explicabo repellat omnis, praesentium qui 
+            itaque quasi dolorem. Pariatur tempore beatae, veniam et, nesciunt vitae nulla aspernatur 
+            sed quisquam asperiores veritatis fuga officiis harum porro. Eum voluptas soluta praesentium 
+            unde atque ad dignissimos corrupti.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat soluta molestiae 
+            expedita ipsum modi. Recusandae numquam explicabo repellat omnis, praesentium qui 
+            itaque quasi dolorem. Pariatur tempore beatae, veniam et, nesciunt vitae nulla aspernatur 
+            sed quisquam asperiores veritatis fuga officiis harum porro. Eum voluptas soluta praesentium 
+            unde atque ad dignissimos corrupti.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat soluta molestiae 
+            expedita ipsum modi. Recusandae numquam explicabo repellat omnis, praesentium qui 
+            itaque quasi dolorem. Pariatur tempore beatae, veniam et, nesciunt vitae nulla aspernatur 
+            sed quisquam asperiores veritatis fuga officiis harum porro. Eum voluptas soluta praesentium 
+            unde atque ad dignissimos corrupti.
+            
+        </p>
+    </div>    
+    <div class="leadership row">
+        <h3>About our Ceo</h3>
+        <div class="img col">
+            <img src="{% static 'files/sources/Bald-man-wearing-black-glasses-frame.jpg' %}"   class="rounded-circle" width="200px">
+        </div>
+        <div class="description col">
+            <h5>Fulanito</h5>
+            <h6>Founder</h6>
+            <p>
+                Lorem ipsum dolor sit amet consectetur 
+                adipisicing elit. Natus molestias doloremque
+                eius temporibus esse aliquam laborum, recusandae
+                accusamus, porro, odit sunt odio sed iste ducimus?
+            </p>
+        </div>            
+    </div>
+    <div class="leadership row">        
+        <div class="img col">
+            <img src="{% static 'files/sources/Bald-man-wearing-black-glasses-frame.jpg' %}"   class="rounded-circle" width="200px">
+        </div>
+        <div class="description col">
+            <h5>Fulanito</h5>
+            <h6>Ceo, Director</h6>
+            <p>
+                Lorem ipsum dolor sit amet consectetur 
+                adipisicing elit. Natus molestias doloremque
+                eius temporibus esse aliquam laborum, recusandae
+                accusamus, porro, odit sunt odio sed iste ducimus?
+            </p>
+        </div>            
+    </div>
+    <div class="leadership row">        
+        <div class="img col">
+            <img src="{% static 'files/sources/Bald-man-wearing-black-glasses-frame.jpg' %}"   class="rounded-circle" width="200px">
+        </div>
+        <div class="description col">
+            <h5>Fulanito</h5>
+            <h6>Ceo, Director</h6>
+            <p>
+                Lorem ipsum dolor sit amet consectetur 
+                adipisicing elit. Natus molestias doloremque
+                eius temporibus esse aliquam laborum, recusandae
+                accusamus, porro, odit sunt odio sed iste ducimus?
+            </p>
+        </div>            
+    </div>    
+</div>
+{% endblock %}

@@ -1,4 +1,9 @@
 from django.urls import path
-from .models import *
+from . import views
 
-urlpattern = []
+urlpatterns = [
+    # path('',views.,name=''),
+    path('',views.MainPage,name='main_page'),
+    path('information/',views.Information,name='information'),
+    path('contact/',views.Contact,name='contact'),
+]
