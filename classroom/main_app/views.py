@@ -1,8 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+
+from django.contrib.auth import login, logout , authenticate
+
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.core.mail import send_mail
+
+from django.contrib import messages
+
 from .models import * 
 from .forms import *
-from django.core.mail import send_mail
-from django.contrib.auth import login, logout , authenticate
 
 # Create your views here.
 
@@ -40,3 +47,47 @@ def LoginView(request):
 def LogoutView(request):     
     logout(request)
     return redirect('login') 
+
+
+def PasswordReset(request):
+    if request.method == 'POST':
+        email = request.POST['email']        
+        user = UserAccount.objects.filter(email=email)        
+        if user:
+            user = UserAccount.objects.get(email=email)  
+            PasswordResetEmail(user)
+            return redirect('password_reset_email_sent')
+                       
+        else:            
+           messages.info(request,'Email not found.') 
+    return render(request,'password_reset/password_reset.html')
+def PasswordResetEmail(user): 
+    from django.contrib.auth.tokens import PasswordResetTokenGenerator
+    password_reset_token = PasswordResetTokenGenerator().make_token(user)   
+    context = {'user':user,'token':password_reset_token}
+    template  = get_template('password_reset/password_reset_email.html')
+    content   = template.render(context)
+    email     = EmailMultiAlternatives(
+        'AcademiaWeb',
+        'Password Reset',
+        settings.EMAIL_HOST_USER,
+        [user.email]
+    )
+    email.attach_alternative(content,'text/html')
+    email.send()
+def PasswordResetEmailSent(request):
+     return render(request,'password_reset/password_reset_email_sent.html')             
+def PasswordResetForm(request,email,token):
+    user = UserAccount.objects.get(email= email)
+    form = UserForm(instance=user)
+    if request.method == 'POST':
+        form = UserForm(request.POST,instance=user)
+        if form.is_valid():                     
+            form.save()            
+            return redirect('password_reset_done',email=email)
+        else:
+            for msg in form.errors:
+                messages.info(request,f"{msg}:{form.errors}")
+    return render(request,'password_reset/password_reset_form.html',{'form':form})                
+def PasswordResetDone(request,email):
+    return render(request,'password_reset/password_reset_done.html',{'email':email})
