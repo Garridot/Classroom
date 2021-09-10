@@ -16,5 +16,7 @@ urlpatterns = [
     path('password_reset_done/<str:email>',views.PasswordResetDone,name='password_reset_done'),
 
     path('applications_form/',views.ApplicationsFormView,name='applications_form'),
-    path('application_send/<str:pk>',views.ApplicationSend,name='application_send'),   
+    path('application_send/<str:pk>',views.ApplicationSend,name='application_send'), 
+
+    path('home/',views.HomeView,name='home')  
 ]

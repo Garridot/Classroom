@@ -1,0 +1,65 @@
+{% extends 'base_home.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-success" role="alert">            
+        {{message}}
+    </div>        
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="content"> 
+    <ul class="list-group">
+        {% if request.user.is_admin or request.user.superuser %}
+        <div class="admin">
+            <div class="content-title">
+                <h4>Admissions</h4>  
+                <a href="">View All</a>
+            </div>                       
+            {% if info %}{% for f in info %}
+            <li class="list-group-item">
+                <a href="">                                            
+                    <img  class="profile_picture" src="{{f.profile_picture.url}}">                    
+                    <p id="full_name">{{f.full_name}}</p>
+                    <p id="email">{{f.sent_date}}</p>            
+                </a>
+            </li>
+            {% endfor %}{% else %}
+            <li class="list-group-item">
+                No Results Found...
+            </li>
+        {% endif %}
+        </div>
+        {% endif %}        
+    </ul>
+    <div class="events">
+        <div class="calendar">            
+            {{calendar|safe}}
+        </div>
+        <div class="content-title">
+            <h4>Events</h4>
+            <a href="">View All</a>
+        </div>
+
+        <li class="list-group-item" id="add">
+            <a href=""><i class="fas fa-plus"></i> Add Event</a>
+        </li>
+        {% if events %}{% for event in events %}
+        <li class="list-group-item">
+            <a href="">
+                <p id="full_name">{{event.title}}</p>
+                <p id="email">{{event.event_date}}</p>            
+            </a>
+        </li>
+        {% endfor %}{% else %}
+        <li class="list-group-item">
+            No Results Found...
+        </li>{% endif %}
+    </div>
+</div>    
+{% endblock %}
