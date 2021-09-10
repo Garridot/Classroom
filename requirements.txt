@@ -1,0 +1,9 @@
+django              == 3.2.6 
+django-crispy-forms == 1.12.0 
+django-countries    == 7.2.1
+django-filter       == 2.4.0
+pillow              == 8.3.1
+Babel               == 2.9.1
+phonenumbers        == 8.12.31
+django-phonenumber-field == 5.2.0
+
