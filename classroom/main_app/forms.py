@@ -8,8 +8,7 @@ from django import forms
 class DateInput(forms.DateInput):
     input_type = 'date'
 
-# class phone(forms.ModelForm):
-#     phone = PhoneNumberField(widget=PhoneNumberPrefixWidget(initial='IN'))
+
 
 class UserForm(UserCreationForm):    
     class Meta:               
@@ -22,6 +21,5 @@ class ApplicationsForm(forms.ModelForm):
         model = Applications
         fields = '__all__'
         widgets={
-        'date_of_birth' : DateInput(),
-        # 'phone'         : phone()
+        'date_of_birth' : DateInput(),        
         }

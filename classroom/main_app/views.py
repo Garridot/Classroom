@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 
+from classroom.settings  import  EMAIL_HOST_USER
+
 from django.contrib.auth import login, logout , authenticate
 
 from django.core.mail import EmailMultiAlternatives
@@ -10,7 +12,7 @@ from django.contrib import messages
 
 from .models import * 
 from .forms import *
-from classroom.settings  import  EMAIL_HOST_USER
+
 
 # Create your views here.
 
@@ -123,3 +125,5 @@ def ApplicationSendEmail(email):
     )
     email.attach_alternative(content,'text/html')
     email.send()
+
+
