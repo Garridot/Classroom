@@ -1,0 +1,70 @@
+.container-fluid{
+width: 100%;
+}
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+}
+.title a{
+text-decoration: none;
+color: #212529;
+}
+
+
+
+.quarter-card{
+width: 100%;
+margin: auto;
+    
+}
+.quarter-card .form{
+width: 100%;
+padding: 0 10px;
+margin: auto;
+}
+
+.form h4{
+text-align: center;
+}
+form{
+padding: 0 20%;
+}
+form .row label{
+font-weight: 600;
+padding: 0;
+margin: 10px 0;
+}
+form .row input[type='password']{
+margin: 0 0 1rem 0;
+}
+form .login{
+text-align: center;
+justify-content: center;
+padding: 20px 0;
+
+}
+form .login input{
+font-weight: 700;
+padding: 10px 0;
+border-radius: 50px;
+border: 1px solid black; 
+transition: all 0.2s;  
+
+
+}
+form .login input:hover{
+border: 1px solid black; 
+background-color: #f8f0f4;   
+}
+form .login a{
+color: #616466;
+margin: 10px 0;
+}
+
+@media (max-width:900px){
+    form{
+    padding: 0 ;
+    }
+}
