@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+
+<div class="container-fluid">
+    <div class="title">
+        <h1>Application</h1>
+    </div>
+    <form method="POST" enctype="multipart/form-data"> 
+        {% for m in messages %}
+        {{m.errorlist}}
+        {% endfor %}
+        {% csrf_token %}      
+        {{form}}        
+        <input type="submit" value="Send Application " style="margin: 2.5rem 0;">
+    </form>
+</div>
+
+{% endblock %}

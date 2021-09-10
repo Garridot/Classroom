@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+
+<div class="container-fluid">
+    <div class="title">
+        <h1>Application Send</h1>
+    </div>
+    <p style="color: rgb(141, 141, 141); width: 50%; margin: auto; line-height: 2;">        
+        Hi {{admission.email}}.
+        <br>
+        Your application has been successfully submitted.
+        <br>
+        Check your email inbox, we send you an email with more information.
+        <br>
+        If you don't receive an email in your email inbox, please send us 
+        an email to check out your situation.  
+    </p>    
+</div>
+
+{% endblock %}

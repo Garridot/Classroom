@@ -10,6 +10,7 @@ from django.contrib import messages
 
 from .models import * 
 from .forms import *
+from classroom.settings  import  EMAIL_HOST_USER
 
 # Create your views here.
 
@@ -26,11 +27,10 @@ def Contact(request):
             'Message from' + name,
             message,
             email,
-            [settings.EMAIL_HOST_USER],
+            [EMAIL_HOST_USER],
         )
         return render(request,'contact.html',{'name':name}) 
     return render(request,'contact.html',{}) 
-
 
 
 def LoginView(request):
@@ -70,7 +70,7 @@ def PasswordResetEmail(user):
     email     = EmailMultiAlternatives(
         'AcademiaWeb',
         'Password Reset',
-        settings.EMAIL_HOST_USER,
+        EMAIL_HOST_USER,
         [user.email]
     )
     email.attach_alternative(content,'text/html')
@@ -91,3 +91,35 @@ def PasswordResetForm(request,email,token):
     return render(request,'password_reset/password_reset_form.html',{'form':form})                
 def PasswordResetDone(request,email):
     return render(request,'password_reset/password_reset_done.html',{'email':email})
+
+def ApplicationsFormView(request):
+    form = ApplicationsForm()
+    if request.method == 'POST':
+        form = ApplicationsForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            ApplicationSendEmail(email=form.instance.email)            
+            return redirect('application_send',pk=form.instance.email)
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")   
+    context={'form':form}
+    return render(request,'form.html',context)  
+def ApplicationSend(request,pk):
+    admission = Applications.objects.get(email=pk)
+    context={'admission':admission}
+    return render(request,'application_send.html',context) 
+def ApplicationSendEmail(email):
+    admission = Applications.objects.get(email=email)  
+    context   = {'email':email,'admission':admission}     
+    template  = get_template('application_send_email.html')
+    content   = template.render(context)
+
+    email     = EmailMultiAlternatives(
+        'Request received!',
+        'Your application has been successfully submitted.',
+        EMAIL_HOST_USER,
+        [email]
+    )
+    email.attach_alternative(content,'text/html')
+    email.send()

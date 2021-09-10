@@ -23,14 +23,14 @@ class UserManager(BaseUserManager):
 
 
     def create_user(self,email,password,**other_fields):        
-        # if not email:
-        #     raise ValueError(gettext_lazy('El usuario necesita un correo.'))
-        # else:
-        #     email = self.normalize_email(email)
-        # user = self.model(email = email, **other_fields)
-        # user.set_password(password)
-        # user.save()
-        # return user
+        if not email:
+            raise ValueError(gettext_lazy('El usuario necesita un correo.'))
+        else:
+            email = self.normalize_email(email)
+        user = self.model(email = email, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
         other_fields.setdefault('is_active',True)        
         email = self.normalize_email(email)        
         return self.create_user(email, password, **other_fields)
