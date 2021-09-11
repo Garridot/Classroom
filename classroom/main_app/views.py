@@ -146,3 +146,9 @@ def HomeView(request):
     }
 
     return render(request,'home.html',context) 
+
+def UserProfileView(request,full_name):
+    data = user_profile(request)
+    user = data['user']
+    context = {'user':user}
+    return render(request,'profile.html',context)

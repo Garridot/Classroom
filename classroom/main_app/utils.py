@@ -2,7 +2,7 @@ from .models import *
 
 def user_profile(request):
     if request.user.is_admin or request.user.is_superuser:
-        user          = UserAccount.objects.get(email=request.user)
+        user          = Admins.objects.get(user=request.user)
         admins        = Admins.objects.all()
         teachers      = Teachers.objects.all()
         students      = Students.objects.all()

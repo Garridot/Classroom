@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<div class="container-fluid">
+    <div class="title">
+        <h1>User Profile</h1>
+    </div>
+    <div class="user-profile">
+        <div class="picture col">
+            <img src="{{user.profile_picture.url}}" width="400px">
+        </div>
+        <div class="data col">
+            <h2>{{user.full_name}}</h2>
+            <h5>Admin</h5>
+            <h5><i class="far fa-envelope"> </i>  {{user.email}}</h5> 
+            <h5><i class="fas fa-phone"> </i>  {{user.phone}}</h5>       
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                Veniam maiores officia tenetur. Quaerat numquam debitis eveniet 
+                deserunt atque suscipit blanditiis officiis maiores, architecto, 
+                tempore mollitia voluptas rerum. Quam, amet cumque!
+            </p>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

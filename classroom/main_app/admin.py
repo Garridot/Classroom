@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(SchoolYears)
 admin.site.register(Applications)
 admin.site.register(UserAccount)
+admin.site.register(Admins)

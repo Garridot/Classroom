@@ -18,5 +18,7 @@ urlpatterns = [
     path('applications_form/',views.ApplicationsFormView,name='applications_form'),
     path('application_send/<str:pk>',views.ApplicationSend,name='application_send'), 
 
-    path('home/',views.HomeView,name='home')  
+    path('home/',views.HomeView,name='home'),
+
+    path('user_profile/name=<str:full_name>/',views.UserProfileView,name='user_profile')  
 ]

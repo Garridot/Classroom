@@ -1,0 +1,33 @@
+.container-fluid{
+width: 100%;
+}
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+color: #212529;
+}
+
+
+.user-profile{
+display: flex;
+align-items: center;
+margin: 5% 0 0 0;
+}
+.picture{
+text-align: center;
+}
+.data h2{
+font-size: 3rem;
+}
+.data h5{
+color: rgb(180, 180, 180);  
+letter-spacing: .5px; 
+padding: .3rem ; 
+}
+.data p{
+width: 70%;
+text-align: justify;
+color: #aaa;
+}
