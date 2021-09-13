@@ -12,7 +12,7 @@ padding: 0;
 margin: 0;
 }
 button.selected{
-color: #f0cfe1;
+color: lightcoral;
 }
 
 /**** Menu ****/
@@ -85,7 +85,7 @@ color: #34383d;
 /**** Notifications ****/
 .user_and_noti span{    
 padding: 0 2px;
-background: rgb(247, 67, 67);
+background: lightcoral;
 position: absolute;
 max-height: 8px;
 

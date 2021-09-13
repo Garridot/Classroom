@@ -1,0 +1,192 @@
+.content{
+width: 100%;
+
+}
+
+/**** CONTENT TITLE ****/
+
+
+.content-title{
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 95%;
+padding: 2rem 0 0 0;
+margin: auto;
+}
+.content-title a{
+text-decoration: none;   
+}
+.content-title a p{
+background: rgb(175, 175, 175);    
+color: white;
+transition: all 0.2s;
+border-radius: 10px;
+margin: 0;
+padding: 3px 12px;
+font-weight: 400;
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+.content-title a p:hover{
+background: #AAA4AC;
+}
+
+
+/**** LIST USER ****/
+
+.list-group{
+
+padding: 2rem 0 0 0;
+}
+.list-group-item a{
+text-decoration: none;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.list-group-item a p{
+margin: 0;
+color: rgb(100, 100, 100);
+}
+.list-group-item a img.profile_picture{
+width: 50px;
+border-radius: 50%;
+}
+.list-group-item a p#email{
+display: none;
+} 
+
+
+
+/**** FILTERS ****/
+
+
+.filters{
+padding: 0.7rem 0 0 2rem;
+width: 25%;
+}
+.filters .row{
+justify-content: flex-end;
+}
+.filters .row i{
+background: white;
+text-align: end;
+color: rgb(100, 100, 100);
+font-size: 1.5rem;
+cursor: pointer;
+width: 10%;
+}
+form{
+visibility: hidden;
+opacity: 0;
+position: absolute;
+transition: all 0.2s;
+}
+form.show{
+visibility: visible;
+opacity: 1;
+position: relative;
+
+}
+form input{
+display: block;
+width: 100%;
+padding: .375rem .75rem;
+font-size: 1rem;
+font-weight: 400;
+line-height: 1.5;
+color: #212529;
+background-color: #fff;
+background-clip: padding-box;
+border: 1px solid #ced4da;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+border-radius: .25rem;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+form input[type=submit]{
+background: #212529;
+color: white;
+margin: 1rem  0 0 0;
+}
+form select{
+display: block;
+width: 100%;    
+-moz-padding-start: calc(0.75rem - 3px);   
+font-weight: 400;
+line-height: 1.5;
+color: #212529;
+background-color: #fff;
+background-image: url('http://www.w3.org/2000/svg');
+background-repeat: no-repeat;
+background-position: right .75rem center;
+background-size: 16px 12px;
+border: 1px solid #ced4da;
+border-radius: .25rem;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+padding-top: .25rem;
+padding-bottom: .25rem;
+padding-left: .5rem;
+font-size: .875rem;
+}
+form label{
+color: rgb(122, 122, 122);
+}
+
+
+/**** MEDIA QUERY ****/
+
+
+@media (min-width:575px){    
+.list-group-item a p#email{
+display: block;
+}
+}
+
+@media(max-width:1000px){
+.list-users{
+display: -webkit-flex;
+-webkit-flex-direction: column-reverse;
+display: flex;
+flex-direction: column-reverse;
+width: 95%;
+margin: auto;
+}
+.list-group{
+width: 100%;
+} 
+.filters {
+padding: 2rem;
+width: 100%;
+}    
+}
+
+@media (min-width:1000px){
+.list-users{
+display: flex;
+justify-content: space-between;
+width: 95%;
+margin: auto;
+}
+.list-group{
+width: 70%;
+}
+.filters .row{
+display: none
+}
+.filters form{        
+visibility: visible;
+opacity: 1;
+position: relative;
+}
+form{    
+margin: auto;
+}
+}

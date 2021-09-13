@@ -20,5 +20,14 @@ urlpatterns = [
 
     path('home/',views.HomeView,name='home'),
 
-    path('user_profile/name=<str:full_name>/',views.UserProfileView,name='user_profile')  
+    path('user_profile/name=<str:full_name>/',views.UserProfileView,name='user_profile'),
+
+    path('admissions/',views.AdmissionsView,name='admissions'),
+    path('admissions/admission_data/email=<str:email>',views.AdmissionData,name='admission'),
+    path('admissions/admission_accept/email=<str:email>',views.AdmissionAccept,name='admission_accept'),
+    path('admissions/admission_denied/email=<str:email>',views.AdmissionDenied,name='admission_denied'),
+
+    path('students/',views.StudentsView,name='students')
+
+      
 ]

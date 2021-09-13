@@ -19,7 +19,7 @@
         <div class="admin">
             <div class="content-title">
                 <h4>Admissions</h4>  
-                <a href="">View All</a>
+                <a href="{% url 'admissions' %}">View All</a>
             </div>                       
             {% if info %}{% for f in info %}
             <li class="list-group-item">

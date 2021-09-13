@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 from datetime import date
 
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 
 import datetime 
 
@@ -22,18 +22,12 @@ class UserManager(BaseUserManager):
 
 
 
-    def create_user(self,email,password,**other_fields):        
-        if not email:
-            raise ValueError(gettext_lazy('El usuario necesita un correo.'))
-        else:
-            email = self.normalize_email(email)
-        user = self.model(email = email, **other_fields)
-        user.set_password(password)
-        user.save()
-        return user
-        other_fields.setdefault('is_active',True)        
-        email = self.normalize_email(email)        
+    def create_user(self,email,password,**other_fields):  
+
+        other_fields.setdefault('is_active',True)
+        email = self.normalize_email(email)
         return self.create_user(email, password, **other_fields)
+
        
 class UserAccount(AbstractBaseUser,PermissionsMixin):
     
@@ -76,7 +70,7 @@ class Admins(models.Model):
     document        = models.CharField(max_length=8,unique=True) 
     first_name      = models.CharField(max_length=200)
     last_name       = models.CharField(max_length=200)
-    phone           = PhoneNumberField()    
+    # phone           = PhoneNumberField()    
     date_of_birth   = models.DateField(default=datetime.date.today) 
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
@@ -139,7 +133,7 @@ class Students(models.Model):
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
     nationality     = CountryField() 
-    phone           = PhoneNumberField()
+    # phone           = PhoneNumberField()
     year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='students/profile_pictures',blank=True,null=True)    
     HS_diploma      = models.FileField(upload_to='students/high_school_diploma',blank=True,null=True)
@@ -236,7 +230,7 @@ class Applications(models.Model):
     date_of_birth   = models.DateField()
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
-    phone           = PhoneNumberField()
+    # phone           = PhoneNumberField()
     year            = models.ForeignKey(SchoolYears,on_delete=models.DO_NOTHING)    
     sent_date       = models.DateTimeField(auto_now_add=True,)    
     profile_picture = models.ImageField(upload_to='applications/profile_pictures',blank=True,null=True)

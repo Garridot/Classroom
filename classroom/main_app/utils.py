@@ -29,3 +29,5 @@ def user_profile(request):
         events        = Events.objects.filter().all()
 
     return {'user':user,'courses':courses,'admins':admins,'teachers':teachers,'students':students,'events':events} 
+
+

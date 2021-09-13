@@ -1,3 +1,4 @@
+from django.http import request
 from classroom.settings  import  EMAIL_HOST_USER
 
 from django.core.mail import EmailMultiAlternatives
@@ -13,6 +14,7 @@ from calendar import HTMLCalendar
 from .models import * 
 from .forms import *
 from .utils import *
+from .filters import*
 
 # Create your views here.
 
@@ -114,7 +116,7 @@ def ApplicationSend(request,pk):
 def ApplicationSendEmail(email):
     admission = Applications.objects.get(email=email)  
     context   = {'email':email,'admission':admission}     
-    template  = get_template('application_send_email.html')
+    template  = get_template('emails/application_send_email.html')
     content   = template.render(context)
 
     email     = EmailMultiAlternatives(
@@ -152,3 +154,75 @@ def UserProfileView(request,full_name):
     user = data['user']
     context = {'user':user}
     return render(request,'profile.html',context)
+
+def AdmissionsView(request):
+    data = user_profile(request)
+    user = data['user']
+
+    requests = Applications.objects.all()
+    filters  = ApplyFilters(request.GET,queryset=requests)
+    requests = filters.qs     
+    title    = 'Admissions'
+    request_data = 'admission_data'      
+    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
+    return render(request,'request_list.html',context)
+def AdmissionData(request,email):
+    admission = Applications.objects.get(email=email)   
+    context = {'admission':admission}
+    return render(request,'admission_profile.html',context)
+def AdmissionAccept(request,email):
+    admission = Applications.objects.get(email=email)     
+    info = f'The student needs a password.\nTips:\nemail: {admission.email}\npassword: {admission.first_name}{admission.last_name}{admission.document}'
+    form = UserForm()
+    if request.method=='POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            AdmissionEMAIL(email)
+            admission.delete()
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
+    context = {'info':info,'form':form}
+    return render(request,'form.html',context)
+def AdmissionEMAIL(email):
+    admission = Applications.objects.get(email=email)  
+    context   = {'email':email,'admission':admission}     
+    template  = get_template('emails/application_accepted.html')
+    content   = template.render(context)
+
+    email     = EmailMultiAlternatives(
+        f'Congratulations {admission.full_name}!',
+        'Your application has been successfully accepted.',
+        EMAIL_HOST_USER,
+        [email]
+    )
+    email.attach_alternative(content,'text/html')
+    email.send()
+def AdmissionDenied(email): 
+    admission = Applications.objects.get(email=email)  
+    context   = {'email':email,'admission':admission}     
+    template  = get_template('emails/application_denied.html')
+    content   = template.render(context)
+
+    email     = EmailMultiAlternatives(
+        'Student not chosen',
+        'Your application has been successfully denied.',
+        EMAIL_HOST_USER,
+        [email]
+    )
+    email.attach_alternative(content,'text/html')
+    email.send()       
+
+def StudentsView(request):
+    data = user_profile(request)
+    user = data['user']
+    requests = Students.objects.all()
+    filters  = StudentsFilters(request.GET,queryset=requests)
+    requests = filters.qs     
+    title    = 'Students'
+    request_data = 'student_data'      
+    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
+    return render(request,'request_list.html',context)
+    
+  

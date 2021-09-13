@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<div class="container-fluid">
+    <div class="title">
+        <h1>Admission Profile</h1>
+    </div>
+    
+    <div class="chosen-option">
+        <form method="POST" action="{% url 'admission_accept' admission.email %}">
+            {% csrf_token %}        
+            <input type="submit" value="Accept">
+            <a href="{% url 'admission_denied' admission.email %}">Deny</a>
+        </form>
+    </div>
+
+    {% for m in messages %}
+        {{m.errorlist}}
+        {% endfor %}
+    
+    <div class="user-profile">
+        <div class="picture col">
+            <img src="{{admission.profile_picture.url}}" width="400px">
+        </div>
+        <div class="data col">
+            <h2>{{admission.full_name}}</h2>
+            <h5>Document: {{admission.document}}</h5> 
+            <h5>Email: {{admission.email}}</h5> 
+            <h5>Phone: {{admission.phone}}</h5>
+            <h5>Gender: {{admission.gender}}</h5>
+            <h5>Nationality: {{admission.nationality}}</h5>
+            <h5>Year: {{admission.year}}</h5>
+            <a href="{{admission.HS_diploma.url}}">High School Diploma</a>
+
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

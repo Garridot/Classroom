@@ -31,3 +31,29 @@ width: 70%;
 text-align: justify;
 color: #aaa;
 }
+
+.data a{
+letter-spacing: .5px; 
+padding: .3rem ; 
+font-size: 1.25rem; 
+}
+
+/**** chosen-option ****/
+
+.chosen-option{
+    padding: .5rem 5rem;
+}
+.chosen-option form{
+    float: right;
+}
+.chosen-option form input{
+background: #212529;
+color: white;
+padding: .2rem 1rem;
+border-radius: 5px;
+}
+.chosen-option form a{
+    margin: 0 1rem;
+    text-decoration: none;
+    color: lightcoral;
+}
