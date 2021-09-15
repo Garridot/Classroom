@@ -52,6 +52,7 @@ class UserAccount(AbstractBaseUser,PermissionsMixin):
 class SchoolYears(models.Model):
 
     id   = models.AutoField(primary_key=True)
+    year = models.IntegerField()
     def __str__(self):
         return str(self.id)
 
@@ -134,7 +135,7 @@ class Students(models.Model):
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
     nationality     = CountryField() 
     # phone           = PhoneNumberField()
-    year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
+    year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,blank=True,null=True)
     profile_picture = models.ImageField(upload_to='students/profile_pictures',blank=True,null=True)    
     HS_diploma      = models.FileField(upload_to='students/high_school_diploma',blank=True,null=True)
 

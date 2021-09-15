@@ -7,6 +7,7 @@ text-align: center;
 
 form{
 padding: 3rem;
+display: grid;
 }
 form input,textarea{
 display: block;
@@ -54,6 +55,12 @@ margin: 0.5rem 0;
 form label{
 color: rgb(122, 122, 122);
 }
+form input[type=checkbox]{display: none;}
+
+label[for=profile_picture-clear_id],
+label[for=HS_diploma-clear_id]{
+display: none;
+}
 form input[type=file]{
 font-size: 1rem;
 padding: 0;
@@ -77,15 +84,19 @@ color: white;
 
 /**** ERROR LIST ****/
 
-.errorlist ul{
-list-style: none;
-padding: 0;
-}
-.errorlist ul li{
-color: white;
+.errorlist  li{
+color: lightcoral;
 padding: 0.2rem;
 border-radius: 5px;
-background: rgb(235, 121, 121);
+
+}
+
+/*  */
+
+span.helptext{
+    padding: 0px 0 2rem 0;
+    margin: -20px 0;
+    color: #aaa;
 }
 
 @media (min-width:800px) {

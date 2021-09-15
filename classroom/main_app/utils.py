@@ -1,4 +1,7 @@
+from django.contrib import messages
+from django.http import request
 from .models import *
+from .forms import *
 
 def user_profile(request):
     if request.user.is_admin or request.user.is_superuser:
@@ -30,4 +33,20 @@ def user_profile(request):
 
     return {'user':user,'courses':courses,'admins':admins,'teachers':teachers,'students':students,'events':events} 
 
-
+def create_teacher(user_form,form):
+    user_form.instance.is_teacher = True    
+    user_form.save()
+    # group  = Group.objects.get(name='Teacher')
+    # userForm.instance.groups.add(group)
+    user   = UserAccount.objects.get(email=user_form['email'].value())             
+    form.instance.user = user
+    form.save()  
+def create_admin(user_form,form):
+    user_form.instance.is_admin = True
+    user_form.instance.is_staff = True
+    user_form.save()
+    # group  = Group.objects.get(name='Admins')
+    # user_form.instance.groups.add(group)
+    user   = UserAccount.objects.get(email=user_form['email'].value())             
+    form.instance.user = user
+    form.save()   

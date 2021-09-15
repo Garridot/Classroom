@@ -27,7 +27,13 @@ urlpatterns = [
     path('admissions/admission_accept/email=<str:email>',views.AdmissionAccept,name='admission_accept'),
     path('admissions/admission_denied/email=<str:email>',views.AdmissionDenied,name='admission_denied'),
 
-    path('students/',views.StudentsView,name='students')
+    path('students/',views.StudentsView,name='students'),
+    path('students/student/email=<str:email>',views.StudentData,name='student'),
+
+    path('teachers/',views.TeachersView,name='teachers'),
+    path('teachers/teacher_create/',views.TeacherCreate,name='teacher_create'),    
+    path('teacher/<str:email>/',views.TeacherData,name='teacher'),
+    path('teacher_delete/<str:email>/',views.TeacherDelete,name='delete_teacher'),
 
       
 ]

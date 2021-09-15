@@ -9,14 +9,14 @@
         <h1>{{title}}</h1>
     </div>
     <form method="POST" enctype="multipart/form-data"> 
-        
+
         {% for m in messages %} {{m.errorlist}} {% endfor %}
 
         {% csrf_token %}
 
         {% if info %} {{info}} {% endif %}
 
-        {% if userForm %} {{userForm}}  {% endif %} 
+        {% if user_form %} {{user_form}}  {% endif %} 
           
         {{form}} 
 

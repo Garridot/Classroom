@@ -44,10 +44,10 @@
                 <div class="list-items">
                     <div class="items"><a href="{% url 'home' %}" id="home"><h4> Home</h4></a></div>
                     <div class="items"><a href="" id="admins"><h4> Admins</h4></a></div>
-                    <div class="items"><a href="" id="students"><h4> Students</h4></a></div>
-                    <div class="items"><a href="" id="teachers"><h4> Teachers</h4></a></div>
+                    <div class="items"><a href="{% url 'students' %}" id="students"><h4> Students</h4></a></div>
+                    <div class="items"><a href="{% url 'teachers' %}" id="teachers"><h4> Teachers</h4></a></div>
                     <div class="items"><a href="" class="course"><h4> Courses</h4></a></div>
-                    <div class="items"><a href="" class="admission"><h4> Admissions</h4></a></div>
+                    <div class="items"><a href="{% url 'admissions' %}" class="admission"><h4> Admissions</h4></a></div>
                     <div class="items"><a href="" class="years"><h4> School years</h4></a></div>
                     <div class="items"><a href=""><h4> Anotaciones</h4></a></div>                
                     <div class="items"><a href="{% url 'logout' %}"><h4> Logout</h4></a></div>

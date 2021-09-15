@@ -173,18 +173,23 @@ def AdmissionData(request,email):
 def AdmissionAccept(request,email):
     admission = Applications.objects.get(email=email)     
     info = f'The student needs a password.\nTips:\nemail: {admission.email}\npassword: {admission.first_name}{admission.last_name}{admission.document}'
-    form = UserForm()
+    user_form = UserForm()
+    form = StudentsForm(instance=admission)
     if request.method=='POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
+        user_form = UserForm(request.POST)
+        form      = StudentsForm(request.POST,request.FILES)
+        if user_form.is_valid():
+            user_form.save()
+            user = UserAccount.objects.get(email=user_form['email'].value()) 
+            form.instance.user = user 
             form.save()
-            AdmissionEMAIL(email)
-            admission.delete()
-        else:
-            for msg in form.errors:
-                messages.error(request,f"{msg}:{form.errors}") 
-    context = {'info':info,'form':form}
+            AdmissionEMAIL(email)            
+            return redirect('home')
+        
+
+    context = {'info':info,'form':form,'user_form':user_form}
     return render(request,'form.html',context)
+
 def AdmissionEMAIL(email):
     admission = Applications.objects.get(email=email)  
     context   = {'email':email,'admission':admission}     
@@ -221,8 +226,70 @@ def StudentsView(request):
     filters  = StudentsFilters(request.GET,queryset=requests)
     requests = filters.qs     
     title    = 'Students'
-    request_data = 'student_data'      
+    request_data = 'student'      
     context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
     return render(request,'request_list.html',context)
-    
-  
+def StudentData(request,email):
+    user = UserAccount.objects.get(email=email)
+    user = Students.objects.get(user = user)
+    context = {'user':user}
+    return render(request,'profile.html',context)
+
+def AdminsView(request):
+    data = user_profile(request)
+    user = data['user']
+    requests = Admins.objects.all()
+    filters  = ApplyFilters(request.GET,queryset=requests)
+    requests = filters.qs     
+    title    = 'Admins'
+    request_data = 'admin_data'      
+    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
+    return render(request,'request_list.html',context)    
+
+def TeachersView(request):  
+    data = user_profile(request)
+    user = data['user']
+    requests = Teachers.objects.all()
+    filters  = TeachersFilters(request.GET,queryset=requests) 
+    requests = filters.qs     
+    title    = 'Teachers'
+    request_data = 'teacher' 
+    create_url   =  'teacher_create'     
+    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user,'create_url':create_url}
+    return render(request,'request_list.html',context)    
+
+def TeacherCreate(request):
+    user_form = UserForm()
+    title     = 'Add Teacher Account'
+    form     = TeachersForm()
+    if request.method == 'POST':
+        form = TeachersForm(request.POST,request.FILES)
+        user_form = UserForm(request.POST)
+        if form.is_valid(): 
+            create_teacher(user_form,form)
+            messages.success(request,'Teacher created successfully.')
+            return redirect('teachers')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")  
+    context = {'form':form,'userform':user_form,'title':title}
+    return render (request,'form.html',context) 
+def TeacherData(request,email):
+    user_teacher  = UserAccount.objects.get(email=email)
+    teacher_account = Teachers.objects.get(user=user_teacher)
+    context = {'user':teacher_account}
+    return render(request,'profile.html',context)
+def TeacherDelete(request,email):
+    user  = UserAccount.objects.get(email=email)
+    user.delete()
+    messages.success(request,'Teacher deleted successfully.')
+    return redirect('teachers')  
+
+def YearViews(request):
+    data = user_profile(request)
+    user = data['user']
+    requests = SchoolYears.objects.all()    
+    title    = 'SchoolYears'
+    request_data = 'year_data'      
+    context  = {'requests':requests,'title':title,'request_data':request_data,'user':user}
+    return render(request,'request_list.html',context)
