@@ -12,11 +12,11 @@
 
         {% for m in messages %} {{m.errorlist}} {% endfor %}
 
-        {% csrf_token %}
+        {% csrf_token %} 
 
         {% if info %} {{info}} {% endif %}
 
-        {% if user_form %} {{user_form}}  {% endif %} 
+        {{user_form}}
           
         {{form}} 
 

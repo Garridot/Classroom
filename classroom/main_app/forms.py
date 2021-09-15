@@ -33,3 +33,8 @@ class  TeachersForm(forms.ModelForm):
     class Meta:
         model   = Teachers
         exclude = ('user',)
+
+class  CoursesForm(forms.ModelForm):
+    class Meta:
+        model = Courses
+        fields = '__all__'

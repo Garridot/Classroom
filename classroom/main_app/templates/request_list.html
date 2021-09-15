@@ -25,10 +25,16 @@
             {% if requests %}
                 {% for request in requests %}            
                 <li class="list-group-item">
-                    <a href="{{request_data}}/email={{request.email}}">
+                    {% if request.email %}<a href="{{request_data}}/email={{request.email}}">{% endif %}
+                    {% if request.name %}<a href="{{request_data}}/name={{request.name}}/year={{request.year}}">{% endif %}
                         {% if request.profile_picture %}<img  class="profile_picture" src="{{request.profile_picture.url}}">{% endif %} 
+                        {% if request.course_picture %}<img  class="profile_picture" src="{{request.course_picture.url}}">{% endif %} 
+
                         {% if request.full_name %}<p id="info1">{{request.full_name}}</p>{% endif %}
-                        {% if request.email %}<p id="info2">{{request.email}}</p>{% endif %}            
+                        {% if request.name %}<p id="info1">{{request.name}}</p>{% endif %}
+
+                        {% if request.email %}<p id="info2">{{request.email}}</p>{% endif %} 
+                        {% if request.name %}<p id="info2">{{request.year}}</p>{% endif %}            
                     </a>
                 </li>
                 {% endfor %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/course_data.css' %}">
+<div class="container-fluid">
+    <div class="title">
+        <a href="{% url 'courses' %}"><h1>Courses</h1></a>
+    </div>
+    <div class="presentation">
+        <div class="img col">
+            <img src="{{course.course_picture.url}}" alt="">
+        </div>
+        <div class="data col">
+            <h2>{{course.name}}</h2>
+            <h5>Year: {{course.year}}</h5>
+            <p>{{course.description}}</p>
+        </div>
+    </div>
+       
+</div>
+{% endblock %}    

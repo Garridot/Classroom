@@ -32,8 +32,11 @@ urlpatterns = [
 
     path('teachers/',views.TeachersView,name='teachers'),
     path('teachers/teacher_create/',views.TeacherCreate,name='teacher_create'),    
-    path('teacher/<str:email>/',views.TeacherData,name='teacher'),
+    path('teachers/teacher/email=<str:email>/',views.TeacherData,name='teacher'),
     path('teacher_delete/<str:email>/',views.TeacherDelete,name='delete_teacher'),
 
-      
+    path('courses/',views.CoursesView,name='courses'),
+    path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
+    path('courses/course_create/',views.CourseCreate,name='course_create'),
+
 ]

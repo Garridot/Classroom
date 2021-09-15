@@ -257,7 +257,6 @@ def TeachersView(request):
     create_url   =  'teacher_create'     
     context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)    
-
 def TeacherCreate(request):
     user_form = UserForm()
     title     = 'Add Teacher Account'
@@ -265,14 +264,21 @@ def TeacherCreate(request):
     if request.method == 'POST':
         form = TeachersForm(request.POST,request.FILES)
         user_form = UserForm(request.POST)
-        if form.is_valid(): 
-            create_teacher(user_form,form)
+        if form.is_valid() and user_form.is_valid(): 
+            user_form.instance.is_teacher = True    
+            user_form.save()
+            email = user_form['email'].value()            
+            user   = UserAccount.objects.get(email=email)             
+            form.instance.user = user
+            form.save()  
+            # create_teacher(user_form,form)
             messages.success(request,'Teacher created successfully.')
             return redirect('teachers')
         else:
             for msg in form.errors:
-                messages.error(request,f"{msg}:{form.errors}")  
-    context = {'form':form,'userform':user_form,'title':title}
+                messages.error(request,f"{msg}:{form.errors}") 
+
+    context = {'form':form,'user_form':user_form,'title':title}
     return render (request,'form.html',context) 
 def TeacherData(request,email):
     user_teacher  = UserAccount.objects.get(email=email)
@@ -284,7 +290,6 @@ def TeacherDelete(request,email):
     user.delete()
     messages.success(request,'Teacher deleted successfully.')
     return redirect('teachers')  
-
 def YearViews(request):
     data = user_profile(request)
     user = data['user']
@@ -293,3 +298,41 @@ def YearViews(request):
     request_data = 'year_data'      
     context  = {'requests':requests,'title':title,'request_data':request_data,'user':user}
     return render(request,'request_list.html',context)
+
+
+def CoursesView(request):
+    data = user_profile(request)
+    user = data['user']
+    requests = Courses.objects.all()
+    filters  = CoursesFilters(request.GET,queryset=requests) 
+    requests = filters.qs     
+    title    = 'Courses'
+    request_data = 'course' 
+    create_url   =  'course_create'     
+    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user,'create_url':create_url}
+    return render(request,'request_list.html',context)  
+def CourseCreate(request):    
+    form     = CoursesForm()
+    title    = 'Create Course'
+    if request.method == 'POST':
+        form     = CoursesForm(request.POST,request.FILES)        
+        if form.is_valid(): 
+            form.save()
+            messages.success(request,'Course successfully created.')
+            return redirect('courses')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
+    context = {'form':form,'title':title}        
+    return render (request,'form.html',context)
+def CourseData(request,name,year):
+    course = Courses.objects.get(name=name,year=year)
+    teachers = Teachers.objects.filter(courses=course).all()
+    categories = CourseCategory.objects.filter(course=course).all()     
+    context =  {'course':course,'teachers':teachers,'categories':categories}
+    return render(request,'course_data.html',context)
+def CourseDelete(request,name,year):
+    course = Courses.objects.get(name=name,year=year)    
+    course.delete()
+    messages.success(request,'Course successfully deleted.')
+    return redirect('courses')   
