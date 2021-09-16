@@ -222,12 +222,11 @@ def AdmissionDenied(email):
 def StudentsView(request):
     data = user_profile(request)
     user = data['user']
-    requests = Students.objects.all()
-    filters  = StudentsFilters(request.GET,queryset=requests)
-    requests = filters.qs     
-    title    = 'Students'
-    request_data = 'student'      
-    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
+    students = Students.objects.all()
+    filters  = StudentsFilters(request.GET,queryset=students)
+    students = filters.qs     
+    title    = 'Students'         
+    context  = {'students':students,'filters':filters,'title':title,'user':user}
     return render(request,'request_list.html',context)
 def StudentData(request,email):
     user = UserAccount.objects.get(email=email)
@@ -249,13 +248,12 @@ def AdminsView(request):
 def TeachersView(request):  
     data = user_profile(request)
     user = data['user']
-    requests = Teachers.objects.all()
-    filters  = TeachersFilters(request.GET,queryset=requests) 
-    requests = filters.qs     
-    title    = 'Teachers'
-    request_data = 'teacher' 
+    teachers = Teachers.objects.all()
+    filters  = TeachersFilters(request.GET,queryset=teachers) 
+    teachers = filters.qs     
+    title    = 'Teachers'     
     create_url   =  'teacher_create'     
-    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user,'create_url':create_url}
+    context  = {'teachers':teachers,'filters':filters,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)    
 def TeacherCreate(request):
     user_form = UserForm()
@@ -303,13 +301,12 @@ def YearViews(request):
 def CoursesView(request):
     data = user_profile(request)
     user = data['user']
-    requests = Courses.objects.all()
-    filters  = CoursesFilters(request.GET,queryset=requests) 
-    requests = filters.qs     
-    title    = 'Courses'
-    request_data = 'course' 
+    courses = Courses.objects.all()
+    filters  = CoursesFilters(request.GET,queryset=courses) 
+    courses = filters.qs     
+    title    = 'Courses'     
     create_url   =  'course_create'     
-    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user,'create_url':create_url}
+    context  = {'courses':courses,'filters':filters,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)  
 def CourseCreate(request):    
     form     = CoursesForm()
@@ -335,4 +332,21 @@ def CourseDelete(request,name,year):
     course = Courses.objects.get(name=name,year=year)    
     course.delete()
     messages.success(request,'Course successfully deleted.')
-    return redirect('courses')   
+    return redirect('courses') 
+
+def YearsViews(request):
+    data = user_profile(request)
+    user = data['user']
+    years = SchoolYears.objects.all()    
+    title    = 'SchoolYears'     
+    create_url   =  'year_create'     
+    context  = {'years':years,'title':title,'user':user,'create_url':create_url}
+    return render(request,'request_list.html',context)  
+
+def YearData(request,pk):
+    year = SchoolYears.objects.get(id=pk)
+    students  = Students.objects.filter(year = year)
+    courses   = Courses.objects.filter(year = year)
+    admssions = Applications.objects.filter(year=year)
+    context   = {'year':year,'students':students,'courses':courses,'admssions':admssions}
+    return render(request,'year_data.html',context)            

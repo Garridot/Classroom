@@ -56,6 +56,8 @@ class SchoolYears(models.Model):
     def __str__(self):
         return str(self.id)
 
+    def year_id(self):
+        return str(self.year)
     @property
     def total_students(self):
         students = 0

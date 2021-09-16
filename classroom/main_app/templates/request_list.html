@@ -22,28 +22,44 @@
     
     <div class="list-users">
         <ul class="list-group">
-            {% if requests %}
-                {% for request in requests %}            
-                <li class="list-group-item">
-                    {% if request.email %}<a href="{{request_data}}/email={{request.email}}">{% endif %}
-                    {% if request.name %}<a href="{{request_data}}/name={{request.name}}/year={{request.year}}">{% endif %}
-                        {% if request.profile_picture %}<img  class="profile_picture" src="{{request.profile_picture.url}}">{% endif %} 
-                        {% if request.course_picture %}<img  class="profile_picture" src="{{request.course_picture.url}}">{% endif %} 
-
-                        {% if request.full_name %}<p id="info1">{{request.full_name}}</p>{% endif %}
-                        {% if request.name %}<p id="info1">{{request.name}}</p>{% endif %}
-
-                        {% if request.email %}<p id="info2">{{request.email}}</p>{% endif %} 
-                        {% if request.name %}<p id="info2">{{request.year}}</p>{% endif %}            
-                    </a>
-                </li>
-                {% endfor %}
+            {% if students %}{% for student in students %}
+            <li class="list-group-item">
+                <a href="{% url 'student' student.email %}">
+                    <img  class="profile_picture" src="{{student.profile_picture.url}}">
+                    <p id="info1">{{student.full_name}}</p>
+                    <p id="info2">{{student.yearl}}</p>
+                </a>
+            </li>{% endfor %}
+            {% elif teachers %}{% for teacher in teachers %}
+            <li class="list-group-item">
+                <a href="{% url 'teacher' teacher.email %}">
+                    <img  class="profile_picture" src="{{teacher.profile_picture.url}}">
+                    <p id="info1">{{teacher.full_name}}</p>
+                    <p id="info2">{{teacher.courses}}</p>
+                </a>
+            </li>{% endfor %}
+            {% elif courses %}{% for course in courses %}
+            <li class="list-group-item">
+                <a href="{% url 'course' course.name course.year %}">
+                    <img  class="profile_picture" src="{{course.course_picture.url}}">
+                    <p id="info1">{{course.name}}</p>
+                    <p id="info2">{{course.year}}</p>
+                </a>
+            </li>{% endfor %}
+            {% elif years %}{% for year in years %}
+            <li class="list-group-item">
+                <a href="{% url 'year' year.id %}">
+                    <p id="info1">{{year.year}}</p>
+                    <p id="info2">{{year.total_students}} students</p>
+                </a>
+            </li>{% endfor %} 
             {% else %}
                 <li class="list-group-item">
                     No Results Found...
                 </li>
             {% endif %}
         </ul>
+        {% if filters %}
         <div class="filters">
             <div class="row">
                 <i class="fas fa-sliders-h"  id="filter_icon"></i>
@@ -53,6 +69,7 @@
                 <input type="submit" value="Filter">
             </form>
         </div>
+        {% endif %}
     </div> 
 
 </div>

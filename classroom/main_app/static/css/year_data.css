@@ -1,0 +1,75 @@
+.container-fluid{
+width: 100%;
+}
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 4rem 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+}
+.title a{
+text-decoration: none;
+color: #212529;
+}
+
+a{
+text-decoration: none;
+}
+p{
+color: rgb(100, 100, 100);
+}
+
+
+.content{
+display: flex;
+justify-content: space-between;
+width: 95%;
+margin: auto;
+padding: 0;
+}   
+
+.first-col{
+width: 65%;
+padding: 1rem 0 0 0;
+}
+
+.first-col #students{
+    margin: 5rem 0 0 0;
+}
+.second-col{
+margin: 1rem 0 0 3rem;
+width: 331px;
+}
+
+
+.content-title{
+display: flex;
+justify-content: space-between;
+padding: 2rem 0;
+align-items: center;
+}
+.content-title a {
+text-decoration: none;
+background: rgb(175, 175, 175);
+color: white;
+transition: all 0.2s;
+border-radius: 10px;
+margin: 0;
+padding: 3px 12px;
+font-weight: 400;
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.list-group-item{
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.list-group-item img{
+width: 50px;
+border-radius: 50%;
+}
+
