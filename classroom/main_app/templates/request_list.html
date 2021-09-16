@@ -30,6 +30,8 @@
                     <p id="info2">{{student.yearl}}</p>
                 </a>
             </li>{% endfor %}
+
+
             {% elif teachers %}{% for teacher in teachers %}
             <li class="list-group-item">
                 <a href="{% url 'teacher' teacher.email %}">
@@ -38,6 +40,17 @@
                     <p id="info2">{{teacher.courses}}</p>
                 </a>
             </li>{% endfor %}
+
+            {% elif admins %}{% for admin in admins %}
+            <li class="list-group-item">
+                <a href="{% url 'admin' admin.email %}">
+                    <img  class="profile_picture" src="{{admin.profile_picture.url}}">
+                    <p id="info1">{{admin.full_name}}</p>
+                    <p id="info2">{{admin.email}}</p>
+                </a>
+            </li>{% endfor %}
+
+
             {% elif courses %}{% for course in courses %}
             <li class="list-group-item">
                 <a href="{% url 'course' course.name course.year %}">
@@ -46,6 +59,8 @@
                     <p id="info2">{{course.year}}</p>
                 </a>
             </li>{% endfor %}
+
+
             {% elif years %}{% for year in years %}
             <li class="list-group-item">
                 <a href="{% url 'year' year.id %}">

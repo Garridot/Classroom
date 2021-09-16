@@ -288,14 +288,44 @@ def TeacherDelete(request,email):
     user.delete()
     messages.success(request,'Teacher deleted successfully.')
     return redirect('teachers')  
-def YearViews(request):
+
+def AdminsView(request):
     data = user_profile(request)
     user = data['user']
-    requests = SchoolYears.objects.all()    
-    title    = 'SchoolYears'
-    request_data = 'year_data'      
-    context  = {'requests':requests,'title':title,'request_data':request_data,'user':user}
-    return render(request,'request_list.html',context)
+    admins  = Admins.objects.all()
+    filters = AdminsFilters(request.GET,queryset=admins) 
+    admins  = filters.qs
+    title   = 'Admins'
+    create_url = 'admin_create'
+    context  = {'admins':admins,'filters':filters,'title':title,'user':user,'create_url':create_url}
+    return render(request,'request_list.html',context)    
+def AdminsData(request,email):
+    user_teacher  = UserAccount.objects.get(email=email)
+    admin_account = Admins.objects.get(user=user_teacher)
+    context = {'user':admin_account}
+    return render(request,'profile.html',context)
+def AdminCreate(request):
+    user_form = UserForm()
+    title     = 'Add Teacher Account'
+    form      =  AdminsForm()
+    if request.method == 'POST':
+        form = AdminsForm(request.POST,request.FILES)
+        user_form = UserForm(request.POST)
+        if form.is_valid() and user_form.is_valid(): 
+            user_form.instance.is_admin = True    
+            user_form.save()
+            email = user_form['email'].value()            
+            user   = UserAccount.objects.get(email=email)             
+            form.instance.user = user
+            form.save()              
+            messages.success(request,'Admin successfully created.')
+            return redirect('admins')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
+
+    context = {'form':form,'user_form':user_form,'title':title}
+    return render (request,'form.html',context) 
 
 
 def CoursesView(request):

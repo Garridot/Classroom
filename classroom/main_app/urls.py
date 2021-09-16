@@ -35,12 +35,16 @@ urlpatterns = [
     path('teachers/teacher/email=<str:email>/',views.TeacherData,name='teacher'),
     path('teacher_delete/<str:email>/',views.TeacherDelete,name='delete_teacher'),
 
+    path('admins/',views.AdminsView,name='admins'),
+    path('admins/admin_create/',views.AdminCreate,name='admin_create'),
+    path('admins/admin/email=<str:email>',views.AdminsData,name='admin'),
+
     path('courses/',views.CoursesView,name='courses'),
     path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
     path('courses/course_create/',views.CourseCreate,name='course_create'),
 
 
     path('years/',views.YearsViews,name='years'),
-    path('years/year=<str:pk>/',views.YearData,name='year')
+    path('years/year=<str:pk>/',views.YearData,name='year'),
 
 ]

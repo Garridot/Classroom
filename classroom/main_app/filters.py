@@ -20,6 +20,11 @@ class TeachersFilters(django_filters.FilterSet):
         model   = Teachers        
         exclude = ('description','sent_date','profile_picture','HS_diploma','date_of_birth','nationality','user')
 
+class AdminsFilters(django_filters.FilterSet):
+    class Meta:
+        model   = Admins        
+        exclude = ('description','sent_date','profile_picture','HS_diploma','date_of_birth','nationality','user')
+
 class CoursesFilters(django_filters.FilterSet):
     class Meta:
         model   =  Courses

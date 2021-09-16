@@ -34,6 +34,11 @@ class  TeachersForm(forms.ModelForm):
         model   = Teachers
         exclude = ('user',)
 
+class  AdminsForm(forms.ModelForm):
+    class Meta:
+        model   = Admins
+        exclude = ('user',)        
+
 class  CoursesForm(forms.ModelForm):
     class Meta:
         model = Courses
