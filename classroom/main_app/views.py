@@ -364,6 +364,40 @@ def CourseDelete(request,name,year):
     messages.success(request,'Course successfully deleted.')
     return redirect('courses') 
 
+def CategoriesView(request,course,category):
+    course   = Courses.objects.get(name=course)
+    category = CourseCategory.objects.get(course = course,name=category)
+    contents  = Content.objects.filter(category=category).all()
+    context  = {'course':course,'category':category,'contents':contents}
+    return render(request,'category_data.html',context) 
+def CategoryCreate(request,course):
+    course = Courses.objects.get(name=course)
+    form   = CategoryForm()
+    title  = 'Add Category'
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.instance.course = course
+            form.instance.year   = course.year
+            form.save()
+            Notifications.objects.create(user=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
+    context= {'form':form,'title':title}
+    return render(request,'form.html',context) 
+def ContentAdd(request,course,category):
+    category = CourseCategory.objects.get(name=category)
+    course   = Courses.objects.get(name=course)
+    form  = ContentForm()
+    title = 'Add content'
+    if request.method == 'POST':
+        form = ContentForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.instance.category = category
+            form.save()
+            Notifications.objects.create(user=request.user,message=f"{course.name} / {category.name} : New content has been added!",year=course.year) 
+            return redirect('category',course=course.name,category=category.name)
+    context= {'form':form,'title':title}
+    return render(request,'form.html',context) 
+
 def YearsViews(request):
     data = user_profile(request)
     user = data['user']
@@ -372,6 +406,7 @@ def YearsViews(request):
     create_url   =  'year_create'     
     context  = {'years':years,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)  
+    
 
 def YearData(request,pk):
     year = SchoolYears.objects.get(id=pk)

@@ -43,6 +43,10 @@ urlpatterns = [
     path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
     path('courses/course_create/',views.CourseCreate,name='course_create'),
 
+    path('courses/course=<str:course>/category=<str:category>/',views.CategoriesView,name='category'),
+    path('courses/course=<str:course>/category_create/',views.CategoryCreate,name='category_create'),
+    path('courses/course=<str:course>/category=<str:category>/content_add/',views.ContentAdd,name='content_add'),
+
 
     path('years/',views.YearsViews,name='years'),
     path('years/year=<str:pk>/',views.YearData,name='year'),

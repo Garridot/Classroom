@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/course_data.css' %}">
+<div class="container-fluid">
+    <div class="title">
+        <a href="{% url 'course' course.name course.year %}"><h1>{{course.name}}</h1></a>
+    </div>
+    <div class="presentation">
+        <div class="img col">
+            <img src="{{course.course_picture.url}}" alt="">
+        </div>
+        <div class="data col">
+            <h2>{{category.name}}</h2>
+            <h5>Course: {{course.name}}</h5>
+            <p>{{course.description}}</p>
+        </div>
+    </div>
+    <div class="content">
+        <div class="c-title">
+            <h4>Content</h4>
+            <a href="{% url 'content_add' course=course.name category=category.name %}"><i class="fas fa-plus"></i> Add</a>
+        </div>
+        {% if contents %}{% for content in contents %}
+        <a href="{{content.field.url}}"><li class="list-group-item">
+            <p>{{content.name}}</p>
+            <p>{{content.created}}</p>
+        </li></a>
+        {% endfor %}{% else %}
+        <li class="list-group-item">
+            <p>No content yet...</p>
+        </li>
+        {% endif %}
+    </div>
+</div>    
+{% endblock %}     

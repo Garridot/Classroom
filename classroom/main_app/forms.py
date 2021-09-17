@@ -43,3 +43,13 @@ class  CoursesForm(forms.ModelForm):
     class Meta:
         model = Courses
         fields = '__all__'
+
+class  CategoryForm(forms.ModelForm):
+    class Meta:
+        model = CourseCategory
+        exclude = ('course','year')
+
+class  ContentForm(forms.ModelForm):
+    class Meta:
+        model = Content
+        exclude = ('category',)

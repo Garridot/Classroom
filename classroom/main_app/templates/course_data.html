@@ -15,7 +15,33 @@
             <h5>Year: {{course.year}}</h5>
             <p>{{course.description}}</p>
         </div>
+    </div>      
+    <div class="categories">  
+        <div class="c-title">
+            <h1>Categories</h1>
+            {% if request.user.is_admin or request.user.is_teacher %}
+            <a href="{% url 'category_create' course=course.name %}"><i class="fas fa-plus"></i> Add</a>
+            {% endif %} 
+        </div> 
+        <ul class="list-group">
+            {% if categories  %}{% for category in categories %}
+            <a href="{% url 'category' course=course.name category=category.name  %}"><li class="list-group-item">                
+                <p>{{category.name}}</p>
+            </li></a>
+            {% endfor %}{% else %}
+            <li class="list-group-item">No content yet...</li>{% endif %}
+        </ul>
     </div>
-       
+    <div class="teachers">
+        <h1>Teachers</h1>
+        <ul class="list-group">
+            {% for teacher in teachers %}
+            <a href="{% url 'teacher' teacher.email %}"><li class="list-group-item">
+                <img src="{{teacher.profile_picture.url}}">
+                <p>{{teacher.full_name}}</p>
+            </li></a>
+            {% endfor %}
+        </ul>
+    </div> 
 </div>
 {% endblock %}    
