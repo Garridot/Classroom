@@ -11,7 +11,7 @@ def user_profile(request):
         students      = Students.objects.all()
         courses       = Courses.objects.all()        
         # notifications = Notifications.objects.all()
-        events        = Events.objects.filter().all()
+        events        = Events.objects.all()
 
     elif request.user.is_teacher:
         user          = Teachers.objects.get(user=request.user)

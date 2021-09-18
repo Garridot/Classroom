@@ -29,3 +29,8 @@ class CoursesFilters(django_filters.FilterSet):
     class Meta:
         model   =  Courses
         exclude = ('course_picture','description')
+
+class EventsFilters(django_filters.FilterSet):
+    class Meta:
+        model   =  Events
+        exclude = ('message','author','created')

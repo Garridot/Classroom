@@ -53,3 +53,11 @@ class  ContentForm(forms.ModelForm):
     class Meta:
         model = Content
         exclude = ('category',)
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Events
+        exclude = ('author',)  
+        widgets={
+        'event_date' : DateInput(),        
+        }       

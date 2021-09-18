@@ -406,12 +406,60 @@ def YearsViews(request):
     create_url   =  'year_create'     
     context  = {'years':years,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)  
-    
-
 def YearData(request,pk):
     year = SchoolYears.objects.get(id=pk)
     students  = Students.objects.filter(year = year)
     courses   = Courses.objects.filter(year = year)
     admssions = Applications.objects.filter(year=year)
     context   = {'year':year,'students':students,'courses':courses,'admssions':admssions}
-    return render(request,'year_data.html',context)            
+    return render(request,'year_data.html',context)  
+
+def EventsView(request):
+    data = user_profile(request)
+    user    = data['user']   
+    events  = data['events']  
+    filters = EventsFilters(request.GET,queryset=events)
+    title   = 'Events'
+    request_data = 'event'
+    create_url = 'event_create'
+    context = {'user':user,'events':events,'filters':filters,'title':title,'request_data':request_data,'create_url':create_url}
+    return render(request,'request_list.html',context)
+def EventData(request,title,date):
+    event = Events.objects.get(title=title,event_date=date)
+    comments = Comments.objects.filter(event=event)
+    total_comments = 0
+    for comment in comments:
+        total_comments += 1
+    context = {'event':event,'comments':comments,'total_comments':total_comments}
+    return render(request,'event_data.html',context)
+def CommentAdd(request,pk):
+    event = Events.objects.get(id=pk)
+    if request.method == 'POST':
+        message = request.POST['message']
+        Comments.objects.create(
+            event        = event,
+            user         = request.user,
+            menssage     = message         
+        )
+    return redirect('event',title=event.title, date=event.event_date)
+def CommentDelete(request,pk):
+    comment = Comments.objects.get(id=pk)    
+    comment.delete()
+    event     = Events.objects.get(id=comment.event.id)
+    return redirect('event',title=event.title, date=event.event_date)
+def EventCreate(request):
+    form = EventForm()
+    title = 'Add Event'
+    if request.method == 'POST':
+        form = EventForm(request.POST,)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            year = SchoolYears.objects.get(id=request.POST['year'])
+            Notifications.objects.create(user=request.user,message=f"New event added!",year=year) 
+            messages.success(request,'Event successfully added')
+            return redirect('events')
+    context={'form':form,'title':title}
+    return render(request,'form.html',context)
+
+
