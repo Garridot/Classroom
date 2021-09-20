@@ -325,10 +325,27 @@ def AdminsView(request):
     context  = {'admins':admins,'filters':filters,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)    
 def AdminsData(request,email):
-    user_teacher  = UserAccount.objects.get(email=email)
-    admin_account = Admins.objects.get(user=user_teacher)
-    context = {'user':admin_account}
+    user  = UserAccount.objects.get(email=email)
+    user  = Admins.objects.get(user=user)
+    update_url = f'/academiaweb/admins/admin_update/email={user.email}/'
+    context = {'user':user,'update_url':update_url}
     return render(request,'profile.html',context)
+def AdminUpdate(request,email):
+    user = UserAccount.objects.get(email=email)
+    admin = Admins.objects.get(user = user)
+    form = AdminsForm(instance=admin)
+    title = 'Update Admins'
+    if request.method == 'POST':
+        form = AdminsForm(request.POST,request.FILES,instance=admin)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Admin successfully updated')
+            return redirect('admins')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")   
+    context = {'form':form,'title':title}
+    return render (request,'form.html',context)
 def AdminCreate(request):
     user_form = UserForm()
     title     = 'Add Teacher Account'

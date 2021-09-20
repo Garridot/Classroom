@@ -40,6 +40,7 @@ urlpatterns = [
     path('admins/',views.AdminsView,name='admins'),
     path('admins/admin_create/',views.AdminCreate,name='admin_create'),
     path('admins/admin/email=<str:email>',views.AdminsData,name='admin'),
+    path('admins/admin_update/email=<str:email>/',views.AdminUpdate,name='admin_update'),
 
     path('courses/',views.CoursesView,name='courses'),
     path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
