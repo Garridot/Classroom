@@ -20,7 +20,7 @@ color: #212529;
 color: #383f46;    
 }  
 .information{
-padding: 0 0 3rem;
+padding: 0 0 2rem;
 }
 
 .information h3{
@@ -37,6 +37,7 @@ padding: 0 0 3rem;
 }
 .information p{
     width: 80%;
+    color: #383f46;
     line-height: 2;
     text-align: justify;
 }
@@ -48,6 +49,9 @@ width: 80%;
 } 
 .comments h3{
     color: #212529;
+}
+.comments p{
+    color: #545658;
 }
 .list-group{
 padding: .5rem;
@@ -96,6 +100,13 @@ color: #AAA;
 }
 .main i{
 color: rgb(141, 141, 141);
+}
+
+.reply-form{
+    display: none;
+}
+.reply-form.view{
+    display: block;
 }
 
 @media(max-width:700px){
@@ -147,6 +158,7 @@ width: 100%;
             </form>
 
             {% for comment in comments %}  
+            
             <div class="comment">
                 <div class="main">
                     <li><p id="user">{{comment.user}}</p> 
@@ -154,9 +166,8 @@ width: 100%;
                     </li>
                     {% if request.user %}<a href="{% url 'comment_delete' comment.id %}"><i class="far fa-trash-alt"></i></a>{% endif %}                          
                 </div>
-                {{comment.menssage}}                                
-            </div>
-            
+                <p>{{comment.menssage}} </p> 
+            </div>                  
             {% endfor %}
         </ul>
 
@@ -164,10 +175,18 @@ width: 100%;
     
 </div>
 <script>
+    
     var submit  = document.querySelector('.comment')
     var message = document.querySelector('#message')
     message.addEventListener("click",function(){
         submit.classList.add('sent')
+    })
+
+    var reply_btn = document.querySelector('#reply-btn')
+    var reply_form = document.querySelector('#reply-form')
+
+    reply_btn.addEventListener("click",function(){
+        reply_form.classList.toggle('view')
     })
 
 </script>

@@ -233,17 +233,24 @@ def StudentData(request,email):
     user = Students.objects.get(user = user)
     context = {'user':user}
     return render(request,'profile.html',context)
+def StudentUpdate(request,email):
+    user = UserAccount.objects.get(email=email)
+    student = Students.objects.get(user = user)
+    form = StudentsForm(instance=student)
+    title = 'Update Student'
+    if request.method == 'POST':
+        form = StudentsForm(request.POST,request.FILES,instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Student successfully updated')
+            return redirect('students')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")   
+    context = {'form':form,'title':title}
+    return render (request,'form.html',context)                
 
-def AdminsView(request):
-    data = user_profile(request)
-    user = data['user']
-    requests = Admins.objects.all()
-    filters  = ApplyFilters(request.GET,queryset=requests)
-    requests = filters.qs     
-    title    = 'Admins'
-    request_data = 'admin_data'      
-    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
-    return render(request,'request_list.html',context)    
+   
 
 def TeachersView(request):  
     data = user_profile(request)
@@ -380,7 +387,7 @@ def CategoryCreate(request,course):
             form.instance.course = course
             form.instance.year   = course.year
             form.save()
-            Notifications.objects.create(user=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
+            Notifications.objects.create(sender=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
 def ContentAdd(request,course,category):
@@ -426,12 +433,27 @@ def EventsView(request):
     return render(request,'request_list.html',context)
 def EventData(request,title,date):
     event = Events.objects.get(title=title,event_date=date)
-    comments = Comments.objects.filter(event=event)
+    comments = Comments.objects.filter(event=event).order_by('-date_added').all()
     total_comments = 0
     for comment in comments:
         total_comments += 1
     context = {'event':event,'comments':comments,'total_comments':total_comments}
     return render(request,'event_data.html',context)
+def EventCreate(request):
+    form = EventForm()
+    title = 'Add Event'
+    if request.method == 'POST':
+        form = EventForm(request.POST,)
+        if form.is_valid():
+            form.instance.author = request.user
+            form.save()
+            year = SchoolYears.objects.get(id=request.POST['year'])
+            Notifications.objects.create(sender=request.user,message=f"New event added!",year=year) 
+            messages.success(request,'Event successfully added')
+            return redirect('events')
+    context={'form':form,'title':title}
+    return render(request,'form.html',context)
+
 def CommentAdd(request,pk):
     event = Events.objects.get(id=pk)
     if request.method == 'POST':
@@ -447,19 +469,5 @@ def CommentDelete(request,pk):
     comment.delete()
     event     = Events.objects.get(id=comment.event.id)
     return redirect('event',title=event.title, date=event.event_date)
-def EventCreate(request):
-    form = EventForm()
-    title = 'Add Event'
-    if request.method == 'POST':
-        form = EventForm(request.POST,)
-        if form.is_valid():
-            form.instance.author = request.user
-            form.save()
-            year = SchoolYears.objects.get(id=request.POST['year'])
-            Notifications.objects.create(user=request.user,message=f"New event added!",year=year) 
-            messages.success(request,'Event successfully added')
-            return redirect('events')
-    context={'form':form,'title':title}
-    return render(request,'form.html',context)
 
 

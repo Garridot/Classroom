@@ -119,6 +119,7 @@ justify-content: space-between;
 align-items: center;
 width: 100%;
 margin: auto;
+padding: .5rem 0;
 }
 .c-title a{
 text-decoration: none; 

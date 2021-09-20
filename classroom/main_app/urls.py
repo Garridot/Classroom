@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('students/',views.StudentsView,name='students'),
     path('students/student/email=<str:email>',views.StudentData,name='student'),
+    path('students/student_update/email=<str:email>',views.StudentUpdate,name='student_update'),
 
     path('teachers/',views.TeachersView,name='teachers'),
     path('teachers/teacher_create/',views.TeacherCreate,name='teacher_create'),    
@@ -55,7 +56,9 @@ urlpatterns = [
     path('events/event/title=<str:title>/date=<str:date>',views.EventData,name='event'),
 
     path('comment_add/event=<str:pk>/',views.CommentAdd,name='comment_add'),
-    path('comment_delete/<str:pk>/',views.CommentDelete,name='comment_delete')
+    path('comment_delete/<str:pk>/',views.CommentDelete,name='comment_delete'),
+
+
 
 
 ]

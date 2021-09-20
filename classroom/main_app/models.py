@@ -194,8 +194,9 @@ class Teachers(models.Model):
 class Notifications(models.Model):
 
     id       = models.AutoField(primary_key=True)
-    user     = models.ForeignKey(UserAccount,on_delete=CASCADE) 
+    sender   = models.ForeignKey(UserAccount,on_delete=CASCADE,related_name='sender') 
     message  = models.CharField(max_length=100)
+    receiver = models.ForeignKey(UserAccount,null=True,blank=True,on_delete=models.DO_NOTHING,related_name='receiver')
     link     = models.URLField(null=True,blank=True)   
     year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
     created  = models.DateTimeField(auto_now_add=True)  
@@ -256,12 +257,8 @@ class Events(models.Model):
         verbose_name_plural = 'Events'
 
 class Comments(models.Model):
-    event       = models.ForeignKey(Events,on_delete=models.CASCADE, related_name='comments')   
+    event        = models.ForeignKey(Events,on_delete=models.CASCADE, related_name='comments')   
     user         = models.ForeignKey(UserAccount,on_delete=models.CASCADE) 
     menssage     = models.TextField()
     date_added   = models.DateTimeField(auto_now_add=True)
-    reply        = models.ForeignKey('self',on_delete=models.CASCADE, blank=True, null=True) 
     
-    @property
-    def replies(self):
-        return Comments.objects.filter(reply='self').order_by('-date_added').all()

@@ -6,6 +6,14 @@
     <div class="title">
         <h1>User Profile</h1>
     </div>
+    {% if request.user.is_admin or request.user %}
+    <div class="update">
+        <a href="{% url 'student_update' email=user.email %}">Update</a>
+        {% if request.user.is_admin %}
+        <a href="" id="delete">Delete</a>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="user-profile">
         <div class="picture col">
             <img src="{{user.profile_picture.url}}" width="400px">
