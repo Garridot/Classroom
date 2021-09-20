@@ -297,7 +297,8 @@ def TeacherData(request,email):
     user_teacher  = UserAccount.objects.get(email=email)
     teacher_account = Teachers.objects.get(user=user_teacher)
     update_url = f'/academiaweb/teachers/teacher_update/email={user_teacher.email}/'
-    context = {'user':teacher_account,'update_url':update_url}
+    delete_url = f'/academiaweb/teachers/teacher_delete/email={user_teacher.email}/'
+    context = {'user':teacher_account,'update_url':update_url,'delete_url':delete_url}
     return render(request,'profile.html',context)
 def TeacherUpdate(request,email):
     user = UserAccount.objects.get(email=email)
@@ -335,7 +336,8 @@ def AdminsData(request,email):
     user  = UserAccount.objects.get(email=email)
     user  = Admins.objects.get(user=user)
     update_url = f'/academiaweb/admins/admin_update/email={user.email}/'
-    context = {'user':user,'update_url':update_url}
+    delete_url = f'/academiaweb/admins/admin_delete/email={user.email}/'
+    context = {'user':user,'update_url':update_url,'delete_url':delete_url}
     return render(request,'profile.html',context)
 def AdminUpdate(request,email):
     user = UserAccount.objects.get(email=email)
@@ -375,7 +377,11 @@ def AdminCreate(request):
 
     context = {'form':form,'user_form':user_form,'title':title}
     return render (request,'form.html',context) 
-
+def AdminDelete(request,email): 
+    user = UserAccount.objects.get(email=email)
+    user.delete()
+    messages.success(request,'Admin successfully deleted')
+    return redirect('admins')
 
 def CoursesView(request):
     data = user_profile(request)
