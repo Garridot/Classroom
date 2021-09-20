@@ -452,6 +452,7 @@ def CategoryCreate(request,course):
             Notifications.objects.create(sender=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
+
 def ContentAdd(request,course,category):
     category = CourseCategory.objects.get(name=category)
     course   = Courses.objects.get(name=course)
@@ -466,6 +467,13 @@ def ContentAdd(request,course,category):
             return redirect('category',course=course.name,category=category.name)
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
+def ContentDelete(request,category,name,id): 
+    category = CourseCategory.objects.get(name=category)    
+    content  = Content.objects.get(id=id,category=category,name=name)
+    print(content)
+    content.delete()
+    return redirect('category',course=category.course,category=category)
+
 
 def YearsViews(request):
     data = user_profile(request)

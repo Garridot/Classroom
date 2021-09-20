@@ -22,10 +22,13 @@
             <a href="{% url 'content_add' course=course.name category=category.name %}"><i class="fas fa-plus"></i> Add</a>
         </div>
         {% if contents %}{% for content in contents %}
-        <a href="{{content.field.url}}"><li class="list-group-item">
-            <p>{{content.name}}</p>
-            <p>{{content.created}}</p>
-        </li></a>
+        <div class="list-content">
+            <a href="{{content.field.url}}" id="content_field"><li class="list-group-item">
+                <p>{{content.name}}</p>
+                <p>{{content.created}}</p>
+            </li></a>
+            <a href="{% url 'content_delete'  category=content.category.name name=content.name id=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
+        </div>
         {% endfor %}{% else %}
         <li class="list-group-item">
             <p>No content yet...</p>

@@ -187,6 +187,19 @@ margin: 0;
 padding: 0;
 }
 
+/**** LIST CONTENT ****/
+.list-content{
+display: flex;
+align-items: center;
+}
+.list-content a#content_field{
+width: 100%;
+}
+.list-content #delete{
+padding: 0 1rem;
+color: lightcoral;
+}
+
 /**** MEDIA QUERY ****/
 
 @media(max-width:1570px){

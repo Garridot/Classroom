@@ -10,7 +10,7 @@
     <div class="update">
         <a href="{% url 'course_update' course.name course.year %}">Update</a>
         {% if request.user.is_admin %}
-        <a href="{% url 'course_delete' course.name course.year %}" id="delete">Delete</a>
+        <a href="{% url 'course_delete' course.name course.year %} " id="delete">Delete</a>
         {% endif %}
     </div>
     {% endif %}
