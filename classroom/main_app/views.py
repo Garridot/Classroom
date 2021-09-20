@@ -232,7 +232,8 @@ def StudentData(request,email):
     user = UserAccount.objects.get(email=email)
     user = Students.objects.get(user = user)
     update_url = f'/academiaweb/students/student_update/email={user.email}'
-    context = {'user':user,'update_url':update_url}
+    delete_url = f'/academiaweb/students/student_delete/email={user.email}'
+    context = {'user':user,'update_url':update_url,'delete_url':delete_url}
     return render(request,'profile.html',context)
 def StudentUpdate(request,email):
     user = UserAccount.objects.get(email=email)
@@ -250,7 +251,13 @@ def StudentUpdate(request,email):
                 messages.error(request,f"{msg}:{form.errors}")   
     context = {'form':form,'title':title}
     return render (request,'form.html',context)                
+def StudentDelete(request,email): 
+    user = UserAccount.objects.get(email=email)
+    user.delete()
+    messages.success(request,'Student successfully deleted')
+    return redirect('students')
 
+    
    
 
 def TeachersView(request):  

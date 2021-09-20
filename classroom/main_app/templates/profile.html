@@ -10,7 +10,7 @@
     <div class="update">
         <a href="{{update_url}}">Update</a>
         {% if request.user.is_admin %}
-        <a href="" id="delete">Delete</a>
+        <a href="{{delete_url}}" id="delete">Delete</a>
         {% endif %}
     </div>
     {% endif %}
