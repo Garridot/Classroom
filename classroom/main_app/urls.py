@@ -46,6 +46,7 @@ urlpatterns = [
     path('courses/',views.CoursesView,name='courses'),
     path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
     path('courses/course_update/name=<str:name>/year=<str:year>/',views.CourseUpdate,name='course_update'),
+    path('courses/course_delete/name=<str:name>/year=<str:year>/',views.CourseDelete,name='course_delete'),
     path('courses/course_create/',views.CourseCreate,name='course_create'),
 
     path('courses/course=<str:course>/category=<str:category>/',views.CategoriesView,name='category'),
