@@ -231,7 +231,8 @@ def StudentsView(request):
 def StudentData(request,email):
     user = UserAccount.objects.get(email=email)
     user = Students.objects.get(user = user)
-    context = {'user':user}
+    update_url = f'/academiaweb/students/student_update/email={user.email}'
+    context = {'user':user,'update_url':update_url}
     return render(request,'profile.html',context)
 def StudentUpdate(request,email):
     user = UserAccount.objects.get(email=email)
@@ -259,7 +260,7 @@ def TeachersView(request):
     filters  = TeachersFilters(request.GET,queryset=teachers) 
     teachers = filters.qs     
     title    = 'Teachers'     
-    create_url   =  'teacher_create'     
+    create_url   =  'teacher_create'         
     context  = {'teachers':teachers,'filters':filters,'title':title,'user':user,'create_url':create_url}
     return render(request,'request_list.html',context)    
 def TeacherCreate(request):
@@ -288,8 +289,25 @@ def TeacherCreate(request):
 def TeacherData(request,email):
     user_teacher  = UserAccount.objects.get(email=email)
     teacher_account = Teachers.objects.get(user=user_teacher)
-    context = {'user':teacher_account}
+    update_url = f'/academiaweb/teachers/teacher_update/email={user_teacher.email}/'
+    context = {'user':teacher_account,'update_url':update_url}
     return render(request,'profile.html',context)
+def TeacherUpdate(request,email):
+    user = UserAccount.objects.get(email=email)
+    teachers = Teachers.objects.get(user = user)
+    form = TeachersForm(instance=teachers)
+    title = 'Update Teachers'
+    if request.method == 'POST':
+        form = TeachersForm(request.POST,request.FILES,instance=teachers)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Teacher successfully updated')
+            return redirect('teachers')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")   
+    context = {'form':form,'title':title}
+    return render (request,'form.html',context)    
 def TeacherDelete(request,email):
     user  = UserAccount.objects.get(email=email)
     user.delete()

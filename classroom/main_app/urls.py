@@ -34,6 +34,7 @@ urlpatterns = [
     path('teachers/',views.TeachersView,name='teachers'),
     path('teachers/teacher_create/',views.TeacherCreate,name='teacher_create'),    
     path('teachers/teacher/email=<str:email>/',views.TeacherData,name='teacher'),
+    path('teachers/teacher_update/email=<str:email>/',views.TeacherUpdate,name='teacher_update'),
     path('teacher_delete/<str:email>/',views.TeacherDelete,name='delete_teacher'),
 
     path('admins/',views.AdminsView,name='admins'),
