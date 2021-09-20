@@ -6,6 +6,14 @@
     <div class="title">
         <a href="{% url 'courses' %}"><h1>Courses</h1></a>
     </div>
+    {% if request.user.is_admin or request.user %}
+    <div class="update">
+        <a href="{% url 'course_update' course.name course.year %}">Update</a>
+        {% if request.user.is_admin %}
+        <a href="" id="delete">Delete</a>
+        {% endif %}
+    </div>
+    {% endif %}
     <div class="presentation">
         <div class="img col">
             <img src="{{course.course_picture.url}}" alt="">

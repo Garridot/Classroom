@@ -413,6 +413,20 @@ def CourseData(request,name,year):
     categories = CourseCategory.objects.filter(course=course).all()     
     context =  {'course':course,'teachers':teachers,'categories':categories}
     return render(request,'course_data.html',context)
+def CourseUpdate(request,name,year):
+    course = Courses.objects.get(name=name,year=year)
+    form   = CoursesForm(instance=course)
+    title  = 'Update Course'
+    if request.method=='POST':
+        form = CoursesForm(request.POST,request.FILES,instance=course)
+        if form.is_valid():
+            form.save()            
+            return redirect('course',name=course.name,year=course.year)
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
+    context = {'form':form,'title':title}        
+    return render (request,'form.html',context)    
 def CourseDelete(request,name,year):
     course = Courses.objects.get(name=name,year=year)    
     course.delete()
