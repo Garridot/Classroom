@@ -54,7 +54,7 @@ color: rgb(100, 100, 100);
 width: 50px;
 border-radius: 50%;
 }
-.list-group-item a p#email{
+.list-group-item a p#info2{
 display: none;
 } 
 
@@ -145,7 +145,7 @@ color: rgb(122, 122, 122);
 
 
 @media (min-width:575px){    
-.list-group-item a p#email{
+.list-group-item a p#info2{
 display: block;
 }
 }

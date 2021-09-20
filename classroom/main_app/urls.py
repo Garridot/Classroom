@@ -51,6 +51,9 @@ urlpatterns = [
 
     path('courses/course=<str:course>/category=<str:category>/',views.CategoriesView,name='category'),
     path('courses/course=<str:course>/category_create/',views.CategoryCreate,name='category_create'),
+    path('courses/course=<str:course>/category=<str:category>/category_update',views.CategoryUpdate,name='category_update'),
+    path('courses/course=<str:course>/category=<str:category>/category_delete',views.CategoryDelete,name='category_delete'),
+
     path('courses/course=<str:course>/category=<str:category>/content_add/',views.ContentAdd,name='content_add'),
     path('courses/category=<str:category>/content=<str:name>/content_delete/<str:id>',views.ContentDelete,name='content_delete'),
 

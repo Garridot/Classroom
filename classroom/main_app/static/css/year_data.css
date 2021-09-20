@@ -73,3 +73,17 @@ width: 50px;
 border-radius: 50%;
 }
 
+/**** MEDIA QUERY  ****/
+
+@media(max-width:800px){
+.content{
+display: block;
+}
+.first-col,.second-col{
+width: 100%;
+margin: 0;
+}
+.first-col p#info2,.second-col p#info2{
+display: none;
+}
+} 

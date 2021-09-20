@@ -12,9 +12,7 @@ color: #212529;
 .update{
 padding: 0 2rem;
 text-align: end;
-
 }
-
 .update a{
 background: #212529;
 border: 1px solid #ced4da;
@@ -30,6 +28,7 @@ background: none;
 color: indianred;
 border: none;
 }
+
 
 .user-profile{
 display: flex;
@@ -59,22 +58,23 @@ padding: .3rem ;
 font-size: 1.25rem; 
 }
 
-/**** chosen-option ****/
-
-.chosen-option{
-    padding: .5rem 5rem;
+@media(max-width:955px){
+.update{
+padding: 0 2rem;
+text-align: center;
+margin: 2rem 0;
 }
-.chosen-option form{
-    float: right;
+.user-profile{
+display: block;
 }
-.chosen-option form input{
-background: #212529;
-color: white;
-padding: .2rem 1rem;
-border-radius: 5px;
+.user-profile .data{
+text-align: center
 }
-.chosen-option form a{
-    margin: 0 1rem;
-    text-decoration: none;
-    color: lightcoral;
+.picture img{
+width: 300px;
+}
+.data p{
+width: 80%;
+margin: auto;
+}
 }

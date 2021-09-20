@@ -149,25 +149,25 @@ border-bottom: 1px solid  #e1e1e2;
 
 @media (min-width:575px){
 .title-pag .user_and_noti{
-    display: flex;        
+display: flex;        
 }
 .title-pag .user_and_noti img{
-    display: block; 
-    margin: 0 0 0 2rem;       
+display: block; 
+margin: 0 0 0 2rem;       
 }
 .user_and_noti span{
 right: 124px;
 top: 75px;
 }
 .notifications{
-    width: 50%;
-    margin: 0 50%;
-    height: 60vh;
+width: 50%;
+margin: 0 50%;
+height: 60vh;
 }
 }
 @media(max-width:700px){
 .menu{
-    width: 80%;
+width: 80%;
 }
 }
 

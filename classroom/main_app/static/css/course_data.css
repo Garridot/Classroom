@@ -218,6 +218,12 @@ color: lightcoral;
     }
 }
 @media(max-width:955px){
+    .update{
+        padding: 0 2rem;
+        text-align: center;
+        margin: 2rem 0;
+        
+        }
     .presentation {
         display: block;
     }

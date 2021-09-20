@@ -6,6 +6,13 @@
     <div class="title">
         <a href="{% url 'course' course.name course.year %}"><h1>{{course.name}}</h1></a>
     </div>
+    {% if request.user.is_admin or request.user.is_teacher %}
+    <div class="update">
+        <a href="{% url 'category_update' course=course.name category=category.name %}">Update Category</a>        
+        <a href="{% url 'category_delete' course=course.name category=category.name %} " id="delete">Delete</a>
+        
+    </div>
+    {% endif %}
     <div class="presentation">
         <div class="img col">
             <img src="{{course.course_picture.url}}" alt="">

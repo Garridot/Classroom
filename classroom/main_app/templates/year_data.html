@@ -19,7 +19,7 @@
                 <a href="{% url 'admission' admission.email %}"><li class="list-group-item">
                     <img src="{{admission.profile_picture.url}}"  alt="">
                     <p>{{admission.full_name}}</p>
-                    <p>{{admission.email}}</p>
+                    <p id="info2">{{admission.email}}</p>
                 </li></a>{% endfor %}{% else %}
                 <li class="list-group-item">
                     <p>No students found...</p>
@@ -37,7 +37,7 @@
                 <a href="{% url 'student' student.email %}"><li class="list-group-item">
                     <img src="{{student.profile_picture.url}}"  alt="">
                     <p>{{student.full_name}}</p>
-                    <p>{{student.email}}</p>
+                    <p id="info2">{{student.email}}</p>
                 </li></a>{% endfor %}{% else %}
                 <li class="list-group-item">
                     <p>No students found...</p>
@@ -52,10 +52,12 @@
                     <a href="/academiaweb/courses/?name=&year=1">View More</a>
                 </div>
                 {% if courses %}{% for course in courses %}
-                <a href="{% url 'course' course.name course.year %}"><li class="list-group-item">
+                <a href="{% url 'course' course.name course.year %}">
+                    <li class="list-group-item">
                     <img src="{{course.course_picture.url}}"  alt="">
                     <p>{{course.name}}</p>
-                </li></a>{% endfor %}{% else %}
+                    </li>
+                </a>{% endfor %}{% else %}
                 <li class="list-group-item">
                     <p>no courses found...</p>
                 </li>

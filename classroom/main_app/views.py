@@ -450,8 +450,33 @@ def CategoryCreate(request,course):
             form.instance.year   = course.year
             form.save()
             Notifications.objects.create(sender=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
+def CategoryUpdate(request,course,category):
+    course   = Courses.objects.get(name=course)
+    category = CourseCategory.objects.get(course = course,name=category)
+    form     = CategoryForm(instance=category)
+    title    = 'Update Category'
+    if request.method == 'POST':
+        form = CategoryForm(request.POST,instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('course',name=course.name,year=course.year)
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")     
+    context = {'form':form,'title':title}        
+    return render (request,'form.html',context)               
+def CategoryDelete(request,course,category):
+    course   = Courses.objects.get(name=course)
+    category = CourseCategory.objects.get(course = course,name=category)
+    category.delete()
+    return redirect('course',name=course.name,year=course.year)
+   
+
 
 def ContentAdd(request,course,category):
     category = CourseCategory.objects.get(name=category)
