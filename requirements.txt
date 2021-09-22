@@ -6,6 +6,4 @@ pillow              == 8.3.1
 Babel               == 2.9.1
 phonenumbers        == 8.12.31
 django-phonenumber-field == 5.2.0
-redis               == 3.5.3
-django-redis        == 5.0.0
 
