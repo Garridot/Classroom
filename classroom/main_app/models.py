@@ -262,3 +262,6 @@ class Comments(models.Model):
     menssage     = models.TextField()
     date_added   = models.DateTimeField(auto_now_add=True)
     
+class History(models.Model):
+    student    = models.ForeignKey(Students,on_delete=models.CASCADE)
+    content_id = models.ForeignKey(Content,on_delete=models.CASCADE)
