@@ -30,11 +30,13 @@
         </div>
         {% if contents %}{% for content in contents %}
         <div class="list-content">
-            <a href="{{content.field.url}}" id="content_field"><li class="list-group-item">
+            <a   onclick="content_select(this)" data-id="{{content.id}}"  id="content_field"><li class="list-group-item">
                 <p>{{content.name}}</p>
                 <p>{{content.created}}</p>
             </li></a>
+            {% if request.user.is_teacher or request.user.is_admin %}
             <a href="{% url 'content_delete'  category=content.category.name name=content.name id=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
         </div>
         {% endfor %}{% else %}
         <li class="list-group-item">
@@ -42,5 +44,48 @@
         </li>
         {% endif %}
     </div>
-</div>    
+</div>
+<script>
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function content_select(e){        
+        var content = e.getAttribute('data-id')        
+
+        var url = '/academiaweb/recent_content/'
+        fetch(url,{                
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',                
+                'X-CSRFToken' : getCookie('csrftoken')          
+            },
+            body : JSON.stringify({'content':content})
+
+        })
+        .then(
+            function(response){     
+                console.log(response)           
+                return response.json()
+            }
+        )
+    }
+    
+
+
+
+</script>    
 {% endblock %}     

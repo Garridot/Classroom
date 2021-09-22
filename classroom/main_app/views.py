@@ -1,4 +1,5 @@
 from django.http import request
+from django.http.response import HttpResponse
 from classroom.settings  import  EMAIL_HOST_USER
 
 from django.core.mail import EmailMultiAlternatives
@@ -9,12 +10,16 @@ from django.contrib.auth import login, logout , authenticate
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from calendar import HTMLCalendar
-
+from django.http import JsonResponse
 
 from .models import * 
 from .forms import *
 from .utils import *
 from .filters import*
+
+
+import json
+
 
 # Create your views here.
 
@@ -128,26 +133,50 @@ def ApplicationSendEmail(email):
     email.attach_alternative(content,'text/html')
     email.send()
 
+def RecentContent(request):
+    
+    data = json.load(request)['content']
+    content = data
+    historical = list()
+    for c in content:        
+        historical.append(c)           
+    print(historical)
+
+    return JsonResponse(data,safe=False)                                                                    
+
 def HomeView(request):
     data = user_profile(request)
     user = data['user']
     notifications = Notifications.objects.all()
-
+    
     year     = timezone.now().year
     month    = timezone.now().month
     calendar = HTMLCalendar().formatmonth(theyear=year,themonth=month) 
     events   = Events.objects.filter(event_date__month=month).all()  
+    
+    
 
     if request.user.is_admin:
         info = Applications.objects.order_by('-sent_date').all()
+        
+    elif request.user.is_student:
+        list = []
+        content = RecentContent(request)['content']
+        list.append(content)
+        print(list) 
+        info = Content.objects.filter().all()
     
+    print(info)
 
+    
     context = {'notifications':notifications,
         'user':user,'calendar':calendar,'info':info,
         'events':events,        
     }
 
     return render(request,'home.html',context) 
+
+
 
 def UserProfileView(request,full_name):
     data = user_profile(request)

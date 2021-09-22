@@ -20,6 +20,8 @@ urlpatterns = [
 
     path('home/',views.HomeView,name='home'),
 
+    path('recent_content/',views.RecentContent),
+
     path('user_profile/name=<str:full_name>/',views.UserProfileView,name='user_profile'),
 
     path('admissions/',views.AdmissionsView,name='admissions'),
@@ -48,6 +50,8 @@ urlpatterns = [
     path('courses/course_update/name=<str:name>/year=<str:year>/',views.CourseUpdate,name='course_update'),
     path('courses/course_delete/name=<str:name>/year=<str:year>/',views.CourseDelete,name='course_delete'),
     path('courses/course_create/',views.CourseCreate,name='course_create'),
+
+    
 
     path('courses/course=<str:course>/category=<str:category>/',views.CategoriesView,name='category'),
     path('courses/course=<str:course>/category_create/',views.CategoryCreate,name='category_create'),
