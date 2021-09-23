@@ -29,8 +29,6 @@ class UserManager(BaseUserManager):
         other_fields.setdefault('is_active',True)
         email = self.normalize_email(email)
         return self.create_user(email, password, **other_fields)
-
-       
 class UserAccount(AbstractBaseUser,PermissionsMixin):
     
     email           = models.EmailField(unique=True)        
@@ -50,6 +48,7 @@ class UserAccount(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self):
         return self.email
+
 
 class SchoolYears(models.Model):
 
@@ -94,7 +93,11 @@ class Admins(models.Model):
         return '{} {}'.format(self.first_name,self.last_name)
     @property
     def email(self):
-        return str(self.user)    
+        return str(self.user)
+
+    def delete(self,*args,**kwargs):
+        self.profile_picture.delete()
+        super().delete(*args,**kwargs)          
         
 class Courses(models.Model):   
 
@@ -110,8 +113,11 @@ class Courses(models.Model):
 
     def __str__(self):
         return self.name
+
+    def delete(self,*args,**kwargs):
+        self.course_picture.delete()
+        super().delete(*args,**kwargs)      
   
-   
 class CourseCategory(models.Model):
 
     id          = models.AutoField(primary_key=True)    
@@ -147,6 +153,11 @@ class Students(models.Model):
     class Meta():
         verbose_name        = 'Student'
         verbose_name_plural = 'Students'
+    
+    def delete(self,*args,**kwargs):
+        self.profile_picture.delete()
+        self.HS_diploma.delete()
+        super().delete(*args,**kwargs)     
         
     @property
     def full_name(self):
@@ -194,6 +205,10 @@ class Teachers(models.Model):
     def course(self):
         return str(self.courses)
 
+    def delete(self,*args,**kwargs):
+        self.profile_picture.delete()
+        super().delete(*args,**kwargs)    
+
 class Notifications(models.Model):
 
     id       = models.AutoField(primary_key=True)
@@ -218,13 +233,13 @@ class Content(models.Model):
         verbose_name        = 'Content'
         verbose_name_plural = 'Contents'
         
-    @property
-    def name_unit(self):
-        
-        return str(self.unit)
-
     def __str__(self):
         return str(self.field)
+
+    def delete(self,*args,**kwargs):
+        self.field.delete()
+        super().delete(*args,**kwargs)
+    
 
 class Applications(models.Model):
 
@@ -246,6 +261,11 @@ class Applications(models.Model):
     @property
     def full_name(self):
         return '{} {}'.format(self.first_name,self.last_name)
+
+    def delete(self,*args,**kwargs):
+        self.profile_picture.delete()
+        self.HS_diploma.delete()
+        super().delete(*args,**kwargs)      
 
 class Events(models.Model):
     id          = models.AutoField(primary_key=True)  
