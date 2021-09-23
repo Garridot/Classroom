@@ -266,7 +266,7 @@ class Comments(models.Model):
     date_added   = models.DateTimeField(auto_now_add=True)
     
 class History(models.Model):
-    student    = models.ForeignKey(Students,on_delete=models.CASCADE)
-    content_id = models.ForeignKey(Content,on_delete=models.CASCADE)
+    student     = models.ForeignKey(Students,on_delete=models.CASCADE)
+    content_id  = models.ForeignKey(Content,on_delete=models.CASCADE)
     category_id = models.ForeignKey(CourseCategory,on_delete=models.CASCADE)
-    course_id = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
