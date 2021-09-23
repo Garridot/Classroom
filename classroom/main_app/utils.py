@@ -10,7 +10,7 @@ def user_profile(request):
         teachers      = Teachers.objects.all()
         students      = Students.objects.all()
         courses       = Courses.objects.all()        
-        # notifications = Notifications.objects.all()
+        notifications = Notifications.objects.all()
         events        = Events.objects.all()
 
     elif request.user.is_teacher:
@@ -19,7 +19,7 @@ def user_profile(request):
         teachers      = Teachers.objects.all()        
         courses       = Courses.objects.filter(course=user.courses).all()        
         students      = Students.objects.filter(courses=courses).all()
-        # notifications = Notifications.objects.filter(course=user.courses).all()
+        notifications = Notifications.objects.filter(course=user.courses).all()
         events        = Events.objects.filter().all()  
 
     elif request.user.is_student:        
@@ -28,10 +28,10 @@ def user_profile(request):
         teachers      = Teachers.objects.all()
         students      = Students.objects.filter(year=user.year).all()
         courses       = Courses.objects.filter(year=user.year).all()
-        # notifications = Notifications.objects.filter(year=user.year).all()
+        notifications = Notifications.objects.filter(year=user.year).all()
         events        = Events.objects.filter().all()
 
-    return {'user':user,'courses':courses,'admins':admins,'teachers':teachers,'students':students,'events':events} 
+    return {'user':user,'courses':courses,'admins':admins,'teachers':teachers,'students':students,'events':events,'notifications':notifications} 
 
 def create_teacher(user_form,form):
     user_form.instance.is_teacher = True    
@@ -50,3 +50,16 @@ def create_admin(user_form,form):
     user   = UserAccount.objects.get(email=user_form['email'].value())             
     form.instance.user = user
     form.save()   
+
+def request_accont(request):
+    if request.user.is_admin:
+        request_data  = Applications.objects.order_by('-sent_date').all() 
+        request_title = 'Admissions'  
+        url_view      = "{% url 'admissions' %}"     
+    elif request.user.is_student:
+        request_data  = History.objects.all()
+        request_title = 'Recent content'
+        url_view      = None
+
+    return {'request_data':request_data,'request_title':request_title,'url_view':url_view}
+        

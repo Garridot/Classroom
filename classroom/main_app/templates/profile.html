@@ -6,7 +6,7 @@
     <div class="title">
         <h1>User Profile</h1>
     </div>
-    {% if request.user.is_admin or request.user %}
+    {% if request.user.is_admin or request.user.email == user.email %}
     <div class="update">
         <a href="{{update_url}}">Update</a>
         {% if request.user.is_admin %}

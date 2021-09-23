@@ -26,11 +26,13 @@
     <div class="content">
         <div class="c-title">
             <h4>Content</h4>
+            {% if request.user.is_teacher or request.user.is_admin %}
             <a href="{% url 'content_add' course=course.name category=category.name %}"><i class="fas fa-plus"></i> Add</a>
+            {% endif %}
         </div>
         {% if contents %}{% for content in contents %}
         <div class="list-content">
-            <a   onclick="content_select(this)" data-id="{{content.id}}"  id="content_field"><li class="list-group-item">
+            <a href="{{content.field.url}}"  onclick="content_select(this)" data-id="{{content.id}}"  id="content_field"><li class="list-group-item">
                 <p>{{content.name}}</p>
                 <p>{{content.created}}</p>
             </li></a>

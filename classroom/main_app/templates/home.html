@@ -15,18 +15,35 @@
 
 <div class="content"> 
     <ul class="list-group">
-        {% if request.user.is_admin or request.user.superuser %}
+        
         <div class="admin">
             <div class="content-title">
-                <h4>Admissions</h4>  
-                <a href="{% url 'admissions' %}">View All</a>
+                <h4>{{request_title}}</h4>  
+                {% if url_view %}
+                <a href="{{url_view}}">View All</a>
+                {% endif %}
             </div>                       
-            {% if info %}{% for f in info %}
+            {% if request_data %}{% for data in request_data %}
             <li class="list-group-item">
-                <a href="">                                            
-                    <img  class="profile_picture" src="{{f.profile_picture.url}}">                    
-                    <p id="info1">{{f.full_name}}</p>
-                    <p id="info2">{{f.sent_date}}</p>            
+                <a 
+                {% if data.email %}href="{% url 'admission' data.email %}"{% endif %}
+                {% if data.content_id %}href="/media/{{data.content_id}}"{% endif %}
+                >                
+                    {% if data.profile_picture %}                                          
+                    <img  class="profile_picture" src="{{data.profile_picture.url}}">  
+                    {% endif %} 
+
+                    {% if data.full_name and data.sent_date %}
+                    <p id="info1">{{data.full_name}}</p>                   
+                    <p id="info2">{{data.sent_date}}</p> 
+                    {% endif %} 
+
+                    {% if data.content_id %}
+                    <p id="info1">{{data.content_id.name}}</p>                   
+                    <p id="info2">{{data.content_id.category}}</p>
+                    <p id="info3">{{data.content_id.category.course}}</p> 
+                    {% endif %}   
+                            
                 </a>
             </li>
             {% endfor %}{% else %}
@@ -35,7 +52,7 @@
             </li>
         {% endif %}
         </div>
-        {% endif %}        
+              
     </ul>
     <div class="events">
         <div class="calendar">            
@@ -45,13 +62,14 @@
             <h4>Events</h4>
             <a href="{% url 'events' %}">View All</a>
         </div>
-
+        {% if request.user.is_admin or request.user.is_teacher %}
         <li class="list-group-item" id="add">
-            <a href=""><i class="fas fa-plus"></i> Add Event</a>
+            <a href="{% url 'event_create' %}"><i class="fas fa-plus"></i> Add Event</a>
         </li>
+        {% endif %}
         {% if events %}{% for event in events %}
         <li class="list-group-item">
-            <a href="">
+            <a href="{% url 'event' event.title event.event_date %}">
                 <p id="info1">{{event.title}}</p>
                 <p id="info2">{{event.event_date}}</p>            
             </a>

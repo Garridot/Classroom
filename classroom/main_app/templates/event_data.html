@@ -164,7 +164,7 @@ width: 100%;
                     <li><p id="user">{{comment.user}}</p> 
                         <p id="date"> {{comment.date_added}}</p>
                     </li>
-                    {% if request.user %}<a href="{% url 'comment_delete' comment.id %}"><i class="far fa-trash-alt"></i></a>{% endif %}                          
+                    {% if request.user == comment.user %}<a href="{% url 'comment_delete' comment.id %}"><i class="far fa-trash-alt"></i></a>{% endif %}                          
                 </div>
                 <p>{{comment.menssage}} </p> 
             </div>                  

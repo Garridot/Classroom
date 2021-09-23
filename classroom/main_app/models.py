@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_delete, pre_save
+from django.dispatch import receiver
 from django.contrib.auth.models import  BaseUserManager, AbstractBaseUser,PermissionsMixin
 from django.db.models.deletion import CASCADE
 from django_countries.fields import CountryField
@@ -108,6 +110,8 @@ class Courses(models.Model):
 
     def __str__(self):
         return self.name
+
+     
    
 class CourseCategory(models.Model):
 

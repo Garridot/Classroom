@@ -135,43 +135,32 @@ def ApplicationSendEmail(email):
 
 def RecentContent(request):
     
-    data = json.load(request)['content']
-    content = data
-    historical = list()
-    for c in content:        
-        historical.append(c)           
-    print(historical)
+    if request.user.is_student:
+        data = json.load(request)['content']
+        content_json = data
+        student = Students.objects.get(user=request.user)
+        content = Content.objects.get(id=content_json) 
+        History.objects.create(student=student,content_id=content)
 
     return JsonResponse(data,safe=False)                                                                    
-
 def HomeView(request):
     data = user_profile(request)
     user = data['user']
-    notifications = Notifications.objects.all()
+    notifications = data['notifications']
     
     year     = timezone.now().year
     month    = timezone.now().month
     calendar = HTMLCalendar().formatmonth(theyear=year,themonth=month) 
-    events   = Events.objects.filter(event_date__month=month).all()  
+    events   = Events.objects.filter(event_date__month=month).all() 
     
-    
-
-    if request.user.is_admin:
-        info = Applications.objects.order_by('-sent_date').all()
-        
-    elif request.user.is_student:
-        list = []
-        content = RecentContent(request)['content']
-        list.append(content)
-        print(list) 
-        info = Content.objects.filter().all()
-    
-    print(info)
-
+     
+    request_data  = request_accont(request)['request_data']
+    request_title = request_accont(request)['request_title']
+    url_view      = request_accont(request)['url_view']
     
     context = {'notifications':notifications,
-        'user':user,'calendar':calendar,'info':info,
-        'events':events,        
+        'user':user,'calendar':calendar,
+        'events':events,'request_data':request_data,'request_title':request_title,'url_view':url_view        
     }
 
     return render(request,'home.html',context) 
