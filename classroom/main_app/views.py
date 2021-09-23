@@ -140,9 +140,10 @@ def RecentContent(request):
         content_json = data
         student = Students.objects.get(user=request.user)
         content = Content.objects.get(id=content_json) 
-        History.objects.create(student=student,content_id=content)
+        History.objects.create(student=student,content_id=content,category=content.category,course=content.course)
 
-    return JsonResponse(data,safe=False)                                                                    
+    return JsonResponse(data,safe=False)   
+
 def HomeView(request):
     data = user_profile(request)
     user = data['user']
