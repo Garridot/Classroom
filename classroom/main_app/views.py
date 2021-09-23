@@ -134,13 +134,18 @@ def ApplicationSendEmail(email):
     email.send()
 
 def RecentContent(request):
-    
-    if request.user.is_student:
-        data = json.load(request)['content']
-        content_json = data
+    from django.utils import timezone 
+    data = json.load(request)['content']
+    content_json = data   
+    if request.user.is_student:        
         student = Students.objects.get(user=request.user)
-        content = Content.objects.get(id=content_json) 
-        History.objects.create(student=student,content_id=content,category=content.category,course=content.course)
+        content = Content.objects.get(id=content_json)
+        try:
+            hitorial  = History.objects.get(student=student,content_id=content)
+            if hitorial:
+                History.objects.filter(student=student,content_id=content).update(seen=timezone.now())
+        except:              
+            History.objects.create(student=student,content_id=content,category_id=content.category,course_id=content.category.course)
 
     return JsonResponse(data,safe=False)   
 
@@ -155,9 +160,9 @@ def HomeView(request):
     events   = Events.objects.filter(event_date__month=month).all() 
     
      
-    request_data  = request_accont(request)['request_data']
-    request_title = request_accont(request)['request_title']
-    url_view      = request_accont(request)['url_view']
+    request_data  = request_account(request)['request_data']
+    request_title = request_account(request)['request_title']
+    url_view      = request_account(request)['url_view']
     
     context = {'notifications':notifications,
         'user':user,'calendar':calendar,
@@ -178,12 +183,11 @@ def AdmissionsView(request):
     data = user_profile(request)
     user = data['user']
 
-    requests = Applications.objects.all()
-    filters  = ApplyFilters(request.GET,queryset=requests)
-    requests = filters.qs     
-    title    = 'Admissions'
-    request_data = 'admission_data'      
-    context  = {'requests':requests,'filters':filters,'title':title,'request_data':request_data,'user':user}
+    admissions = Applications.objects.all()
+    filters  = ApplyFilters(request.GET,queryset=admissions)
+    admins = filters.qs     
+    title    = 'Admissions'          
+    context  = {'admins':admins,'filters':filters,'title':title,'user':user}
     return render(request,'request_list.html',context)
 def AdmissionData(request,email):
     admission = Applications.objects.get(email=email)   
@@ -468,7 +472,11 @@ def CategoryCreate(request,course):
             form.instance.course = course
             form.instance.year   = course.year
             form.save()
-            Notifications.objects.create(sender=request.user,message=f"{course.name} : A new category has been added!",year=course.year) 
+            Notifications.objects.create(sender=request.user,
+            message=f"{course.year} Year/ {course.name} : A new category has been added!",
+            link=f"/academiaweb/courses/course/name={course.name}/year={course.year}/",
+            year=course.year) 
+            return redirect('course', course.name, course.year)
         else:
             for msg in form.errors:
                 messages.error(request,f"{msg}:{form.errors}") 
@@ -507,7 +515,12 @@ def ContentAdd(request,course,category):
         if form.is_valid():
             form.instance.category = category
             form.save()
-            Notifications.objects.create(user=request.user,message=f"{course.name} / {category.name} : New content has been added!",year=course.year) 
+            
+            Notifications.objects.create(sender=request.user,
+            message=f"{course.name} / {category.name} : New content has been added!",
+            link=f"/academiaweb/courses/course={course.name}/category={category.name}/",            
+            year=course.year) 
+            
             return redirect('category',course=course.name,category=category.name)
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 

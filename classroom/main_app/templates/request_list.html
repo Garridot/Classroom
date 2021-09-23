@@ -51,7 +51,14 @@
                 </a>
             </li>{% endfor %}
 
-
+            {% elif admissions %}{% for admission in admissions %}
+            <li class="list-group-item">
+                <a href="{% url 'admission' admission.email %}">
+                    <img  class="profile_picture" src="{{admission.profile_picture.url}}">
+                    <p id="info1">{{admission.full_name}}</p>
+                    <p id="info2">{{admission.email}}</p>
+                </a>
+            </li>{% endfor %}
             {% elif courses %}{% for course in courses %}
             <li class="list-group-item">
                 <a href="{% url 'course' course.name course.year %}">

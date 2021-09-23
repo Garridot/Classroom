@@ -212,7 +212,7 @@ class Teachers(models.Model):
 class Notifications(models.Model):
 
     id       = models.AutoField(primary_key=True)
-    sender   = models.ForeignKey(UserAccount,on_delete=CASCADE,related_name='sender') 
+    sender   = models.ForeignKey(UserAccount,on_delete=models.CASCADE,related_name='sender') 
     message  = models.CharField(max_length=100)
     receiver = models.ForeignKey(UserAccount,null=True,blank=True,on_delete=models.DO_NOTHING,related_name='receiver')
     link     = models.URLField(null=True,blank=True)   
@@ -290,3 +290,4 @@ class History(models.Model):
     content_id  = models.ForeignKey(Content,on_delete=models.CASCADE)
     category_id = models.ForeignKey(CourseCategory,on_delete=models.CASCADE)
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    seen        = models.DateTimeField(auto_now_add=timezone.now())
