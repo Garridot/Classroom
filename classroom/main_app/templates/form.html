@@ -14,12 +14,19 @@
 
         {% csrf_token %} 
 
-        {% if info %} {{info}} {% endif %}
+        {% if info %}
+        <span class="helptext">
+            <ul>
+                <li>The student needs a password</li>
+                <li>email: {{admission.email}}</li>
+                <li>password: {{admission.first_name}}{{admission.last_name}}{{admission.document}} </li>
+            </ul>
+        </span>        
+        {% endif %}
 
         {{user_form}}
           
-        {{form}} 
-
+        {{form}}        
         <input type="submit" value="{{title}}" style="margin: 2.5rem 0;">
     </form>
 </div>

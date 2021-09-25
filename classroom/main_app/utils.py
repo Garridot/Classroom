@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.http import request
+from django.shortcuts import redirect
 from .models import *
 from .forms import *
 
@@ -50,6 +51,23 @@ def create_admin(user_form,form):
     user   = UserAccount.objects.get(email=user_form['email'].value())             
     form.instance.user = user
     form.save()   
+
+def create_student(user,admission):
+    from django.core.files import File 
+    Students.objects.create(
+        user          = user,              
+        document      = admission.document,
+        first_name    = admission.first_name,
+        last_name     = admission.last_name,
+        date_of_birth = admission.date_of_birth,
+        gender        = admission.gender,
+        nationality   = admission.nationality,
+        year          = admission.year,
+        profile_picture = File(admission.profile_picture), 
+        HS_diploma      = File(admission.HS_diploma)  
+    )
+    
+
 
 def request_account(request):
     if request.user.is_admin:

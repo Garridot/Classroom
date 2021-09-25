@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<style>
+   
+</style>
+<div class="container-fluid">
+    <div class="title">
+        <h1>{{title}}</h1>
+    </div>
+    <form method="POST" enctype="multipart/form-data"> 
+        {% csrf_token %}        
+        {{form}}
+        <input type="submit" value="{{title}}" style="margin: 2.5rem 0;">
+    </form>
+</div>
+
+<script>
+    email         = document.querySelector("input[name='email']").value = '{{admission.email}}' 
+    password1     = document.querySelector("input[name='password1']").value = '{{admission.first_name}}{{admission.last_name}}{{admission.document}}' 
+    password2     = document.querySelector("input[name='password2']").value = '{{admission.first_name}}{{admission.last_name}}{{admission.document}}'    
+   
+</script>
+
+{% endblock %}  
+

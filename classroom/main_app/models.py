@@ -147,30 +147,27 @@ class Students(models.Model):
     nationality     = CountryField() 
     # phone           = PhoneNumberField()
     year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,blank=True,null=True)
-    profile_picture = models.ImageField(upload_to='students/profile_pictures',blank=True,null=True)    
-    HS_diploma      = models.FileField(upload_to='students/high_school_diploma',blank=True,null=True)
+    profile_picture = models.ImageField(upload_to='students',blank=True,null=True)    
+    HS_diploma      = models.FileField(upload_to='students',blank=True,null=True)
 
     class Meta():
         verbose_name        = 'Student'
         verbose_name_plural = 'Students'
-    
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()
-        self.HS_diploma.delete()
-        super().delete(*args,**kwargs)     
-        
     @property
     def full_name(self):
         return '{} {}'.format(self.first_name,self.last_name)
-
     @property
     def email(self):
         return str(self.user)
-
     @property
     def age(self):
         age = date.today().year - self.date_of_birth.year
-        return age          
+        return age 
+
+    def delete(self,*args,**kwargs):
+        self.profile_picture.delete()
+        self.HS_diploma.delete()
+        super().delete(*args,**kwargs)             
 
 class Teachers(models.Model):
 
@@ -251,8 +248,7 @@ class Applications(models.Model):
     last_name       = models.CharField(max_length=200,)    
     date_of_birth   = models.DateField()
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
-    gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
-    # phone           = PhoneNumberField()
+    gender          = models.CharField(max_length=10, default='male', choices=gender_choice)   
     year            = models.ForeignKey(SchoolYears,on_delete=models.DO_NOTHING)    
     sent_date       = models.DateTimeField(auto_now_add=True,)    
     profile_picture = models.ImageField(upload_to='applications/profile_pictures',blank=True,null=True)

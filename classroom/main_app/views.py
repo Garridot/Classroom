@@ -182,36 +182,34 @@ def UserProfileView(request,full_name):
 def AdmissionsView(request):
     data = user_profile(request)
     user = data['user']
-
     admissions = Applications.objects.all()
     filters  = ApplyFilters(request.GET,queryset=admissions)
-    admins = filters.qs     
+    admissions = filters.qs     
     title    = 'Admissions'          
-    context  = {'admins':admins,'filters':filters,'title':title,'user':user}
+    context  = {'admissions':admissions,'filters':filters,'title':title,'user':user}
     return render(request,'request_list.html',context)
 def AdmissionData(request,email):
     admission = Applications.objects.get(email=email)   
     context = {'admission':admission}
     return render(request,'admission_profile.html',context)
-def AdmissionAccept(request,email):
-    admission = Applications.objects.get(email=email)     
-    info = f'The student needs a password.\nTips:\nemail: {admission.email}\npassword: {admission.first_name}{admission.last_name}{admission.document}'
-    user_form = UserForm()
-    form = StudentsForm(instance=admission)
+def AdmissionAccept(request,email): 
+    admission = Applications.objects.get(email=email)  
+    title = 'Create Student'
+    form = UserForm()
     if request.method=='POST':
-        user_form = UserForm(request.POST)
-        form      = StudentsForm(request.POST,request.FILES)
-        if user_form.is_valid():
-            user_form.save()
-            user = UserAccount.objects.get(email=user_form['email'].value()) 
-            form.instance.user = user 
+        form = UserForm(request.POST)
+        if form.is_valid():
             form.save()
-            AdmissionEMAIL(email)            
-            return redirect('home')
-        
+            user = UserAccount.objects.get(email=form['email'].value()) 
+            create_student(user,admission)            
+            messages.success(request,'Student sucessfully created')            
+            return redirect('students')
+        else:
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}")    
 
-    context = {'info':info,'form':form,'user_form':user_form}
-    return render(request,'form.html',context)
+    context = {'form':form,'admission':admission,'title':title}
+    return render(request,'student_form.html',context)
 
 def AdmissionEMAIL(email):
     admission = Applications.objects.get(email=email)  
@@ -306,8 +304,7 @@ def TeacherCreate(request):
             email = user_form['email'].value()            
             user   = UserAccount.objects.get(email=email)             
             form.instance.user = user
-            form.save()  
-            # create_teacher(user_form,form)
+            form.save()              
             messages.success(request,'Teacher created successfully.')
             return redirect('teachers')
         else:
@@ -553,6 +550,7 @@ def EventsView(request):
     user    = data['user']   
     events  = data['events']  
     filters = EventsFilters(request.GET,queryset=events)
+    events  = filters.qs
     title   = 'Events'
     request_data = 'event'
     create_url = 'event_create'
