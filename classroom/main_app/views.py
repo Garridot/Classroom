@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import UserChangeForm
 from django.http import request
 from django.http.response import HttpResponse
 from classroom.settings  import  EMAIL_HOST_USER
@@ -7,6 +8,8 @@ from django.template.loader import get_template
 from django.core.mail import send_mail
 
 from django.contrib.auth import login, logout , authenticate
+from django.contrib.auth.forms import  PasswordChangeForm
+
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from calendar import HTMLCalendar
@@ -173,11 +176,50 @@ def HomeView(request):
 
 
 
-def UserProfileView(request,full_name):
+def UserProfileView(request,email):
     data = user_profile(request)
     user = data['user']
-    context = {'user':user}
+    update_url = f'/academiaweb/user_profile_update/email={user.email}/'
+    context = {'user':user,'update_url':update_url}
     return render(request,'profile.html',context)
+def UserProfileUpdate(request,email):
+    import os
+    from django.core.files import File 
+    user = UserAccount.objects.get(email=email) 
+    data = user_profile(request)
+    account = data['user']
+    form    = UpdateUserForm(instance=user)
+    if request.method == 'POST':
+        form  = UpdateUserForm(request.POST,instance=user)
+        profile_picture = request.FILES['profile_picture']
+        if form.is_valid():       
+            form.save()
+            if len(profile_picture)!= 0:
+                if len(profile_picture)> 0:
+                    os.remove(account.profile_picture.path)
+                account.profile_picture = request.FILES['profile_picture']
+            account.save()
+            messages.success(request,'Account successfully update!')
+            return redirect('home')
+    context = {'user':user,'account':account,'form':form}
+    return render (request,'user_update_form.html',context)                
+
+def PasswordsChange(request,email):
+    user  = UserAccount.objects.get(email=email)
+    form  = PasswordChangeForm(user=user)
+    title = 'Password Change' 
+    if request.method == 'POST':
+        form  = PasswordChangeForm(user=request.user,data=request.POST)
+        if form.is_valid():       
+            form.save()            
+            return redirect('login')
+        else: 
+            for msg in form.errors:
+                messages.error(request,f"{msg}:{form.errors}") 
+    context = {'form':form,'title':title}
+    return render(request,'form.html',context)        
+
+    
 
 def AdmissionsView(request):
     data = user_profile(request)

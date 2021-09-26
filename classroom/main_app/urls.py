@@ -22,7 +22,10 @@ urlpatterns = [
 
     path('recent_content/',views.RecentContent),
 
-    path('user_profile/name=<str:full_name>/',views.UserProfileView,name='user_profile'),
+    path('user_profile/email=<str:email>/',views.UserProfileView,name='user_profile'),
+    path('user_profile_update/email=<str:email>/',views.UserProfileUpdate,name='user_profile_update'),
+
+    path('password_change/email=<str:email>/',views.PasswordsChange,name='password_change'),
 
     path('admissions/',views.AdmissionsView,name='admissions'),
     path('admissions/admission_data/email=<str:email>',views.AdmissionData,name='admission'),

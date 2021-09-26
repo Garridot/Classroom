@@ -35,7 +35,7 @@
                 <div class="user_and_noti">                          
                     <button id="icon-noti" onclick="toggleNoti()"><i class="far fa-bell"></i></button>
                     <span id="alert">.</span>                       
-                    <a href="{% url 'user_profile'  user.full_name  %}">
+                    <a href="{% url 'user_profile'  user.email  %}">
                     <img src="{{user.profile_picture.url}}" >
                     </a>
                 </div>

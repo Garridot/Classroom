@@ -15,6 +15,11 @@ class UserForm(UserCreationForm):
         model  = UserAccount
         exclude = ('password','user_permissions','groups','is_active','is_staff','is_superuser','is_teacher','is_student','is_admin')
 
+class UpdateUserForm(forms.ModelForm):    
+    class Meta:               
+        model  = UserAccount
+        exclude = ('password','password1','password2','user_permissions','groups','is_active','is_staff','is_superuser','is_teacher','is_student','is_admin')
+
 class ApplicationsForm(forms.ModelForm):
     # phone = PhoneNumberField(widget=PhoneNumberPrefixWidget(initial='IN'))
     class Meta:
