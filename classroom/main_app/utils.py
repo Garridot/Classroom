@@ -70,14 +70,25 @@ def create_student(user,admission):
 
 
 def request_account(request):
-    if request.user.is_admin:
-        request_data  = Applications.objects.order_by('-sent_date').all() 
-        request_title = 'Admissions'  
-        url_view      = "/academiaweb/admissions"     
-    elif request.user.is_student:
-        request_data  = History.objects.order_by('-seen').all()
-        request_title = 'Seen recently'
-        url_view      = None
+    data = user_profile(request)
+    user = data['user']
 
-    return {'request_data':request_data,'request_title':request_title,'url_view':url_view}
+    if request.user.is_admin:
+        admissions = Applications.objects.order_by('-sent_date').all()
+    else:
+        admissions = None     
+
+    if request.user.is_student:
+        history    = History.objects.order_by('-seen').all()
+    else:
+        history    = None 
+
+    if request.user.is_student:
+        classwork  = ClassWork.objects.filter(year=user.year,reply=None).all()
+    elif request.user.is_teacher:
+        classwork  = ClassWork.objects.filter(course=user.course).all()
+    else:
+        classwork  = None   
+
+    return{'classwork':classwork,'admissions':admissions,'history':history}    
         

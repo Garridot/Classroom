@@ -162,16 +162,16 @@ def HomeView(request):
     calendar = HTMLCalendar().formatmonth(theyear=year,themonth=month) 
     events   = Events.objects.filter(event_date__month=month).all() 
     
-     
-    request_data  = request_account(request)['request_data']
-    request_title = request_account(request)['request_title']
-    url_view      = request_account(request)['url_view']
+    classworks  = request_account(request)['classwork']
+    admissions = request_account(request)['admissions']
+    history    = request_account(request)['history']
     
     context = {'notifications':notifications,
-        'user':user,'calendar':calendar,
-        'events':events,'request_data':request_data,'request_title':request_title,'url_view':url_view        
+                'user':user,'calendar':calendar,'events':events,
+                'classworks':classworks,'admissions':admissions,  
+                'history':history
+                     
     }
-
     return render(request,'home.html',context) 
 
 

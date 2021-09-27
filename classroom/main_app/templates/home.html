@@ -12,48 +12,95 @@
     {% endfor %}
 </div>
 {% endif %}
-
-<div class="content"> 
+<div class="content">     
+    {% if request.user.is_admin %}
     <ul class="list-group">
-        
-        <div class="admin">
+        <div class="first_request">
             <div class="content-title">
-                <h4>{{request_title}}</h4>  
-                {% if url_view %}
-                <a href="{{url_view}}">View All</a>
-                {% endif %}
-            </div>                       
-            {% if request_data %}{% for data in request_data %}
+                <h4>Admissions</h4>
+                <a href="">View All</a>
+            </div>
+            {% if admissions %}
+            {% for admission in admissions %}
             <li class="list-group-item">
-                <a 
-                {% if data.email %}href="{% url 'admission' data.email %}"{% endif %}
-                {% if data.content_id %}href="/media/{{data.content_id}}"{% endif %}
-                >                
-                    {% if data.profile_picture %}                                          
-                    <img  class="profile_picture" src="{{data.profile_picture.url}}">  
-                    {% endif %} 
-
-                    {% if data.full_name and data.sent_date %}
-                    <p id="info1">{{data.full_name}}</p>                   
-                    <p id="info2">{{data.sent_date}}</p> 
-                    {% endif %} 
-
-                    {% if data.content_id %}
-                    <p id="info1">{{data.content_id.name}}</p>                   
-                    <p id="info2">{{data.content_id.category}}</p>
-                    <p id="info3">{{data.seen}}</p> 
-                    {% endif %}   
-                            
+                <a href="{% url 'admission' admission.email  %}">
+                    <img src="{{admission.profile_picture.url}}" class="profile_picture">
+                    <p id="info1">{{admission.full_name}}</p>
+                    <p id="info2">{{admission.sent_date}}</p>
                 </a>
             </li>
-            {% endfor %}{% else %}
-            <li class="list-group-item">
-                No Results Found...
-            </li>
-        {% endif %}
+            {% endfor %}
+            {% else %}
+            <li class="list-group-item">No Results Found...</li>
+            {% endif %}
         </div>
-              
+    </ul>  
+
+    {% elif request.user.is_teacher %}
+    <ul class="list-group">
+        <div class="first_request">
+            <div class="content-title">
+                <h4>Student work</h4>
+                <a href="">View All</a>
+            </div>
+            {% if classworks %}
+            {% for work in classworks %}
+            <li class="list-group-item">
+                <a href="">
+                    <p id="info1">{{work.full_name}}</p>
+                    <p id="info2">{{work.course}}</p>
+                    <p id="info1">{{work.year}}</p>
+                </a>
+            </li>
+            {% endfor %}
+            {% else %}
+            <li class="list-group-item">No Results Found...</li>
+            {% endif %}
+        </div>
+    </ul>   
+
+    {% elif request.user.is_student %}
+    <ul class="list-group">
+        <div class="first_request">
+            <div class="content-title">
+                <h4>Seen recently</h4>
+            </div>
+            {% if history %}
+            {% for h in  history %}
+            <li class="list-group-item">
+                <a href="">
+                    <p id="info1">{{h.content_id.name}}}</p>
+                    <p id="info2">{{h.content_id.category}}</p>
+                    <p id="info2">{{h.seen}}</p>
+                </a>
+            </li>
+            {% endfor %}
+            {% else %}
+            <li class="list-group-item">No Results Found...</li>
+            {% endif %}
+        </div>
+        <div class="second_request">
+            <div class="content-title">
+                <h4>Class work</h4>
+                <a href="">View All</a>
+            </div>
+            {% if classworks %}
+            {% for work in classworks %}
+            <li class="list-group-item">
+                <a href="">
+                    <p id="info1">{{work.title}}</p>
+                    <p id="info2">{{work.course}}</p>
+                    <p id="info1">{{work.due_date}}</p>
+                </a>
+            </li>
+            {% endfor %}
+            {% else %}
+            <li class="list-group-item">No Results Found...</li>
+            {% endif %}
+        </div>
     </ul>
+    {% endif %}
+    
     <div class="events">
         <div class="calendar">            
             {{calendar|safe}}

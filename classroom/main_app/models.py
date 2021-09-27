@@ -289,12 +289,14 @@ class History(models.Model):
     seen        = models.DateTimeField(auto_now_add=timezone.now())
 
 class ClassWork(models.Model):
-    author  = models.ForeignKey(Teachers,on_delete=models.CASCADE)
-    course  = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    topic   = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)  
-    title   = models.CharField(max_length=50) 
+    author   = models.ForeignKey(Teachers,on_delete=models.CASCADE)
+    year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
+    course   = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
+    title    = models.CharField(max_length=50) 
     instructions = models.TextField()
-    file    = models.FileField(upload_to=f'courses/{course}/{topic}/classwork/assignment/',null=True,blank=True)
+    file     = models.FileField(upload_to=f'courses/{course}/{topic}/classwork/assignment/',null=True,blank=True)
+    due_date = models.DateTimeField(null=True,blank=True)
     created = models.DateTimeField(auto_now=datetime.datetime.now())
     reply   = models.ForeignKey('ClassWork',null=True, related_name='replies', blank=True, on_delete=models.CASCADE)
 
