@@ -56,13 +56,13 @@ urlpatterns = [
 
     
 
-    path('courses/course=<str:course>/category=<str:category>/',views.CategoriesView,name='category'),
-    path('courses/course=<str:course>/category_create/',views.CategoryCreate,name='category_create'),
-    path('courses/course=<str:course>/category=<str:category>/category_update',views.CategoryUpdate,name='category_update'),
-    path('courses/course=<str:course>/category=<str:category>/category_delete',views.CategoryDelete,name='category_delete'),
+    path('courses/course=<str:course>/topic=<str:topic>/',views.TopicsView,name='topic'),
+    path('courses/course=<str:course>/topic_create/',views.TopicCreate,name='topic_create'),
+    path('courses/course=<str:course>/topic=<str:topic>/topic_update',views.TopicUpdate,name='topic_update'),
+    path('courses/course=<str:course>/topic=<str:topic>/topic_delete',views.TopicDelete,name='topic_delete'),
 
-    path('courses/course=<str:course>/category=<str:category>/content_add/',views.ContentAdd,name='content_add'),
-    path('courses/category=<str:category>/content=<str:name>/content_delete/<str:id>',views.ContentDelete,name='content_delete'),
+    path('courses/course=<str:course>/topic=<str:topic>/content_add/',views.ContentAdd,name='content_add'),
+    path('courses/topic=<str:topic>/content=<str:name>/content_delete/<str:id>',views.ContentDelete,name='content_delete'),
 
     path('years/',views.YearsViews,name='years'),
     path('years/year=<str:pk>/',views.YearData,name='year'),

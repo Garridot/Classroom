@@ -52,15 +52,15 @@ class  CoursesForm(forms.ModelForm):
         model = Courses
         fields = '__all__'
 
-class  CategoryForm(forms.ModelForm):
+class  TopicForm(forms.ModelForm):
     class Meta:
-        model = CourseCategory
+        model = CourseTopic
         exclude = ('course','year')
 
 class  ContentForm(forms.ModelForm):
     class Meta:
         model = Content
-        exclude = ('category',)
+        exclude = ('topic',)
 
 class EventForm(forms.ModelForm):
     class Meta:

@@ -148,7 +148,7 @@ def RecentContent(request):
             if hitorial:
                 History.objects.filter(student=student,content_id=content).update(seen=timezone.now())
         except:              
-            History.objects.create(student=student,content_id=content,category_id=content.category,course_id=content.category.course)
+            History.objects.create(student=student,content_id=content,topic_id=content.topic,course_id=content.topic.course)
 
     return JsonResponse(data,safe=False)   
 
@@ -472,8 +472,8 @@ def CourseCreate(request):
 def CourseData(request,name,year):
     course = Courses.objects.get(name=name,year=year)
     teachers = Teachers.objects.filter(courses=course).all()
-    categories = CourseCategory.objects.filter(course=course).all()     
-    context =  {'course':course,'teachers':teachers,'categories':categories}
+    topics  = CourseTopic.objects.filter(course=course).all()     
+    context =  {'course':course,'teachers':teachers,'topics':topics}
     return render(request,'course_data.html',context)
 def CourseUpdate(request,name,year):
     course = Courses.objects.get(name=name,year=year)
@@ -495,24 +495,24 @@ def CourseDelete(request,name,year):
     messages.success(request,'Course successfully deleted.')
     return redirect('courses') 
 
-def CategoriesView(request,course,category):
+def TopicsView(request,course,topic):
     course   = Courses.objects.get(name=course)
-    category = CourseCategory.objects.get(course = course,name=category)
-    contents  = Content.objects.filter(category=category).all()
-    context  = {'course':course,'category':category,'contents':contents}
-    return render(request,'category_data.html',context) 
-def CategoryCreate(request,course):
+    topic = CourseTopic.objects.get(course = course,name=topic)
+    contents  = Content.objects.filter(topic=topic).all()
+    context  = {'course':course,'topic':topic,'contents':contents}
+    return render(request,'topic_data.html',context) 
+def TopicCreate(request,course):
     course = Courses.objects.get(name=course)
-    form   = CategoryForm()
-    title  = 'Add Category'
+    form   = TopicForm()
+    title  = 'Add Topic'
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = TopicForm(request.POST)
         if form.is_valid():
             form.instance.course = course
             form.instance.year   = course.year
             form.save()
             Notifications.objects.create(sender=request.user,
-            message=f"{course.year} Year/ {course.name} : A new category has been added!",
+            message=f"{course.year} Year/ {course.name} : A new topic has been added!",
             link=f"/academiaweb/courses/course/name={course.name}/year={course.year}/",
             year=course.year) 
             return redirect('course', course.name, course.year)
@@ -521,13 +521,13 @@ def CategoryCreate(request,course):
                 messages.error(request,f"{msg}:{form.errors}") 
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
-def CategoryUpdate(request,course,category):
+def TopicUpdate(request,course,topic):
     course   = Courses.objects.get(name=course)
-    category = CourseCategory.objects.get(course = course,name=category)
-    form     = CategoryForm(instance=category)
-    title    = 'Update Category'
+    topic    = CourseTopic.objects.get(course = course,name=topic)
+    form     = TopicForm(instance=topic)
+    title    = 'Update Topic'
     if request.method == 'POST':
-        form = CategoryForm(request.POST,instance=category)
+        form = TopicForm(request.POST,instance=topic)
         if form.is_valid():
             form.save()
             return redirect('course',name=course.name,year=course.year)
@@ -536,39 +536,39 @@ def CategoryUpdate(request,course,category):
                 messages.error(request,f"{msg}:{form.errors}")     
     context = {'form':form,'title':title}        
     return render (request,'form.html',context)               
-def CategoryDelete(request,course,category):
+def TopicDelete(request,course,topic):
     course   = Courses.objects.get(name=course)
-    category = CourseCategory.objects.get(course = course,name=category)
-    category.delete()
+    topic    = CourseTopic.objects.get(course = course,name=topic)
+    topic.delete()
     return redirect('course',name=course.name,year=course.year)
    
 
 
-def ContentAdd(request,course,category):
-    category = CourseCategory.objects.get(name=category)
+def ContentAdd(request,course,topic):
+    topic    = CourseTopic.objects.get(name=topic)
     course   = Courses.objects.get(name=course)
     form  = ContentForm()
     title = 'Add content'
     if request.method == 'POST':
         form = ContentForm(request.POST,request.FILES)
         if form.is_valid():
-            form.instance.category = category
+            form.instance.topic = topic
             form.save()
             
             Notifications.objects.create(sender=request.user,
-            message=f"{course.name} / {category.name} : New content has been added!",
-            link=f"/academiaweb/courses/course={course.name}/category={category.name}/",            
+            message=f"{course.name} / {topic.name} : New content has been added!",
+            link=f"/academiaweb/courses/course={course.name}/topic={topic.name}/",            
             year=course.year) 
             
-            return redirect('category',course=course.name,category=category.name)
+            return redirect('topic',course=course.name,topic=topic.name)
     context= {'form':form,'title':title}
     return render(request,'form.html',context) 
-def ContentDelete(request,category,name,id): 
-    category = CourseCategory.objects.get(name=category)    
-    content  = Content.objects.get(id=id,category=category,name=name)
+def ContentDelete(request,topic,name,id): 
+    topic    = CourseTopic.objects.get(name=topic)    
+    content  = Content.objects.get(id=id,topic=topic,name=name)
     print(content)
     content.delete()
-    return redirect('category',course=category.course,category=category)
+    return redirect('topic',course=topic.course,topic=topic)
 
 
 def YearsViews(request):

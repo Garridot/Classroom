@@ -118,7 +118,7 @@ class Courses(models.Model):
         self.course_picture.delete()
         super().delete(*args,**kwargs)      
   
-class CourseCategory(models.Model):
+class CourseTopic(models.Model):
 
     id          = models.AutoField(primary_key=True)    
     course      = models.ForeignKey(Courses,on_delete=models.CASCADE,)
@@ -222,7 +222,7 @@ class Notifications(models.Model):
 class Content(models.Model): 
 
     id       = models.AutoField(primary_key=True)    
-    category = models.ForeignKey(CourseCategory,on_delete=models.CASCADE)
+    topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
     name     = models.CharField(max_length=50)        
     field    = models.FileField(upload_to='pdf')
     created  = models.DateTimeField(auto_now_add=timezone.now())
@@ -284,6 +284,17 @@ class Comments(models.Model):
 class History(models.Model):
     student     = models.ForeignKey(Students,on_delete=models.CASCADE)
     content_id  = models.ForeignKey(Content,on_delete=models.CASCADE)
-    category_id = models.ForeignKey(CourseCategory,on_delete=models.CASCADE)
+    topic_id    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
     seen        = models.DateTimeField(auto_now_add=timezone.now())
+
+class ClassWork(models.Model):
+    author  = models.ForeignKey(Teachers,on_delete=models.CASCADE)
+    course  = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    topic   = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)  
+    title   = models.CharField(max_length=50) 
+    instructions = models.TextField()
+    file    = models.FileField(upload_to=f'courses/{course}/{topic}/classwork/assignment/',null=True,blank=True)
+    created = models.DateTimeField(auto_now=datetime.datetime.now())
+    reply   = models.ForeignKey('ClassWork',null=True, related_name='replies', blank=True, on_delete=models.CASCADE)
+

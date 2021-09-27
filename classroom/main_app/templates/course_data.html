@@ -26,15 +26,15 @@
     </div>      
     <div class="categories">  
         <div class="c-title">
-            <h1>Categories</h1>
+            <h1>Topics</h1>
             {% if request.user.is_admin or request.user.is_teacher %}
-            <a href="{% url 'category_create' course=course.name %}"><i class="fas fa-plus"></i> Add</a>
+            <a href="{% url 'topic_create' course=course.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %} 
         </div> 
         <ul class="list-group">
-            {% if categories  %}{% for category in categories %}
-            <a href="{% url 'category' course=course.name category=category.name  %}"><li class="list-group-item">                
-                <p>{{category.name}}</p>
+            {% if topics  %}{% for topic in topics %}
+            <a href="{% url 'topic' course=course.name topic=topic.name  %}"><li class="list-group-item">                
+                <p>{{topic.name}}</p>
             </li></a>
             {% endfor %}{% else %}
             <li class="list-group-item">No content yet...</li>{% endif %}

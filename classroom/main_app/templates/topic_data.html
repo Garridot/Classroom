@@ -8,8 +8,8 @@
     </div>
     {% if request.user.is_admin or request.user.is_teacher %}
     <div class="update">
-        <a href="{% url 'category_update' course=course.name category=category.name %}">Update Category</a>        
-        <a href="{% url 'category_delete' course=course.name category=category.name %} " id="delete">Delete</a>
+        <a href="{% url 'topic_update' course=course.name topic=topic.name %}">Update Topic</a>        
+        <a href="{% url 'topic_delete' course=course.name topic=topic.name %} " id="delete">Delete</a>
         
     </div>
     {% endif %}
@@ -18,16 +18,16 @@
             <img src="{{course.course_picture.url}}" alt="">
         </div>
         <div class="data col">
-            <h2>{{category.name}}</h2>
+            <h2>{{topic.name}}</h2>
             <h5>Course: {{course.name}}</h5>
-            <p>{{course.description}}</p>
+            <p>{{topic.description}}</p>
         </div>
     </div>
     <div class="content">
         <div class="c-title">
             <h4>Content</h4>
             {% if request.user.is_teacher or request.user.is_admin %}
-            <a href="{% url 'content_add' course=course.name category=category.name %}"><i class="fas fa-plus"></i> Add</a>
+            <a href="{% url 'content_add' course=course.name topic=topic.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %}
         </div>
         {% if contents %}{% for content in contents %}
@@ -37,7 +37,7 @@
                 <p>{{content.created}}</p>
             </li></a>
             {% if request.user.is_teacher or request.user.is_admin %}
-            <a href="{% url 'content_delete'  category=content.category.name name=content.name id=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
+            <a href="{% url 'content_delete'  topic=content.topic.name name=content.name id=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
             {% endif %}
         </div>
         {% endfor %}{% else %}
