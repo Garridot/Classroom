@@ -44,7 +44,6 @@ def Contact(request):
         return render(request,'contact.html',{'name':name}) 
     return render(request,'contact.html',{}) 
 
-
 def LoginView(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -59,7 +58,6 @@ def LoginView(request):
 def LogoutView(request):     
     logout(request)
     return redirect('login') 
-
 
 def PasswordReset(request):
     if request.method == 'POST':
@@ -174,8 +172,6 @@ def HomeView(request):
     }
     return render(request,'home.html',context) 
 
-
-
 def UserProfileView(request,email):
     data = user_profile(request)
     user = data['user']
@@ -218,8 +214,6 @@ def PasswordsChange(request,email):
                 messages.error(request,f"{msg}:{form.errors}") 
     context = {'form':form,'title':title}
     return render(request,'form.html',context)        
-
-    
 
 def AdmissionsView(request):
     data = user_profile(request)
@@ -319,9 +313,6 @@ def StudentDelete(request,email):
     user.delete()
     messages.success(request,'Student successfully deleted')
     return redirect('students')
-
-    
-   
 
 def TeachersView(request):  
     data = user_profile(request)
@@ -541,9 +532,7 @@ def TopicDelete(request,course,topic):
     topic    = CourseTopic.objects.get(course = course,name=topic)
     topic.delete()
     return redirect('course',name=course.name,year=course.year)
-   
-
-
+  
 def ContentAdd(request,course,topic):
     topic    = CourseTopic.objects.get(name=topic)
     course   = Courses.objects.get(name=course)
@@ -569,7 +558,6 @@ def ContentDelete(request,topic,name,id):
     print(content)
     content.delete()
     return redirect('topic',course=topic.course,topic=topic)
-
 
 def YearsViews(request):
     data = user_profile(request)

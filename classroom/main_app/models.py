@@ -68,6 +68,8 @@ class SchoolYears(models.Model):
             students += 1            
         return students
 
+def upload_location_admins(instance,filename):
+    return f"admins/{instance.full_name}/{filename}"
 class Admins(models.Model):
     id              = models.AutoField(primary_key=True)    
     user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)       
@@ -80,7 +82,7 @@ class Admins(models.Model):
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
     nationality     = CountryField()      
     description     = models.TextField(max_length=500,blank=True)
-    profile_picture = models.ImageField(blank=True,null=True, upload_to='admins/profile_pictures')
+    profile_picture = models.ImageField(blank=True,null=True, upload_to=upload_location_admins)
     
     class Meta():
         verbose_name        = 'Admin'
@@ -98,14 +100,15 @@ class Admins(models.Model):
     def delete(self,*args,**kwargs):
         self.profile_picture.delete()
         super().delete(*args,**kwargs)          
-        
-class Courses(models.Model):   
 
+def upload_location(instance,filename):
+    return f'course/{instance.name}/course_picture/{filename}'         
+class Courses(models.Model): 
     id             = models.AutoField(primary_key=True)
     name           = models.CharField(max_length=200)
     description    = models.TextField()
     year           = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)    
-    course_picture = models.ImageField(blank=True,null=True, upload_to='course_pictures') 
+    course_picture = models.ImageField(blank=True,null=True, upload_to=upload_location) 
 
     class Meta():        
         verbose_name        = 'Course'
@@ -134,6 +137,8 @@ class CourseTopic(models.Model):
     def __str__(self):
         return self.name 
 
+def upload_location_students(instance,filename):
+    return f"students/{instance.full_name}/{filename}"
 class Students(models.Model):
 
     id              = models.AutoField(primary_key=True) 
@@ -147,8 +152,8 @@ class Students(models.Model):
     nationality     = CountryField() 
     # phone           = PhoneNumberField()
     year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,blank=True,null=True)
-    profile_picture = models.ImageField(upload_to='students',blank=True,null=True)    
-    HS_diploma      = models.FileField(upload_to='students',blank=True,null=True)
+    profile_picture = models.ImageField(upload_to=upload_location_students,blank=True,null=True)    
+    HS_diploma      = models.FileField(upload_to=upload_location_students,blank=True,null=True)
 
     class Meta():
         verbose_name        = 'Student'
@@ -169,11 +174,13 @@ class Students(models.Model):
         self.HS_diploma.delete()
         super().delete(*args,**kwargs)             
 
+def upload_location_teachers(instance,filename):
+    return f"teachers/{instance.full_name}/{filename}"
 class Teachers(models.Model):
 
     id              = models.AutoField(primary_key=True)    
     user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
-    courses         = models.ForeignKey(Courses,on_delete=models.CASCADE)      
+    courses         = models.ForeignKey(Courses,on_delete=models.DO_NOTHING,null=True,blank=True)      
     document        = models.CharField(max_length=8,unique=True) 
     first_name      = models.CharField(max_length=200)
     last_name       = models.CharField(max_length=200)    
@@ -182,7 +189,7 @@ class Teachers(models.Model):
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
     nationality     = CountryField()         
     description     = models.TextField(max_length=500,blank=True)
-    profile_picture = models.ImageField(blank=True,null=True, upload_to='teachers/profile_pictures')
+    profile_picture = models.ImageField(blank=True,null=True, upload_to=upload_location_teachers)
     
     class Meta():
         verbose_name        = 'Teacher'
@@ -218,13 +225,14 @@ class Notifications(models.Model):
     unread   = models.BooleanField(default=True) 
     def __str__(self):
         return str(self.message)
-      
-class Content(models.Model): 
 
+def upload_location_content(instance,filename):
+    return f'course/{instance.topic.course}/{instance.topic}/files/{filename}'       
+class Content(models.Model): 
     id       = models.AutoField(primary_key=True)    
     topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
     name     = models.CharField(max_length=50)        
-    field    = models.FileField(upload_to='pdf')
+    field    = models.FileField(upload_to=upload_location_content)
     created  = models.DateTimeField(auto_now_add=timezone.now())
     class Meta():
         verbose_name        = 'Content'
@@ -236,7 +244,7 @@ class Content(models.Model):
     def delete(self,*args,**kwargs):
         self.field.delete()
         super().delete(*args,**kwargs)
-    
+
 
 class Applications(models.Model):
 
@@ -251,8 +259,8 @@ class Applications(models.Model):
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)   
     year            = models.ForeignKey(SchoolYears,on_delete=models.DO_NOTHING)    
     sent_date       = models.DateTimeField(auto_now_add=True,)    
-    profile_picture = models.ImageField(upload_to='applications/profile_pictures',blank=True,null=True)
-    HS_diploma      = models.FileField(upload_to='applications/high_school_diploma',blank=True,null=True,)
+    profile_picture = models.ImageField(upload_to=upload_location_students,blank=True,null=True)
+    HS_diploma      = models.FileField(upload_to=upload_location_students,blank=True,null=True,)
       
     @property
     def full_name(self):
@@ -288,6 +296,8 @@ class History(models.Model):
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
     seen        = models.DateTimeField(auto_now_add=timezone.now())
 
+def upload_location_assignment(instance,filename):
+    f'courses/{instance.course}/{instance.topic}/assignment/{filename}'
 class ClassWork(models.Model):
     author   = models.ForeignKey(Teachers,on_delete=models.CASCADE)
     year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
@@ -295,7 +305,7 @@ class ClassWork(models.Model):
     topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
     title    = models.CharField(max_length=50) 
     instructions = models.TextField()
-    file     = models.FileField(upload_to=f'courses/{course}/{topic}/classwork/assignment/',null=True,blank=True)
+    file     = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
     due_date = models.DateTimeField(null=True,blank=True)
     created = models.DateTimeField(auto_now=datetime.datetime.now())
     reply   = models.ForeignKey('ClassWork',null=True, related_name='replies', blank=True, on_delete=models.CASCADE)

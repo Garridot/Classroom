@@ -18,9 +18,9 @@ def user_profile(request):
         user          = Teachers.objects.get(user=request.user)
         admins        = Admins.objects.all()
         teachers      = Teachers.objects.all()        
-        courses       = Courses.objects.filter(course=user.courses).all()        
-        students      = Students.objects.filter(courses=courses).all()
-        notifications = Notifications.objects.filter(course=user.courses).order_by('-created')[0:5]
+        courses       = Courses.objects.get(name=user.courses)    
+        students      = Students.objects.filter(year=courses.year).all()
+        notifications = Notifications.objects.filter(year=courses.year).order_by('-created')[0:5]
         events        = Events.objects.filter().all()  
 
     elif request.user.is_student:        
@@ -86,7 +86,7 @@ def request_account(request):
     if request.user.is_student:
         classwork  = ClassWork.objects.filter(year=user.year,reply=None).all()
     elif request.user.is_teacher:
-        classwork  = ClassWork.objects.filter(course=user.course).all()
+        classwork  = ClassWork.objects.filter(course=user.courses).all()
     else:
         classwork  = None   
 

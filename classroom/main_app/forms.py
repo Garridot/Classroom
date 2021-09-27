@@ -41,6 +41,9 @@ class  TeachersForm(forms.ModelForm):
     class Meta:
         model   = Teachers
         exclude = ('user',)
+        widgets={
+        'date_of_birth' : DateInput(),        
+        }
 
 class  AdminsForm(forms.ModelForm):
     class Meta:
