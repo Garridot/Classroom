@@ -40,16 +40,15 @@
     <ul class="list-group">
         <div class="first_request">
             <div class="content-title">
-                <h4>Student work</h4>
-                <a href="">View All</a>
+                <h4>Student works</h4>
             </div>
             {% if classworks %}
             {% for work in classworks %}
             <li class="list-group-item">
                 <a href="">
-                    <p id="info1">{{work.full_name}}</p>
-                    <p id="info2">{{work.course}}</p>
-                    <p id="info1">{{work.year}}</p>
+                    <p id="info1">{{work.student.full_name}}</p>
+                    <p id="info2">{{work.topic}}</p>
+                    <p id="info1">{{work.course}}</p>
                 </a>
             </li>
             {% endfor %}

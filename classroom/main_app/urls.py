@@ -20,6 +20,9 @@ urlpatterns = [
 
     path('home/',views.HomeView,name='home'),
 
+    path('my_grades/email=<str:email>',views.GradesView,name='my_grades'),
+    path('my_grades/work/work_id=<str:work_id>',views.GradeData,name='grade'),
+
     path('recent_content/',views.RecentContent),
 
     path('user_profile/email=<str:email>/',views.UserProfileView,name='user_profile'),

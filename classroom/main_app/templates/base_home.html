@@ -55,6 +55,9 @@
                     <div class="items"><a href="{% url 'admissions' %}" class="admission"><h4> Admissions</h4></a></div>                    
                     <div class="items"><a href="{% url 'years' %}" class="years"><h4> School years</h4></a></div>
                     {% endif %}
+                    {% if request.user.is_student %}
+                    <div class="items"><a href="{% url 'my_grades' request.user %}" class="grades"><h4> My grades</h4></a></div>
+                    {% endif %}
                     <div class="items"><a href="{% url 'events' %}"><h4> Events</h4></a></div>
                     <div class="items"><a href="{% url 'logout' %}"><h4> Logout</h4></a></div>
                 </div>            

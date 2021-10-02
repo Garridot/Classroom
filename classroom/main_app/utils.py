@@ -75,20 +75,19 @@ def request_account(request):
 
     if request.user.is_admin:
         admissions = Applications.objects.order_by('-sent_date').all()
-    else:
-        admissions = None     
+        history = None
+        classwork = None         
 
     if request.user.is_student:
-        history    = History.objects.order_by('-seen').all()
-    else:
-        history    = None 
-
-    if request.user.is_student:
-        classwork  = ClassWork.objects.filter(year=user.year).all()
+        history    = History.objects.order_by('-seen').all()    
+        admissions = None 
+        classwork  = ClassWork.objects.filter(year=user.year).all()   
+        
     elif request.user.is_teacher:
         classwork  = ClassWork.objects.filter(course=user.courses).all()
-    else:
-        classwork  = None   
+        admissions = None 
+        history = None  
+     
 
     return{'classwork':classwork,'admissions':admissions,'history':history}    
         

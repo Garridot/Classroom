@@ -163,6 +163,7 @@ def HomeView(request):
     classworks  = request_account(request)['classwork']
     admissions = request_account(request)['admissions']
     history    = request_account(request)['history']
+    print(classworks)
     
     context = {'notifications':notifications,
                 'user':user,'calendar':calendar,'events':events,
@@ -171,6 +172,28 @@ def HomeView(request):
                      
     }
     return render(request,'home.html',context) 
+
+
+def GradesView(request,email):
+    student = Students.objects.get(user=request.user)
+    works   = StudentWorks.objects.filter(student=student).all() 
+    total_works = 0
+    for w in works:
+        total_works += 1        
+    grades = 0    
+    for g in works:
+        grades += g.grade 
+
+    average = (int(grades)/int(total_works)) 
+    print(average)         
+    context = {'student':student,'works':works,'average ':average }    
+    return render(request,'grades.html',context) 
+
+
+def GradeData(request,work_id):
+    work = StudentWorks.objects.get(id=work_id)
+    context = {'work':work}
+    return render(request,'my_work.html',context)
 
 def UserProfileView(request,email):
     data = user_profile(request)
