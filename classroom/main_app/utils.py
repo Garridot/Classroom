@@ -84,7 +84,7 @@ def request_account(request):
         history    = None 
 
     if request.user.is_student:
-        classwork  = ClassWork.objects.filter(year=user.year,reply=None).all()
+        classwork  = ClassWork.objects.filter(year=user.year).all()
     elif request.user.is_teacher:
         classwork  = ClassWork.objects.filter(course=user.courses).all()
     else:

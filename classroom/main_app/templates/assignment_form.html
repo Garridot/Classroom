@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+.container-fluid{
+width: 90%;
+text-align: center;
+}
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+}
+.title a{text-decoration: none;}
+a{color: #212529;}
+a:hover{color: #4a4c4e;}
+form{
+padding: 2rem 0;    
+width: 50%;
+margin: auto;
+text-align: initial;
+}
+form label {
+color: rgb(122, 122, 122);
+}
+form input,textarea{
+margin: 1rem 0 0 0;
+display: block;
+width: 100%;
+padding: .375rem .75rem;
+font-size: 1rem;
+font-weight: 400;
+line-height: 1.5;
+color: #212529;
+background-color: #fff;
+background-clip: padding-box;
+border: 1px solid #ced4da;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+border-radius: .25rem;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+form input[type=submit]{
+background: #212529;
+color: white;
+}
+</style>
+<div class="container-fluid">
+    <div class="title">
+        <h2><a href="{% url 'student_works' course=work.course.name topic=work.topic.name assignment=work.assignment %}">
+            Assignment  {{work.assignment}}</a>
+        </h2>
+    </div>
+    <div class="work">
+        <h3 style="margin: 2rem 0;">Student : {{work.student.full_name}}</h3>
+        <h3><a href="{{work.file.url}}">View Work</a></h3>
+    </div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" value="Send review">
+    </form>
+</div>    
+{% endblock %}

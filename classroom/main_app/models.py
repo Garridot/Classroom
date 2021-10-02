@@ -71,7 +71,7 @@ class SchoolYears(models.Model):
         return students
 
 def upload_location_admins(instance,filename):
-    return f"admins/{instance.full_name}/{filename}"
+    return f"accounts/admins/{instance.full_name}/{filename}"
 class Admins(models.Model):
     id              = models.AutoField(primary_key=True)    
     user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)       
@@ -140,7 +140,7 @@ class CourseTopic(models.Model):
         return self.name 
 
 def upload_location_students(instance,filename):
-    return f"students/{instance.full_name}/{filename}"
+    return f"accounts/students/{instance.full_name}/{filename}"
 class Students(models.Model):
 
     id              = models.AutoField(primary_key=True) 
@@ -177,7 +177,7 @@ class Students(models.Model):
         super().delete(*args,**kwargs)             
 
 def upload_location_teachers(instance,filename):
-    return f"teachers/{instance.full_name}/{filename}"
+    return f"accounts/teachers/{instance.full_name}/{filename}"
 class Teachers(models.Model):
 
     id              = models.AutoField(primary_key=True)    
@@ -298,8 +298,10 @@ class History(models.Model):
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
     seen        = models.DateTimeField(auto_now_add=timezone.now())
 
+
+
 def upload_location_assignment(instance,filename):
-    f'courses/{instance.course}/{instance.topic}/assignment/{filename}'
+    return  f'course/{instance.course}/{instance.topic}/assignment/{filename}'
 class ClassWork(models.Model):
     author   = models.ForeignKey(Teachers,on_delete=models.CASCADE)
     year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
@@ -308,21 +310,31 @@ class ClassWork(models.Model):
     title    = models.CharField(max_length=50) 
     instructions = models.TextField()
     file     = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
-    deadline = models.DateTimeField(null=True,blank=True)
+    deadline = models.DateField(null=True,blank=True)
     created = models.DateTimeField(auto_now=datetime.datetime.now())
-    
+
+    def __str__(self):
+        return self.title
+
+    def delete(self,*args,**kwargs):
+        self.file.delete()
+        super().delete(*args,**kwargs)    
+
+
+def upload_location_studentwork(instance,filename):
+    return  f'course/{instance.course}/{instance.topic}/assignment/studentworks/{filename}'    
 class StudentWorks(models.Model):
-    asignment = models.ForeignKey(Teachers,on_delete=models.CASCADE)
+    assignment = models.ForeignKey(ClassWork,on_delete=models.CASCADE)
     student   = models.ForeignKey(Students,on_delete=models.CASCADE)
     course    = models.ForeignKey(Courses,on_delete=models.CASCADE)
     topic     = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
-    file      = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
+    file      = models.FileField(upload_to=upload_location_studentwork,null=True,blank=True)
     comment   = models.TextField(null=True,blank=True)
-    grade     = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
+    grade     = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)],null=True,blank=True)
     status_choice   = (('Passed','Passed'),('Unchecked','Unchecked'),('Failed','Failed'))  
-    status    = models.CharField(max_length=10, default='male', choices=status_choice)
+    status    = models.CharField(max_length=10, default='Unchecked', choices=status_choice,null=True,blank=True)
     
     def __str__(self):
-        return f"{self.asignment.title}"
+        return f"{self.assignment.title}"
 
     

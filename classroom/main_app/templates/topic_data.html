@@ -46,6 +46,27 @@
         </li>
         {% endif %}
     </div>
+    
+    <div class="content">
+        <div class="c-title">
+            <h4>Assignments</h4>
+            {% if request.user.is_teacher or request.user.is_admin %}
+            <a href="{% url 'assignment_add' course.name topic.name %}"><i class="fas fa-plus"></i> Add</a>
+            {% endif %}
+        </div>
+        {% if assignments %}{% for assignment in assignments %}
+        <div class="list-content">
+            <a href="{% url 'assignment' course=course topic=topic assignment=assignment %}" id="content_field"><li class="list-group-item">
+                <p>{{assignment.title}}</p>
+                <p>{{assignment.deadline}}</p>
+            </li></a>
+        </div>
+        {% endfor %}{% else %}
+        <li class="list-group-item">
+            <p>No content yet...</p>
+        </li>
+        {% endif %}
+    </div>
 </div>
 <script>
     

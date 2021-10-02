@@ -490,7 +490,8 @@ def TopicsView(request,course,topic):
     course   = Courses.objects.get(name=course)
     topic = CourseTopic.objects.get(course = course,name=topic)
     contents  = Content.objects.filter(topic=topic).all()
-    context  = {'course':course,'topic':topic,'contents':contents}
+    assignments  = ClassWork.objects.filter(topic=topic).all()
+    context  = {'course':course,'topic':topic,'contents':contents,'assignments':assignments}
     return render(request,'topic_data.html',context) 
 def TopicCreate(request,course):
     course = Courses.objects.get(name=course)
@@ -558,6 +559,94 @@ def ContentDelete(request,topic,name,id):
     print(content)
     content.delete()
     return redirect('topic',course=topic.course,topic=topic)
+
+def Assignment(request,course,topic,assignment):
+    from datetime import date
+    topic    = CourseTopic.objects.get(name=topic)
+    course   = Courses.objects.get(name=course)
+    assignment = ClassWork.objects.get(title=assignment)
+    deadline   = date.today()
+    
+    if request.user.is_student:
+        if StudentWorks.objects.filter(assignment=assignment,student=Students.objects.get(user =request.user)).all():
+            worked_already_sub = True
+
+    worked_already_sub = False  
+        
+    if request.method == 'POST':
+        file = request.FILES['file']
+        StudentWorks.objects.create(
+            topic      = topic,
+            course     = course,
+            assignment = assignment,
+            student    = Students.objects.get(user=request.user),
+            file       = file, 
+        )
+        return redirect('topic',course = course.name,topic = topic.name)
+    context = {'assignment':assignment,'deadline':deadline,'worked_already_sub':worked_already_sub}  
+    return render(request,'assignment.html',context)    
+def AssignmentAddForm(request,course,topic):
+    topic    = CourseTopic.objects.get(name=topic)
+    course   = Courses.objects.get(name=course)
+    form  = AssignmentForm()
+    title = 'Add Assignment'
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST,request.FILES) 
+        if form.is_valid():
+            ClassWork.objects.create(
+            topic  = topic,
+            course = course,
+            year   = course.year, 
+            author = Teachers.objects.get(user=request.user),
+            deadline = request.POST['deadline'],
+            instructions = request.POST['instructions'],
+            title = request.POST['title'],
+            file = request.FILES['file'],
+            )
+            # form.topic  = topic,
+            # form.course = course,
+            # form.year   = course.year 
+            # form.author = Teachers.objects.get(user=request.user)
+            # form.save() 
+            return redirect('topic',course = course.name,topic = topic.name)
+
+    context = {'form':form,'title':title} 
+    return render (request,'form.html',context)       
+
+
+def StudentWorkList(request,course,topic,assignment):
+    
+    topic       = CourseTopic.objects.get(name=topic)
+    course      = Courses.objects.get(name=course)
+    assignment  = ClassWork.objects.get(title=assignment)        
+    works       = StudentWorks.objects.filter(assignment =assignment).all()
+    students    = Students.objects.filter(year=course.year).all()
+    
+
+    total_works = 0
+    for w in works:
+        total_works += 1
+    total_students = 0 
+    for s in students:
+        total_students += 1 
+    context = {'assignment':assignment,'works':works,'total_works':total_works,'total_students':total_students,}      
+    return render(request,'students_works_list.html',context)      
+def StudentWork(request,course,topic,assignment,work_id):
+    assignment = ClassWork.objects.get(title=assignment)
+    work       = StudentWorks.objects.get(id=work_id)
+    form       = WorkReviewForm(instance=work)
+    if request.method == 'POST':
+        form       = WorkReviewForm(request.POST,instance=work) 
+        if form.is_valid():
+            grade = request.POST['grade'] 
+            if int(grade) >= 6:
+                form.instance.status = 'Passed'
+            else:
+                form.instance.status = 'Failed'
+            form.save()
+            return redirect('student_works', course=work.course.name, topic=work.topic.name, assignment=work.assignment)
+    context = {'assignment':assignment,'work':work,'form':form}
+    return render(request,'assignment_form.html',context)         
 
 def YearsViews(request):
     data = user_profile(request)

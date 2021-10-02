@@ -71,4 +71,18 @@ class EventForm(forms.ModelForm):
         exclude = ('author',)  
         widgets={
         'event_date' : DateInput(),        
-        }       
+        } 
+class AssignmentForm(forms.ModelForm): 
+    class Meta:
+        model   = ClassWork
+        exclude = ('author','course','topic','year')   
+        widgets={
+        'deadline' : DateInput(),        
+        }     
+class WorkReviewForm(forms.ModelForm): 
+    class Meta:
+        model   = StudentWorks
+        exclude = ('student','course','topic','assignment','status','file')
+        labels  = {
+            'comment' : 'Add a Comment(no required)'
+        } 

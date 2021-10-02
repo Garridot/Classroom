@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # path('',views.,name=''),
+    
     path('',views.MainPage,name='main_page'),
     path('information/',views.Information,name='information'),
     path('contact/',views.Contact,name='contact'),
@@ -54,12 +54,15 @@ urlpatterns = [
     path('courses/course_delete/name=<str:name>/year=<str:year>/',views.CourseDelete,name='course_delete'),
     path('courses/course_create/',views.CourseCreate,name='course_create'),
 
-    
-
     path('courses/course=<str:course>/topic=<str:topic>/',views.TopicsView,name='topic'),
     path('courses/course=<str:course>/topic_create/',views.TopicCreate,name='topic_create'),
     path('courses/course=<str:course>/topic=<str:topic>/topic_update',views.TopicUpdate,name='topic_update'),
     path('courses/course=<str:course>/topic=<str:topic>/topic_delete',views.TopicDelete,name='topic_delete'),
+    
+    path('courses/course=<str:course>/topic=<str:topic>/assignment_add',views.AssignmentAddForm,name='assignment_add'),
+    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>',views.Assignment,name='assignment'),
+    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>/student_works/',views.StudentWorkList,name='student_works'),
+    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>/student_work/work=<str:work_id>',views.StudentWork,name='student_work'),
 
     path('courses/course=<str:course>/topic=<str:topic>/content_add/',views.ContentAdd,name='content_add'),
     path('courses/topic=<str:topic>/content=<str:name>/content_delete/<str:id>',views.ContentDelete,name='content_delete'),
