@@ -2,6 +2,8 @@ from django.db import models
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from django.contrib.auth.models import  BaseUserManager, AbstractBaseUser,PermissionsMixin
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 from django.db.models.deletion import CASCADE
 from django_countries.fields import CountryField
 from django.contrib.auth.models import Group
@@ -306,7 +308,21 @@ class ClassWork(models.Model):
     title    = models.CharField(max_length=50) 
     instructions = models.TextField()
     file     = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
-    due_date = models.DateTimeField(null=True,blank=True)
+    deadline = models.DateTimeField(null=True,blank=True)
     created = models.DateTimeField(auto_now=datetime.datetime.now())
-    reply   = models.ForeignKey('ClassWork',null=True, related_name='replies', blank=True, on_delete=models.CASCADE)
+    
+class StudentWorks(models.Model):
+    asignment = models.ForeignKey(Teachers,on_delete=models.CASCADE)
+    student   = models.ForeignKey(Students,on_delete=models.CASCADE)
+    course    = models.ForeignKey(Courses,on_delete=models.CASCADE)
+    topic     = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
+    file      = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
+    comment   = models.TextField(null=True,blank=True)
+    grade     = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)])
+    status_choice   = (('Passed','Passed'),('Unchecked','Unchecked'),('Failed','Failed'))  
+    status    = models.CharField(max_length=10, default='male', choices=status_choice)
+    
+    def __str__(self):
+        return f"{self.asignment.title}"
 
+    
