@@ -20,7 +20,8 @@ color: lightcoral;
 .menu{
 left: -100%;    
 z-index: 1;
-background: white;
+background: rgb(255,255,255);
+background: linear-gradient(90deg, rgba(255,255,255,1) 40%, rgba(246,246,246,0) 100%);
 width: 30%;
 position: fixed;
 transition: all 0.5s;
@@ -142,7 +143,14 @@ color: #AAA4AC;
 border-bottom: 1px solid  #e1e1e2;
 }
 
+.content-extends{
+animation-name: view;
+animation-duration: 1.5s;}
 
+@keyframes view{
+from{visibility: hidden;  opacity: 0;}
+to  {visibility: visible; opacity: 1;}
+}
 
 
 /**** Media Query ****/

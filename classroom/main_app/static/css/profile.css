@@ -110,8 +110,3 @@ margin: auto;
 }
 }
 
-@media(max-width:500px){
-.user-profile .data{
-text-align: justify
-}
-}

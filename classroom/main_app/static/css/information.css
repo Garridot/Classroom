@@ -39,6 +39,21 @@ font-size: 1.1em;
 text-align: inherit;
 line-height: 2em;
 }
+.students img{
+    position: absolute;
+}
+.students h3{
+font-size: 3rem;
+font-weight: 600;
+text-align: center;
+}
+
+.students p{
+margin: 2em 0;
+font-size: 1.1em;
+text-align: inherit;
+line-height: 2em;
+}
 
 .second-card .leadership{
 margin: 4rem 0 0 0;

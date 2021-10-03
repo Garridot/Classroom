@@ -41,6 +41,7 @@ border: none;
 .presentation{
 display: flex;
 align-items: center;
+padding: 2rem 0
 }
 
 .presentation .data h2{

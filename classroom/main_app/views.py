@@ -593,8 +593,10 @@ def Assignment(request,course,topic,assignment):
     if request.user.is_student:
         if StudentWorks.objects.filter(assignment=assignment,student=Students.objects.get(user =request.user)).all():
             worked_already_sub = True
-
-    worked_already_sub = False  
+        else:
+            worked_already_sub = False  
+    else:
+            worked_already_sub = False         
         
     if request.method == 'POST':
         file = request.FILES['file']

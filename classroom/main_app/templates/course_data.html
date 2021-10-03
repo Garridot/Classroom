@@ -26,7 +26,7 @@
     </div>      
     <div class="categories">  
         <div class="c-title">
-            <h1>Topics</h1>
+            <h1><i class="far fa-bookmark"></i> Topics</h1>
             {% if request.user.is_admin or request.user.is_teacher %}
             <a href="{% url 'topic_create' course=course.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %} 

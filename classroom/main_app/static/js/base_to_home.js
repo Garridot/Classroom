@@ -24,7 +24,7 @@ function toggleMenu(){
 function toggleNoti(){
     if(status == 0){
         noti.style.visibility = 'visible'
-        noti.style.opacity = '1';
+        noti.style.opacity = '1';        
         icon_noti.classList.add('selected')
         icon_menu.disabled = true
                
@@ -46,3 +46,21 @@ icon_noti.addEventListener('click',function(){
 }) 
 
 
+
+document.querySelector(".main").addEventListener("wheel", myFunction);
+menu.addEventListener("wheel", myFunction);
+
+function myFunction() {
+    menu.style.left = '-100%';
+    icon_noti.disabled = false 
+    icon_menu.classList.remove('selected') 
+    document.querySelector('.content-extends').style.filter= 'blur(0px)';   
+    toggle = 0; 
+    noti.style.visibility = 'hidden'
+    noti.style.opacity = '0';
+    icon_noti.classList.remove('selected')
+    icon_menu.disabled = false 
+    document.querySelector('.content-extends').style.filter= 'blur(0px)';
+    status = 0;      
+   
+}
