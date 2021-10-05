@@ -92,7 +92,7 @@ width: 100%;
         <p>{{assignment.instructions}}</p>
         <h4><a href="{{assignment.file.url}}">View File</a></h4>
         <h4 style="color: rgb(253, 77, 77); padding: 1rem 0;">Deadline: {{assignment.deadline}}</h4>
-        {%  if request.user.is_admin or request.user.is_teacher %}
+        {%  if request.user.is_admin or teacher_course %}
         <h4><a href="{% url 'student_works' course=assignment.course.name topic=assignment.topic.name assignment=assignment %}">View Students Works</a></h4>
         {% endif %}
     </div>    

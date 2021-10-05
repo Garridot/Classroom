@@ -42,13 +42,13 @@
             <div class="content-title">
                 <h4><i class="fas fa-pen"></i> Student works</h4>
             </div>
-            {% if classworks %}
-            {% for work in classworks %}
+            {% if studentworks %}
+            {% for work in studentworks %}
             <li class="list-group-item">
-                <a href="">
+                <a href="{% url 'student_work' course=work.course.name topic=work.topic.name assignment=work.assignment.title work_id=work.id %}">
                     <p id="info1">{{work.student.full_name}}</p>
-                    <p id="info2">{{work.topic}}</p>
-                    <p id="info1">{{work.course}}</p>
+                    <p id="info2">{{work.assignment}}</p>
+                    <p id="info1">{{work.topic}}</p>
                 </a>
             </li>
             {% endfor %}
@@ -66,9 +66,9 @@
             </div>
             {% if history %}
             {% for h in  history %}
-            <li class="list-group-item">
-                <a href="">
-                    <p id="info1">{{h.content_id.name}}}</p>
+            <li class="list-group-item" >
+                <a href="{{h.content_id.field.url}}" onclick="content_select(this)" data-id="{{h.content_id.id}}" >
+                    <p id="info1">{{h.content_id.name}}</p>
                     <p id="info2">{{h.content_id.category}}</p>
                     <p id="info2">{{h.seen}}</p>
                 </a>
@@ -78,7 +78,7 @@
             <li class="list-group-item">No Results Found...</li>
             {% endif %}
         </div>
-        <div class="second_request">
+        <div class="second_request" style="margin: 2rem 0 0 0;">
             <div class="content-title">
                 <h4><i class="fas fa-pen"></i> Class work</h4>
                 <a href="">View All</a>
@@ -89,7 +89,7 @@
                 <a href="">
                     <p id="info1">{{work.title}}</p>
                     <p id="info2">{{work.course}}</p>
-                    <p id="info1">{{work.due_date}}</p>
+                    <p id="info1">{{work.deadline}}</p>
                 </a>
             </li>
             {% endfor %}
@@ -126,4 +126,47 @@
         </li>{% endif %}
     </div>
 </div>    
+<script>
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function content_select(e){        
+        var content = e.getAttribute('data-id')        
+
+        var url = '/academiaweb/recent_content/'
+        fetch(url,{                
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',                
+                'X-CSRFToken' : getCookie('csrftoken')          
+            },
+            body : JSON.stringify({'content':content})
+
+        })
+        .then(
+            function(response){     
+                console.log(response)           
+                return response.json()
+            }
+        )
+    }
+    
+
+
+
+</script>    
 {% endblock %}

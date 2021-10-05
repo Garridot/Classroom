@@ -35,8 +35,8 @@
                 <div class="user_and_noti">                          
                     <button id="icon-noti" onclick="toggleNoti()"><i class="far fa-bell"></i></button>
                     <span id="alert">.</span>                       
-                    <a href="{% url 'user_profile'  user.email  %}">
-                    <img src="{{user.profile_picture.url}}" >
+                    <a href="{% url 'user_profile'  user.email  %}" id="user">
+                    <img src="{{user.profile_picture.url}}">
                     </a>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     <div class="items"><a href="{% url 'home' %}" id="home"><h4> Home</h4></a></div>
                     <div class="items"><a href="{% url 'user_profile' request.user.email %}" id="home"><h4>User</h4></a></div>
                     <div class="items"><a href="{% url 'admins' %}" id="admins"><h4> Admins</h4></a></div>
-                    {% if request.user.is_admin %}
+                    {% if request.user.is_admin or request.user.is_teacher %}
                     <div class="items"><a href="{% url 'students' %}" id="students"><h4> Students</h4></a></div>
                     {% endif %}
                     <div class="items"><a href="{% url 'teachers' %}" id="teachers"><h4> Teachers</h4></a></div>
@@ -66,17 +66,18 @@
 
                 <a href="">
                     <h5>Notifications</h5>
-                </a> 
-                <div class="notification" id="notification">
+                </a>                 
+                <div class="notification" id="notification">  
+                    <div class="list-group-item" style="color: lightcoral; text-align: center;">
+                        Alert notification in progress
+                    </div>                  
                     {% if notifications %}
-                    {% for notification in notifications  %}                    
-                    <a href="{{notification.link}}" id="noti-link">
-                        <p class="menssage">{{notification.message}}</p>
-                        <p class="date">{{notification.created}}</p>
-                    </a>
+                    {% for notification in notifications  %} 
+                    <p class="menssage">{{notification.message}}</p>
+                    <p class="date">{{notification.created}}</p>
                     {% endfor %}
                     {% else %}
-                    <p>Not notifications yet...</p>
+                    <p>Not notifications yet...</p>                   
                     {% endif %}
                 </div>               
             </div>

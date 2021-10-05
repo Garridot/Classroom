@@ -6,7 +6,7 @@
     <div class="title">
         <a href="{% url 'course' course.name course.year %}"><h1>{{course.name}}</h1></a>
     </div>
-    {% if request.user.is_admin or request.user.is_teacher %}
+    {% if request.user.is_admin or teacher_course %}
     <div class="update">
         <a href="{% url 'topic_update' course=course.name topic=topic.name %}">Update Topic</a>        
         <a href="{% url 'topic_delete' course=course.name topic=topic.name %} " id="delete">Delete</a>
@@ -26,7 +26,7 @@
     <div class="content">
         <div class="c-title">
             <h4><i class="far fa-bookmark"></i> Content</h4>
-            {% if request.user.is_teacher or request.user.is_admin %}
+            {% if request.user.is_admin or teacher_course %}
             <a href="{% url 'content_add' course=course.name topic=topic.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %}
         </div>
@@ -36,7 +36,7 @@
                 <p>{{content.name}}</p>
                 <p>{{content.created}}</p>
             </li></a>
-            {% if request.user.is_teacher or request.user.is_admin %}
+            {% if request.user.is_admin or teacher_course %}
             <a href="{% url 'content_delete'  topic=content.topic.name name=content.name id=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
             {% endif %}
         </div>
@@ -50,7 +50,7 @@
     <div class="content">
         <div class="c-title">
             <h4><i class="fas fa-pen"></i> Assignments</h4>
-            {% if request.user.is_teacher or request.user.is_admin %}
+            {% if request.user.is_admin or teacher_course %}
             <a href="{% url 'assignment_add' course.name topic.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %}
         </div>

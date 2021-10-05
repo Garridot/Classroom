@@ -72,9 +72,13 @@ font-size: 1.25rem;
 .title_and_bar a{
 text-decoration: none;
 color: #212529;
+
 }
 .title_and_bar a:hover{
 color: #34383d;
+}
+a#user{
+    margin: 0 0 0 2rem;
 }
 .title-pag .user_and_noti img{
     display: none;
@@ -161,7 +165,7 @@ display: flex;
 }
 .title-pag .user_and_noti img{
 display: block; 
-margin: 0 0 0 2rem;       
+     
 }
 .user_and_noti span{
 right: 124px;

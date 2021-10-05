@@ -16,7 +16,7 @@
     <div class="content-title">
         <h3>{{title}}</h3>
 
-        {% if request.user.is_admin or request.user.is_teacher %}{% if create_url %}        
+        {% if request.user.is_admin  %}{% if create_url %}        
         <a href="{{create_url}}"><p>Add<i class="fas fa-plus"></i></p></a>
         {% endif %}{% endif %}
     </div>
@@ -38,7 +38,7 @@
                 <a href="{% url 'teacher' teacher.email %}">
                     <img  class="profile_picture" src="{{teacher.profile_picture.url}}">
                     <p id="info1">{{teacher.full_name}}</p>
-                    <p id="info2">{{teacher.courses}}</p>
+                    <p id="info2">{{teacher.course}}</p> 
                 </a>
             </li>{% endfor %}
 

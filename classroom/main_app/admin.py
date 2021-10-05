@@ -12,5 +12,10 @@ admin.site.register(Events)
 admin.site.register(Notifications)
 admin.site.register(History)
 admin.site.register(CourseTopic)
+admin.site.register(Courses)
 admin.site.register(ClassWork)
+
+
 admin.site.register(StudentWorks)
+
+

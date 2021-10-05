@@ -6,13 +6,14 @@
     <div class="title">
         <a href="{% url 'courses' %}"><h1>Courses</h1></a>
     </div>
-    {% if request.user.is_admin or request.user.is_teacher %}
+    {% if request.user.is_admin or teacher_course %}
+    
     <div class="update">
         <a href="{% url 'course_update' course.name course.year %}">Update Course</a>
         {% if request.user.is_admin %}
         <a href="{% url 'course_delete' course.name course.year %} " id="delete">Delete</a>
         {% endif %}
-    </div>
+    </div>   
     {% endif %}
     <div class="presentation">
         <div class="img col">
@@ -27,7 +28,7 @@
     <div class="categories">  
         <div class="c-title">
             <h1><i class="far fa-bookmark"></i> Topics</h1>
-            {% if request.user.is_admin or request.user.is_teacher %}
+            {% if request.user.is_admin or teacher_course %}
             <a href="{% url 'topic_create' course=course.name %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %} 
         </div> 

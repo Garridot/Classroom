@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
-from django.contrib.auth.models import  BaseUserManager, AbstractBaseUser,PermissionsMixin
+from django.contrib.auth.models import  BaseUserManager, AbstractBaseUser,PermissionsMixin, Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django.db.models.deletion import CASCADE
@@ -42,7 +42,8 @@ class UserAccount(AbstractBaseUser,PermissionsMixin):
     is_superuser    = models.BooleanField(default=False)
     is_teacher      = models.BooleanField(default=False)
     is_student      = models.BooleanField(default=False)      
-    is_admin        = models.BooleanField(default=False)  
+    is_admin        = models.BooleanField(default=False) 
+    
 
     USERNAME_FIELD  = 'email'
    
@@ -74,7 +75,8 @@ def upload_location_admins(instance,filename):
     return f"accounts/admins/{instance.full_name}/{filename}"
 class Admins(models.Model):
     id              = models.AutoField(primary_key=True)    
-    user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)       
+    user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
+           
     document        = models.CharField(max_length=8,unique=True) 
     first_name      = models.CharField(max_length=200)
     last_name       = models.CharField(max_length=200)
@@ -160,6 +162,8 @@ class Students(models.Model):
     class Meta():
         verbose_name        = 'Student'
         verbose_name_plural = 'Students'
+    def __str__(self):
+        return '{} {}'.format(self.first_name,self.last_name)    
     @property
     def full_name(self):
         return '{} {}'.format(self.first_name,self.last_name)
@@ -182,7 +186,7 @@ class Teachers(models.Model):
 
     id              = models.AutoField(primary_key=True)    
     user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
-    courses         = models.ForeignKey(Courses,on_delete=models.DO_NOTHING,null=True,blank=True)      
+    course          = models.ForeignKey(Courses,on_delete=models.DO_NOTHING,null=True,blank=True)      
     document        = models.CharField(max_length=8,unique=True) 
     first_name      = models.CharField(max_length=200)
     last_name       = models.CharField(max_length=200)    
@@ -190,7 +194,7 @@ class Teachers(models.Model):
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
     nationality     = CountryField()         
-    description     = models.TextField(max_length=500,blank=True)
+    description     = models.TextField(max_length=500,blank=True,null=True)
     profile_picture = models.ImageField(blank=True,null=True, upload_to=upload_location_teachers)
     
     class Meta():
@@ -208,8 +212,8 @@ class Teachers(models.Model):
     def email(self):
         return str(self.user)
         
-    def course(self):
-        return str(self.courses)
+    def teacher_course(self):
+        return str(self.course)
 
     def delete(self,*args,**kwargs):
         self.profile_picture.delete()
@@ -217,14 +221,12 @@ class Teachers(models.Model):
 
 class Notifications(models.Model):
 
-    id       = models.AutoField(primary_key=True)
-    sender   = models.ForeignKey(UserAccount,on_delete=models.CASCADE,related_name='sender') 
-    message  = models.CharField(max_length=100)
-    receiver = models.ForeignKey(UserAccount,null=True,blank=True,on_delete=models.DO_NOTHING,related_name='receiver')
-    link     = models.URLField(null=True,blank=True)   
-    year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
-    created  = models.DateTimeField(auto_now_add=True)  
-    unread   = models.BooleanField(default=True) 
+    id        = models.AutoField(primary_key=True)     
+    message   = models.CharField(max_length=100)
+    receivers = models.ForeignKey(Group,null=True,blank=True,on_delete=models.DO_NOTHING,related_name='receiver')
+    unique_receiver = models.ForeignKey(UserAccount,null=True,blank=True,on_delete=models.CASCADE,related_name='unique_receiver') 
+    year      = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,null=True,blank=True)
+    created   = models.DateTimeField(auto_now_add=True) 
     def __str__(self):
         return str(self.message)
 
@@ -247,7 +249,8 @@ class Content(models.Model):
         self.field.delete()
         super().delete(*args,**kwargs)
 
-
+def upload_location_applications(instance,filename):
+    return f"applications/{instance.full_name}/{filename}"
 class Applications(models.Model):
 
     id              = models.AutoField(primary_key=True)
@@ -261,9 +264,11 @@ class Applications(models.Model):
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)   
     year            = models.ForeignKey(SchoolYears,on_delete=models.DO_NOTHING)    
     sent_date       = models.DateTimeField(auto_now_add=True,)    
-    profile_picture = models.ImageField(upload_to=upload_location_students,blank=True,null=True)
-    HS_diploma      = models.FileField(upload_to=upload_location_students,blank=True,null=True,)
+    profile_picture = models.ImageField(upload_to=upload_location_applications,blank=True,null=True)
+    HS_diploma      = models.FileField(upload_to=upload_location_applications,blank=True,null=True,)
       
+    def __str__(self):
+        return '{} {}'.format(self.first_name,self.last_name)
     @property
     def full_name(self):
         return '{} {}'.format(self.first_name,self.last_name)
@@ -297,8 +302,6 @@ class History(models.Model):
     topic_id    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
     seen        = models.DateTimeField(auto_now_add=timezone.now())
-
-
 
 def upload_location_assignment(instance,filename):
     return  f'course/{instance.course}/{instance.topic}/assignment/{filename}'
