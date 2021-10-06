@@ -20,15 +20,20 @@
             <img src="{{user.profile_picture.url}}" width="400px">
         </div>
         <div class="data col">
-            <h2>{{user.full_name}}</h2>            
-            <h5><i class="far fa-envelope"></i>      {{user.email}}</h5> 
-            <h5><i class="fas fa-birthday-cake"></i> {{user.date_of_birth}}</h5>       
-            <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
-                Veniam maiores officia tenetur. Quaerat numquam debitis eveniet 
-                deserunt atque suscipit blanditiis officiis maiores, architecto, 
-                tempore mollitia voluptas rerum. Quam, amet cumque!
-            </p>
+            <h2>{{user.full_name}}</h2>       
+                 
+            <h5><i class="far fa-envelope"></i> {{user.email}}</h5>  
+            {% if user.course %}
+            <h6>Course : {{user.course}}</h6>
+            {% endif %}
+            {% if user.year %}
+            <h6>Year : {{user.year}}</h6>
+            {% endif %}
+            <h6>Document : {{user.document}}</h6>
+            <h6>Nationality : {{user.nationality}}</h6>
+            {% if user.description %}
+            <p>{{user.description}}</p>
+            {% endif %}
         </div>
     </div>
     

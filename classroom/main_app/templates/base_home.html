@@ -15,7 +15,7 @@
     
     <!-- Chart.js cdn -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
-    
+
     <!-- Fontawesome -->
     <script src="https://kit.fontawesome.com/47100a983e.js" crossorigin="anonymous"></script>
 
@@ -37,7 +37,6 @@
                 </div>                
                 <div class="user_and_noti">                          
                     <button id="icon-noti" onclick="toggleNoti()"><i class="far fa-bell"></i></button>
-                    <span id="alert">.</span>                       
                     <a href="{% url 'user_profile'  user.email  %}" id="user">
                     <img src="{{user.profile_picture.url}}">
                     </a>

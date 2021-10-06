@@ -794,8 +794,9 @@ def YearData(request,pk):
     year = SchoolYears.objects.get(id=pk)
     students  = Students.objects.filter(year = year)
     courses   = Courses.objects.filter(year = year)
-    admssions = Applications.objects.filter(year=year)
-    context   = {'year':year,'students':students,'courses':courses,'admssions':admssions}
+    admissions = Applications.objects.filter(year=year).all()
+    
+    context   = {'year':year,'students':students,'courses':courses,'admissions':admissions}
     return render(request,'year_data.html',context)  
 
 
