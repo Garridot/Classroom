@@ -17,7 +17,10 @@
         
         <input type="submit" value="Update Account"  style="margin: 2.5rem 0;">
     </form>
-    <a href="{% url 'password_change' user.email %}">Change password</a>
+    <div class="password" style="text-align:center">
+        <a href="{% url 'password_change' user.email %}">         
+        Change password</a>
+    </div>
 </div>
 
 
