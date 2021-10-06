@@ -183,7 +183,7 @@ def HomeView(request):
     return render(request,'home.html',context) 
 
 @login_required(login_url='login')
-@allowed_user(allowed_roles=['Studnets'])
+@allowed_user(allowed_roles=['Students'])
 def GradesView(request,email):
     student = Students.objects.get(user=request.user)
     works   = StudentWorks.objects.filter(student=student).all() 
@@ -200,7 +200,7 @@ def GradesView(request,email):
     return render(request,'grades.html',context) 
 
 @login_required(login_url='login')
-@allowed_user(allowed_roles=['Studnets'])
+@allowed_user(allowed_roles=['Students'])
 def GradeData(request,work_id):
     work = StudentWorks.objects.get(id=work_id)
     context = {'work':work}

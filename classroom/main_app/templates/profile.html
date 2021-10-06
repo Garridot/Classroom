@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}{{user.full_name}}{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 <div class="container-fluid">
