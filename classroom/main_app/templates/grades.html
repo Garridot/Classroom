@@ -29,6 +29,43 @@
             </li>
             {% endfor %}            
         </ul>
+        <div class="filters">
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['passed','failed'],
+                    datasets: [{                        
+                        data: ['{{passeds}}','{{faileds}}'],
+                        backgroundColor: [
+                            'rgb(35, 141, 35,0.3)',
+                            'rgb(241, 74, 74,0.3)',                            
+                        ],
+                        borderColor: [
+                            'rgb(35, 141, 35,0.3)',
+                            'rgb(241, 74, 74,0.3)',
+                            
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            </script>
+            <div class="average" style="padding: 1rem 0; text-align: center;">
+                <h6>Your Average: {{average}}</h6>
+            </div>
+            
+
+        </div>
     </div>
 </div> 
 {% endblock %}   

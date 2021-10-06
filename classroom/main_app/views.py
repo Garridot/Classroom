@@ -185,8 +185,13 @@ def HomeView(request):
 @login_required(login_url='login')
 @allowed_user(allowed_roles=['Students'])
 def GradesView(request,email):
+    data = user_profile(request)    
+    user = data['user']
+    notifications = data['notifications']
     student = Students.objects.get(user=request.user)
     works   = StudentWorks.objects.filter(student=student).all() 
+    passeds = StudentWorks.objects.filter(student=student,status='Passed').all().count()
+    faileds = StudentWorks.objects.filter(student=student,status='Failed').all().count()    
     total_works = 0
     for w in works:
         total_works += 1        
@@ -195,8 +200,10 @@ def GradesView(request,email):
         grades += g.grade 
 
     average = (int(grades)/int(total_works)) 
+    average = round(average, 1)
           
-    context = {'student':student,'works':works,'average ':average }    
+    context = {'student':student,'works':works,'average':average,'notifications':notifications,
+                'user':user,'passeds':passeds,'faileds':faileds }    
     return render(request,'grades.html',context) 
 
 @login_required(login_url='login')
