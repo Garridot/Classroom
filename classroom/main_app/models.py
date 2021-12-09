@@ -153,11 +153,10 @@ class Students(models.Model):
     date_of_birth   = models.DateField(default=datetime.date.today)
     gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
     gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
-    nationality     = CountryField() 
-    # phone           = PhoneNumberField()
+    nationality     = CountryField()     
     year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,blank=True,null=True)
     profile_picture = models.ImageField(upload_to=upload_location_students,blank=True,null=True)    
-    HS_diploma      = models.FileField(upload_to=upload_location_students,blank=True,null=True)
+    
 
     class Meta():
         verbose_name        = 'Student'
@@ -176,8 +175,7 @@ class Students(models.Model):
         return age 
 
     def delete(self,*args,**kwargs):
-        self.profile_picture.delete()
-        self.HS_diploma.delete()
+        self.profile_picture.delete()        
         super().delete(*args,**kwargs)             
 
 def upload_location_teachers(instance,filename):
@@ -249,34 +247,7 @@ class Content(models.Model):
         self.field.delete()
         super().delete(*args,**kwargs)
 
-def upload_location_applications(instance,filename):
-    return f"applications/{instance.full_name}/{filename}"
-class Applications(models.Model):
 
-    id              = models.AutoField(primary_key=True)
-    email           = models.EmailField()    
-    document        = models.CharField(max_length=8) 
-    nationality     = CountryField()
-    first_name      = models.CharField(max_length=200)
-    last_name       = models.CharField(max_length=200,)    
-    date_of_birth   = models.DateField()
-    gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
-    gender          = models.CharField(max_length=10, default='male', choices=gender_choice)   
-    year            = models.ForeignKey(SchoolYears,on_delete=models.DO_NOTHING)    
-    sent_date       = models.DateTimeField(auto_now_add=True,)    
-    profile_picture = models.ImageField(upload_to=upload_location_applications,blank=True,null=True)
-    HS_diploma      = models.FileField(upload_to=upload_location_applications,blank=True,null=True,)
-      
-    def __str__(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-    @property
-    def full_name(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()
-        self.HS_diploma.delete()
-        super().delete(*args,**kwargs)      
 
 class Events(models.Model):
     id          = models.AutoField(primary_key=True)  

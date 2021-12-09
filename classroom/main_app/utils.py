@@ -82,8 +82,7 @@ def request_account(request):
     data = user_profile(request)
     user = data['user']
 
-    if request.user.is_admin:
-        admissions   = Applications.objects.order_by('-sent_date').all()
+    if request.user.is_admin:        
         history      = None
         classwork    = None 
         studentworks = None        

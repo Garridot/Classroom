@@ -16,7 +16,7 @@ urlpatterns = [
     path('password_reset_done/<str:email>',views.PasswordResetDone,name='password_reset_done'),
 
     path('applications_form/',views.ApplicationsFormView,name='applications_form'),
-    path('application_send/<str:pk>',views.ApplicationSend,name='application_send'), 
+    
 
     path('home/',views.HomeView,name='home'),
 
@@ -30,10 +30,9 @@ urlpatterns = [
 
     path('password_change/email=<str:email>/',views.PasswordsChange,name='password_change'),
 
-    path('admissions/',views.AdmissionsView,name='admissions'),
-    path('admissions/admission_data/email=<str:email>',views.AdmissionData,name='admission'),
-    path('admissions/admission_accept/email=<str:email>',views.AdmissionAccept,name='admission_accept'),
-    path('admissions/admission_denied/email=<str:email>',views.AdmissionDenied,name='admission_denied'),
+   
+    
+    
 
     path('students/',views.StudentsView,name='students'),
     path('students/student/email=<str:email>',views.StudentData,name='student'),

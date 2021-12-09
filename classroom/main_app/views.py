@@ -11,10 +11,14 @@ from django.contrib.auth import login, logout , authenticate
 from django.contrib.auth.forms import  PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 
+
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from calendar import HTMLCalendar
 from django.http import JsonResponse
+
+from django.views import View
+
 
 from .models import * 
 from .forms import *
@@ -104,40 +108,44 @@ def PasswordResetForm(request,email,token):
 def PasswordResetDone(request,email):
     return render(request,'password_reset/password_reset_done.html',{'email':email})
 
+
+# Register
 def ApplicationsFormView(request):
-    form = ApplicationsForm()
+    user_form = UserForm()
+    form = StudentsForm()
     title = 'Apply Form'
     if request.method == 'POST':
-        form = ApplicationsForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            ApplicationSendEmail(email=form.instance.email)        
-            group  = Group.objects.get(name='Admins')
-            Notifications.objects.create(message=f"New admission has been received!",receivers=group)     
-            return redirect('application_send',pk=form.instance.email)
+        form = StudentsForm(request.POST,request.FILES)
+        user_form = UserForm(request.POST)
+        if form.is_valid() and user_form.is_valid():
+
+            user_form.save()
+            form.instance.user = UserAccount.objects.get(email=user_form.instance.email)
+            form.save()            
+            AdmissionEMAIL(email=user_form.instance.email)
+            return redirect('login')
         else:
             for msg in form.errors:
-                messages.error(request,f"{msg}:{form.errors}")   
-    context={'form':form,'title':title}
+                messages.error(request,f"{msg}:{form.errors}")  
+    context={'form':form,'title':title,'user_form':user_form}    
     return render(request,'form.html',context)  
-def ApplicationSend(request,pk):
-    admission = Applications.objects.get(email=pk)
-    context={'admission':admission}
-    return render(request,'application_send.html',context) 
-def ApplicationSendEmail(email):
-    admission = Applications.objects.get(email=email)  
+
+def AdmissionEMAIL(email):
+    admission = UserAccount.objects.get(email=email)  
     context   = {'email':email,'admission':admission}     
-    template  = get_template('emails/application_send_email.html')
+    template  = get_template('emails/application_accepted.html')
     content   = template.render(context)
 
     email     = EmailMultiAlternatives(
-        'Request received!',
-        'Your application has been successfully submitted.',
+        f'Congratulations {admission.full_name}!',
+        'Your application has been successfully accepted.',
         EMAIL_HOST_USER,
         [email]
     )
     email.attach_alternative(content,'text/html')
     email.send()
+
+
 
 def RecentContent(request):
     from django.utils import timezone 
@@ -154,6 +162,10 @@ def RecentContent(request):
             History.objects.create(student=student,content_id=content,topic_id=content.topic,course_id=content.topic.course)
 
     return JsonResponse(data,safe=False)   
+
+
+
+
 
 @login_required(login_url='login')
 def HomeView(request):
@@ -259,79 +271,9 @@ def PasswordsChange(request,email):
     context = {'form':form,'title':title}
     return render(request,'form.html',context)        
 
-@login_required(login_url='login')
-def AdmissionsView(request):
-    data = user_profile(request)
-    user = data['user']
-    admissions = Applications.objects.all()
-    filters  = ApplyFilters(request.GET,queryset=admissions)
-    admissions = filters.qs     
-    title    = 'Admissions'          
-    context  = {'admissions':admissions,'filters':filters,'title':title,'user':user}
-    return render(request,'request_list.html',context)
-@login_required(login_url='login')
-@allowed_user(allowed_roles=['Admins'])
-def AdmissionData(request,email):
-    admission = Applications.objects.get(email=email)   
-    context = {'admission':admission}
-    return render(request,'admission_profile.html',context)
-@login_required(login_url='login')
-@allowed_user(allowed_roles=['Admins'])
-def AdmissionAccept(request,email): 
-    admission = Applications.objects.get(email=email)  
-    title = 'Create Student'
-    form = UserForm()
-    if request.method=='POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            group  = Group.objects.get(name='Students')
-            form.instance.groups.add(group) 
-            user = UserAccount.objects.get(email=form['email'].value()) 
-            create_student(user,admission) 
-            AdmissionEMAIL(email)  
-            admission.delete()         
-            messages.success(request,'Student sucessfully created')            
-            return redirect('students')
-        else:
-            for msg in form.errors:
-                messages.error(request,f"{msg}:{form.errors}")    
 
-    context = {'form':form,'admission':admission,'title':title}
-    return render(request,'student_form.html',context)
 
-@login_required(login_url='login')
-@allowed_user(allowed_roles=['Admins'])
-def AdmissionEMAIL(email):
-    admission = Applications.objects.get(email=email)  
-    context   = {'email':email,'admission':admission}     
-    template  = get_template('emails/application_accepted.html')
-    content   = template.render(context)
 
-    email     = EmailMultiAlternatives(
-        f'Congratulations {admission.full_name}!',
-        'Your application has been successfully accepted.',
-        EMAIL_HOST_USER,
-        [email]
-    )
-    email.attach_alternative(content,'text/html')
-    email.send()
-@login_required(login_url='login')
-@allowed_user(allowed_roles=['Admins'])
-def AdmissionDenied(email): 
-    admission = Applications.objects.get(email=email)  
-    context   = {'email':email,'admission':admission}     
-    template  = get_template('emails/application_denied.html')
-    content   = template.render(context)
-
-    email     = EmailMultiAlternatives(
-        'Student not chosen',
-        'Your application has been successfully denied.',
-        EMAIL_HOST_USER,
-        [email]
-    )
-    email.attach_alternative(content,'text/html')
-    email.send()       
 
 @login_required(login_url='login')
 def StudentsView(request):
@@ -376,6 +318,10 @@ def StudentDelete(request,email):
     user.delete()
     messages.success(request,'Student successfully deleted')
     return redirect('students')
+
+
+
+  
 
 @login_required(login_url='login')
 def TeachersView(request):  
@@ -794,9 +740,9 @@ def YearData(request,pk):
     year = SchoolYears.objects.get(id=pk)
     students  = Students.objects.filter(year = year)
     courses   = Courses.objects.filter(year = year)
-    admissions = Applications.objects.filter(year=year).all()
     
-    context   = {'year':year,'students':students,'courses':courses,'admissions':admissions}
+    
+    context   = {'year':year,'students':students,'courses':courses}
     return render(request,'year_data.html',context)  
 
 
