@@ -22,7 +22,7 @@ color: #434c55;
 align-items: center;
 padding: 5%;
 animation-name: view;
-animation-duration: 2s;
+animation-duration: 3s;
 max-width: 100%;
 }
 @keyframes view{
