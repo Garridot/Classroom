@@ -1,56 +1,21 @@
 from django.db import models
-from django.db.models.signals import post_delete, pre_save
-from django.dispatch import receiver
-from django.contrib.auth.models import  BaseUserManager, AbstractBaseUser,PermissionsMixin, Group
 from django.core.validators import MaxValueValidator, MinValueValidator
-
-from django.db.models.deletion import CASCADE
-from django_countries.fields import CountryField
-from django.contrib.auth.models import Group
 from django.utils import timezone
-from datetime import date
-
-# from phonenumber_field.modelfields import PhoneNumberField
-
 import datetime 
+
+
 
 # Create your models here.
 
-class UserManager(BaseUserManager):
+def upload_location_content(instance,filename):
+    return f'course/{instance.topic.course}/{instance.topic}/files/{filename}'   
 
-    def create_superuser(self,email,password,**other_fields):
-        other_fields.setdefault('is_staff',True)
-        other_fields.setdefault('is_superuser',True)
-        email = self.normalize_email(email)        
-        return self.create_user(email, password, **other_fields)
+def location_assignment(instance,filename):
+    return  f'course/{instance.topic.course}/{instance.topic}/{instance.title}/{filename}'
 
+def location_students_assignment(instance,filename):
+    return  f'course/{instance.assignment.topic.course}/{instance.assignment.topic}/{instance.assignment}/students_assignment/{filename}'
 
-
-    def create_user(self,email,password,**other_fields):  
-
-        other_fields.setdefault('is_active',True)
-        email = self.normalize_email(email)
-        return self.create_user(email, password, **other_fields)
-class UserAccount(AbstractBaseUser,PermissionsMixin):
-    
-    email           = models.EmailField(unique=True)        
-    groups          = models.ManyToManyField(Group,blank=True)     
-    date_joined     = models.DateTimeField(auto_now_add=timezone.now())
-    last_login      = models.DateTimeField(auto_now=timezone.now())    
-    is_active       = models.BooleanField(default=True)
-    is_staff        = models.BooleanField(default=False)
-    is_superuser    = models.BooleanField(default=False)
-    is_teacher      = models.BooleanField(default=False)
-    is_student      = models.BooleanField(default=False)      
-    is_admin        = models.BooleanField(default=False) 
-    
-
-    USERNAME_FIELD  = 'email'
-   
-    objects = UserManager()
-
-    def __str__(self):
-        return self.email
 
 
 class SchoolYears(models.Model):
@@ -70,49 +35,13 @@ class SchoolYears(models.Model):
         for student in get_students:
             students += 1            
         return students
-
-def upload_location_admins(instance,filename):
-    return f"accounts/admins/{instance.full_name}/{filename}"
-class Admins(models.Model):
-    id              = models.AutoField(primary_key=True)    
-    user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
-           
-    document        = models.CharField(max_length=8,unique=True) 
-    first_name      = models.CharField(max_length=200)
-    last_name       = models.CharField(max_length=200)
-    # phone           = PhoneNumberField()    
-    date_of_birth   = models.DateField(default=datetime.date.today) 
-    gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
-    gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
-    nationality     = CountryField()      
-    description     = models.TextField(max_length=500,blank=True)
-    profile_picture = models.ImageField(blank=True,null=True, upload_to=upload_location_admins)
-    
-    class Meta():
-        verbose_name        = 'Admin'
-        verbose_name_plural = 'Admins'
-    
-    def __str__(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-    @property
-    def full_name(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-    @property
-    def email(self):
-        return str(self.user)
-
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()
-        super().delete(*args,**kwargs)          
-
-def upload_location(instance,filename):
-    return f'course/{instance.name}/course_picture/{filename}'         
+       
 class Courses(models.Model): 
     id             = models.AutoField(primary_key=True)
     name           = models.CharField(max_length=200)
     description    = models.TextField()
     year           = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)    
-    course_picture = models.ImageField(blank=True,null=True, upload_to=upload_location) 
+    
 
     class Meta():        
         verbose_name        = 'Course'
@@ -121,17 +50,15 @@ class Courses(models.Model):
     def __str__(self):
         return self.name
 
-    def delete(self,*args,**kwargs):
-        self.course_picture.delete()
-        super().delete(*args,**kwargs)      
+          
   
-class CourseTopic(models.Model):
+class Topic(models.Model):
 
     id          = models.AutoField(primary_key=True)    
     course      = models.ForeignKey(Courses,on_delete=models.CASCADE,)
     name        = models.CharField(max_length=200)
     description = models.TextField()   
-    year        = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
+    
 
     class Meta():
         verbose_name        = 'Course Content'
@@ -141,98 +68,10 @@ class CourseTopic(models.Model):
     def __str__(self):
         return self.name 
 
-def upload_location_students(instance,filename):
-    return f"accounts/students/{instance.full_name}/{filename}"
-class Students(models.Model):
-
-    id              = models.AutoField(primary_key=True) 
-    user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)    
-    document        = models.CharField(max_length=8,unique=True)    
-    first_name      = models.CharField(max_length=200)
-    last_name       = models.CharField(max_length=200)
-    date_of_birth   = models.DateField(default=datetime.date.today)
-    gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
-    gender          = models.CharField(max_length=10, default='male', choices=gender_choice)
-    nationality     = CountryField()     
-    year            = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,blank=True,null=True)
-    profile_picture = models.ImageField(upload_to=upload_location_students,blank=True,null=True)    
     
-
-    class Meta():
-        verbose_name        = 'Student'
-        verbose_name_plural = 'Students'
-    def __str__(self):
-        return '{} {}'.format(self.first_name,self.last_name)    
-    @property
-    def full_name(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-    @property
-    def email(self):
-        return str(self.user)
-    @property
-    def age(self):
-        age = date.today().year - self.date_of_birth.year
-        return age 
-
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()        
-        super().delete(*args,**kwargs)             
-
-def upload_location_teachers(instance,filename):
-    return f"accounts/teachers/{instance.full_name}/{filename}"
-class Teachers(models.Model):
-
-    id              = models.AutoField(primary_key=True)    
-    user            = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
-    course          = models.ForeignKey(Courses,on_delete=models.DO_NOTHING,null=True,blank=True)      
-    document        = models.CharField(max_length=8,unique=True) 
-    first_name      = models.CharField(max_length=200)
-    last_name       = models.CharField(max_length=200)    
-    date_of_birth   = models.DateField(default=datetime.date.today) 
-    gender_choice   = (('male','male'),('feminine','feminine'),('undefined','undefined'))  
-    gender          = models.CharField(max_length=10, default='male', choices=gender_choice) 
-    nationality     = CountryField()         
-    description     = models.TextField(max_length=500,blank=True,null=True)
-    profile_picture = models.ImageField(blank=True,null=True, upload_to=upload_location_teachers)
-    
-    class Meta():
-        verbose_name        = 'Teacher'
-        verbose_name_plural = 'Teachers'
-    
-    def __str__(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-
-    @property
-    def full_name(self):
-        return '{} {}'.format(self.first_name,self.last_name)
-
-    @property
-    def email(self):
-        return str(self.user)
-        
-    def teacher_course(self):
-        return str(self.course)
-
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()
-        super().delete(*args,**kwargs)    
-
-class Notifications(models.Model):
-
-    id        = models.AutoField(primary_key=True)     
-    message   = models.CharField(max_length=100)
-    receivers = models.ForeignKey(Group,null=True,blank=True,on_delete=models.DO_NOTHING,related_name='receiver')
-    unique_receiver = models.ForeignKey(UserAccount,null=True,blank=True,on_delete=models.CASCADE,related_name='unique_receiver') 
-    year      = models.ForeignKey(SchoolYears,on_delete=models.CASCADE,null=True,blank=True)
-    created   = models.DateTimeField(auto_now_add=True) 
-    def __str__(self):
-        return str(self.message)
-
-def upload_location_content(instance,filename):
-    return f'course/{instance.topic.course}/{instance.topic}/files/{filename}'       
 class Content(models.Model): 
     id       = models.AutoField(primary_key=True)    
-    topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
+    topic    = models.ForeignKey(Topic,on_delete=models.CASCADE)
     name     = models.CharField(max_length=50)        
     field    = models.FileField(upload_to=upload_location_content)
     created  = models.DateTimeField(auto_now_add=timezone.now())
@@ -247,15 +86,12 @@ class Content(models.Model):
         self.field.delete()
         super().delete(*args,**kwargs)
 
-
-
 class Events(models.Model):
     id          = models.AutoField(primary_key=True)  
     title       = models.CharField(max_length=50)
     message     = models.TextField()
     event_date  = models.DateField()    
-    year        = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
-    author      = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
+    year        = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)    
     created     = models.DateTimeField(auto_now_add=datetime.datetime.now())
     class Meta():
         verbose_name        = 'Event'
@@ -263,52 +99,51 @@ class Events(models.Model):
 
 class Comments(models.Model):
     event        = models.ForeignKey(Events,on_delete=models.CASCADE, related_name='comments')   
-    user         = models.ForeignKey(UserAccount,on_delete=models.CASCADE) 
+    user         = models.ForeignKey(to='users.UserAccount',on_delete=models.CASCADE) 
     menssage     = models.TextField()
     date_added   = models.DateTimeField(auto_now_add=True)
     
 class History(models.Model):
-    student     = models.ForeignKey(Students,on_delete=models.CASCADE)
+    student     = models.ForeignKey(to='users.Students',on_delete=models.CASCADE)
     content_id  = models.ForeignKey(Content,on_delete=models.CASCADE)
-    topic_id    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
+    topic_id    = models.ForeignKey(Topic,on_delete=models.CASCADE)
     course_id   = models.ForeignKey(Courses,on_delete=models.CASCADE)
     seen        = models.DateTimeField(auto_now_add=timezone.now())
 
-def upload_location_assignment(instance,filename):
-    return  f'course/{instance.course}/{instance.topic}/assignment/{filename}'
-class ClassWork(models.Model):
-    author   = models.ForeignKey(Teachers,on_delete=models.CASCADE)
-    year     = models.ForeignKey(SchoolYears,on_delete=models.CASCADE)
-    course   = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    topic    = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.content_id.name}"
+
+class School_Assignment(models.Model):
+    topic    = models.ForeignKey(Topic,on_delete=models.CASCADE)
     title    = models.CharField(max_length=50) 
     instructions = models.TextField()
-    file     = models.FileField(upload_to=upload_location_assignment,null=True,blank=True)
+    file     = models.FileField(upload_to=location_assignment,null=True,blank=True)
     deadline = models.DateField(null=True,blank=True)
-    created = models.DateTimeField(auto_now=datetime.datetime.now())
+    created  = models.DateTimeField(auto_now=datetime.datetime.now())
 
     def __str__(self):
         return self.title
 
     def delete(self,*args,**kwargs):
         self.file.delete()
-        super().delete(*args,**kwargs)    
+        super().delete(*args,**kwargs)
 
-
-def upload_location_studentwork(instance,filename):
-    return  f'course/{instance.course}/{instance.topic}/assignment/studentworks/{filename}'    
-class StudentWorks(models.Model):
-    assignment = models.ForeignKey(ClassWork,on_delete=models.CASCADE)
-    student   = models.ForeignKey(Students,on_delete=models.CASCADE)
-    course    = models.ForeignKey(Courses,on_delete=models.CASCADE)
-    topic     = models.ForeignKey(CourseTopic,on_delete=models.CASCADE)
-    file      = models.FileField(upload_to=upload_location_studentwork,null=True,blank=True)
-    comment   = models.TextField(null=True,blank=True)
-    grade     = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)],null=True,blank=True)
+    def get_absolute_url(self):        
+        return f"courses/{self.topic.course.id}/topic/{self.topic.id}/assignments/{self.id}"     
+    
+    
+class Students_Assignment(models.Model):
+    assignment = models.ForeignKey(School_Assignment,on_delete=models.CASCADE)    
+    student    = models.ForeignKey(to='users.Students',on_delete=models.CASCADE)       
+    file       = models.FileField(upload_to=location_students_assignment,null=True,blank=True)    
+    grade      = models.PositiveIntegerField(validators=[MaxValueValidator(10), MinValueValidator(1)],null=True,blank=True)
     status_choice   = (('Passed','Passed'),('Unchecked','Unchecked'),('Failed','Failed'))  
     status    = models.CharField(max_length=10, default='Unchecked', choices=status_choice,null=True,blank=True)
     
     def __str__(self):
         return f"{self.assignment.title}"
+
+    def get_absolute_url(self):        
+        return f"courses/{self.assignment.topic.course.id}/topic/{self.assignment.topic.id}/assignments/{self.assignment.id}/students_assignment/{self.id}"             
 
     

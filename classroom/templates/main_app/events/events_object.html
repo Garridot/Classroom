@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Event {{object.title}}{% endblock %}
+{% block content %}
+<style>
+.container-fluid{
+width: 100%;
+padding: 0 2rem;
+}
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+}
+.title a{
+text-decoration: none;
+color: #212529;
+} 
+.title a:hover{
+color: #383f46;    
+}  
+.information{
+padding: 0 0 2rem;
+}
+
+.information h3{
+    font-size: 3.5rem;
+    padding: 1rem 0;
+    color: #212529;
+}
+.information h6,
+.information a{
+    color: #AAA;
+    text-decoration: none;
+    line-height: 2;
+    
+}
+.information p{
+    width: 80%;
+    color: #383f46;
+    line-height: 2;
+    text-align: justify;
+}
+
+
+.comments{
+padding: 2rem 0;
+width: 80%;
+} 
+.comments h3{
+    color: #212529;
+}
+.comments p{
+    color: #545658;
+}
+.list-group{
+padding: .5rem;
+}
+.form-control{
+
+padding: 1rem;    
+}
+input.comment{
+float: right;
+background: #065fd4;
+color: white;
+border: none;
+padding: .4rem 1rem;
+border-radius: 5px;
+position: absolute;
+visibility: hidden;
+transition: all 0.2s;
+opacity: 0;
+}
+input.comment.sent{
+position: relative;
+visibility: visible;
+opacity: 1;   
+}
+.comment{
+padding: 2rem 1rem 0 ;
+}
+.comment .main{
+list-style: none;
+display: flex; 
+justify-content: space-between;
+}
+.main li{
+list-style: none;
+display: flex;
+
+}
+.main li p#user{
+color: #383f46;
+font-weight: 800;
+padding: 0 1rem 0 0;
+}
+.main li p#date{
+color: #AAA;
+}
+.main i{
+color: rgb(141, 141, 141);
+}
+
+.reply-form{
+    display: none;
+}
+.reply-form.view{
+    display: block;
+}
+
+@media(max-width:700px){
+.information{
+    padding: 0;
+}    
+.main li{
+display: block;
+}    
+}
+@media(max-width:600px){
+.information p{
+width: 100%;
+}
+}
+@media(max-width:411px){
+.information h3{
+font-size: 3rem;
+text-align: center;
+}
+.comments{
+width: 100%;
+}
+}
+
+</style>
+<div class="container-fluid">
+    <div class="title">
+        <a href="{% url 'events_list' %}">
+          <h1>Events</h1>
+        </a>   
+    </div>
+    <div class="information">
+        <h3>{{object.title}}</h3>  
+        <h6>Date: {{object.event_date}}</h6>
+        <p>{{object.message}}</p>
+    </div>
+   
+</div>
+<!-- <script>
+    
+    var submit  = document.querySelector('.comment')
+    var message = document.querySelector('#message')
+    message.addEventListener("click",function(){
+        submit.classList.add('sent')
+    })
+
+    var reply_btn = document.querySelector('#reply-btn')
+    var reply_form = document.querySelector('#reply-form')
+
+    reply_btn.addEventListener("click",function(){
+        reply_form.classList.toggle('view')
+    })
+
+</script> -->
+{% endblock %}

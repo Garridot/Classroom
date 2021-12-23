@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Topic {{object.name}}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main_app/css/course_data.css' %}">
+
+
+<div class="container-fluid">  
+    
+    
+    <div class="title">
+        <a href=""><h1>{{course.name}}</h1></a>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">            
+            {{message}}
+        </div>        
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    {% if request.user.is_staff %}
+    <div class="update">
+        <a href="{% url 'topic_update' course_pk=course.id topic_pk=object.id %}">Update Topic</a>        
+        <a href="{% url 'topic_delete' course_pk=course.id topic_pk=object.id %} " id="delete">Delete</a>
+        
+    </div>
+
+
+    {% endif %}
+    <div class="presentation">
+        <div class="img col">
+            <img src="" alt="">
+        </div>
+        <div class="data col">
+            <h2>{{object.name}}</h2>
+            <h5>Course: {{course.name}}</h5>
+            <p>{{object.description}}</p>
+        </div>
+    </div>
+
+
+
+    <div class="content">
+        <div class="c-title">
+            <h4><i class="far fa-bookmark"></i> Content</h4>
+            {% if request.user.is_staff  %}
+            <a href="{% url 'content_create' course_pk=course.id topic_pk=object.id %}"><i class="fas fa-plus"></i> Add</a>
+            {% endif %}
+        </div>
+        {% if contents %}{% for content in contents %}
+        <div class="list-content">
+            <a href="{{content.field.url}}"  onclick="content_select(this)" data-id="{{content.id}}"  id="content_field"><li class="list-group-item">
+                <p>{{content.name}}</p>
+                <p>{{content.created}}</p>
+            </li></a>
+            {% if request.user.is_staff %}
+            <a href="{% url 'content_delete' course_pk=course.id topic_pk=object.id content_pk=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
+            {% endif %}
+        </div>
+        {% endfor %}{% else %}
+        <li class="list-group-item">
+            <p>No content yet...</p>
+        </li>
+        {% endif %}
+    </div>
+
+
+
+
+    
+    <div class="content">
+        <div class="c-title">
+            <h4><i class="fas fa-pen"></i> Assignments</h4>
+            {% if request.user.is_staff %}
+            <a href="{% url 'assignment_create' course_pk=course.id topic_pk=object.id  %}"><i class="fas fa-plus"></i> Add</a>
+            {% endif %}
+        </div>
+        {% if assignments %}{% for assignment in assignments %}
+        <div class="list-content">
+            <a href="{% url 'assignment_data' course_pk=course.id topic_pk=object.id assignment_pk=assignment.id  %}" id="content_field"><li class="list-group-item">
+                <p>{{assignment.title}}</p>
+                <p>{{assignment.deadline}}</p>
+            </li></a>
+        </div>
+        {% endfor %}{% else %}
+        <li class="list-group-item">
+            <p>No content yet...</p>
+        </li>
+        {% endif %}
+    </div>
+
+
+</div>
+<script>
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function content_select(e){        
+        var content = e.getAttribute('data-id')        
+
+        var url = '/academiaweb/recent_content/'
+        fetch(url,{                
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',                
+                'X-CSRFToken' : getCookie('csrftoken')          
+            },
+            body : JSON.stringify({'content':content})
+
+        })
+        .then(
+            function(response){     
+                console.log(response)           
+                return response.json()
+            }
+        )
+    }
+    
+
+
+
+</script>    
+{% endblock %}     

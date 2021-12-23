@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Assignment {{object.title}}{% endblock %}
+{% block content %}
+<style>
+.container-fluid .title{
+border-bottom: 1px solid #d9dadc;
+padding: 25px 0 10px;
+margin-bottom: 30px;
+text-align: center;
+}
+.title a{
+text-decoration: none;
+color: #212529;
+}
+.assignment{
+width: 60%;
+margin: auto;
+}
+h4,p,h1{
+padding: 1rem 0 0 0;
+}
+
+a{
+color: rgb(150, 150, 150)
+}
+a:hover{
+color:rgb(88, 88, 88) ;
+}
+form{
+width: 60%;
+margin: auto;
+}
+form h5,input{
+margin: 2rem 0;
+}
+form input,textarea{
+display: block;
+width: 100%;
+padding: .375rem .75rem;
+font-size: 1rem;
+font-weight: 400;
+line-height: 1.5;
+color: #212529;
+background-color: #fff;
+background-clip: padding-box;
+border: 1px solid #ced4da;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+border-radius: .25rem;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+form input[type=file]{
+font-size: 1rem;
+padding: 0;
+cursor: pointer;
+}
+form input[type=file]::-webkit-file-upload-button{
+color: white;
+background: #212529;
+border: none;
+outline: none;  
+cursor: pointer;    
+border-top-right-radius: 50px;
+border-bottom-right-radius: 50px;
+padding: 10px;
+}
+form input[type=submit]{
+background: #212529;
+color: white;
+}
+@media(max-width:500px){
+p{
+width: 90%;
+text-align: justify;
+}
+form{
+width: 100%;
+
+}
+}
+
+</style>
+<div class="container-fluid">
+    <div class="title">
+        <h2><a href="{% url 'topic' course_pk=object.topic.course.id topic_pk=object.topic.id  %}">{{object.topic}}</a></h2>
+    </div>
+    <div class="assignment">
+        <h1>{{object.title}}</h1>
+        <p>{{object.instructions}}</p> 
+        <h4><a href="{{object.file.url}}">View File</a></h4>
+        <h4 style="color: rgb(253, 77, 77); padding: 1rem 0;">Deadline: {{object.deadline}}</h4>
+        {%  if request.user.is_staff %}
+        <h4><a href="{% url 'students_assignment' course_pk=object.topic.course.id topic_pk=object.topic.id assignment_pk=object.id  %}">View Students Works</a></h4>
+        {% endif %}
+    </div>    
+    {%  if request.user  %}
+    {% if File_was_already_sent %}
+    <h5 style="text-align: center; color: forestgreen;">Your work was uploaded successfully </h5>
+    {% else  %}    
+    {% if object.deadline == deadline %}
+    <h6 style="text-align: center;">Time was over for assignment submission</h6>
+    {% else %}    
+    <form  method="POST" action="{% url 'send_homework' object.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h5>File Update</h5>
+        <input type="file" name="file">
+        <input type="submit" value="Send Work">
+    </form>
+    {% endif %}  
+    {% endif %} 
+    {% endif %}  
+</div>
+{% endblock %}

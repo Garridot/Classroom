@@ -1,104 +1,63 @@
-from django.contrib import messages
-from django.db.models.query_utils import Q
-from django.http import request
-from django.shortcuts import redirect
 from .models import *
 from .forms import *
+from calendar import HTMLCalendar
+from users.models import *
 
-def user_profile(request):
-    if request.user.is_admin or request.user.is_superuser:
-        user          = Admins.objects.get(user=request.user)
-        admins        = Admins.objects.all()
-        teachers      = Teachers.objects.all()
-        students      = Students.objects.all()
-        courses       = Courses.objects.all()
-        group         = Group.objects.get(name='Admins')        
-        notifications = Notifications.objects.filter(Q(receivers=group) | Q(unique_receiver=request.user)).order_by('-created').all()
+class GetCalendar():
+    def calendar():
+        year     = timezone.now().year
+        month    = timezone.now().month
+        calendar = HTMLCalendar().formatmonth(theyear=year,themonth=month) 
+        return calendar
+
+class UserObjs():   
+
+    def request_user(user):
+        user = UserAccount.objects.get(email=user)
+        user_request = {}
         
-        events        = Events.objects.all()
-
-    elif request.user.is_teacher:
-        user          = Teachers.objects.get(user=request.user)
-        admins        = Admins.objects.all()
-        teachers      = Teachers.objects.all()        
-        courses       = Courses.objects.get(name=user.course)    
-        students      = Students.objects.filter(year=courses.year).all()
-        group         = Group.objects.get(name='Teachers')
-        notifications = Notifications.objects.filter(Q(receivers=group,year=courses.year) | Q(unique_receiver=request.user)).order_by('-created').all()
         
-        events        = Events.objects.filter(year=courses.year).all()  
+        if user.groups.all()[0].name == 'Students':                        
+            student = Students.objects.get(user=user)
+            
 
-    elif request.user.is_student:        
-        user          = Students.objects.get(user=request.user)
-        admins        = Admins.objects.all()
-        teachers      = Teachers.objects.all()
-        students      = None
-        courses       = Courses.objects.filter(year=user.year).all()
-        group         = Group.objects.get(name='Students')
-        notifications = Notifications.objects.filter(Q(receivers=group,year=user.year) | Q(unique_receiver=request.user)).order_by('-created').all()
-        
-        events        = Events.objects.filter(year=user.year).all()
+            user_request['title1'] = 'Seen recently '
+            
+            list1  = History.objects.filter(student=student).order_by('-seen')[0:5]
+            user_request['title2'] = 'Homework'  
+            course = Courses.objects.filter(year=student.year)           
+            list2  = School_Assignment.objects.filter(topic__in=Topic.objects.filter(course__in=course))[0:5]
 
-    return {'user':user,'courses':courses,'admins':admins,'teachers':teachers,'students':students,'events':events,'notifications':notifications,} 
+        elif user.groups == 'Teachers':
+            teacher = Teachers.objects.get(user=user)
+            
 
-def create_teacher(user_form,form):
-    user_form.instance.is_teacher = True       
-    user_form.save() 
-    group  = Group.objects.get(name='Teachers')
-    user_form.instance.groups.add(group)   
-    email = user_form['email'].value            
-    user   = UserAccount.objects.get(email=email)             
-    form.instance.user = user
-    form.save()  
-    
-def create_admin(user_form,form):
-    user_form.instance.is_admin = True
-    user_form.instance.is_staff = True
-    user_form.save()
-    group  = Group.objects.get(name='Admins')
-    user_form.instance.groups.add(group)
-    user   = UserAccount.objects.get(email=user_form['email'].value())             
-    form.instance.user = user
-    form.save()   
+            user_request['title1'] = 'School assignment'
+            list1  = School_Assignment.objects.filter(course=teacher.course)[0:5]   
+            user_request['title2'] = 'Homework' 
+            list2  = Students_Assignment.objects.filter()[0:5]  
 
-def create_student(user,admission):
-    from django.core.files import File 
-    Students.objects.create(
-        user          = user,              
-        document      = admission.document,
-        first_name    = admission.first_name,
-        last_name     = admission.last_name,
-        date_of_birth = admission.date_of_birth,
-        gender        = admission.gender,
-        nationality   = admission.nationality,
-        year          = admission.year, 
-        profile_picture = File(admission.profile_picture), 
-        HS_diploma      = File(admission.HS_diploma)         
-    )
-    
-    
- 
-def request_account(request):
-    data = user_profile(request)
-    user = data['user']
+        else:
+            
+            user_request['title1']  = 'Students'            
+            list1  = Students.objects.all()[0:5]
+            user_request['title2']  = 'Teachers'
+            list2  = Teachers.objects.all()[0:5] 
 
-    if request.user.is_admin:        
-        history      = None
-        classwork    = None 
-        studentworks = None        
+        return {'user_request':user_request,'list1':list1,'list2':list2}     
+              
+class Create_Teacher():
+    def create(form,form_kwargs):         
+        form.save()
+        email = form['email'].value()    
+        form_kwargs.instance.user = UserAccount.objects.get(email = email)             
+        form_kwargs.save() 
+               
 
-    if request.user.is_student:
-        history      = History.objects.order_by('-seen')[0:5]   
-        admissions   = None 
-        classwork    = ClassWork.objects.filter(year=user.year).all() 
-        studentworks = None  
-        
-    elif request.user.is_teacher:
-        classwork    = ClassWork.objects.filter(course=user.course).all()
-        studentworks = StudentWorks.objects.filter(course=user.course).order_by('-id').all()
-        admissions   = None 
-        history      = None  
-     
+class Create_Student():
+    def create(form,form_kwargs):
+        form.instance.is_student = True    
+        form.save()    
+        form_kwargs.instance.user = UserAccount.objects.get(email= form['email'])             
+        form_kwargs.save()     
 
-    return{'classwork':classwork,'admissions':admissions,'history':history,'studentworks':studentworks}    
-        

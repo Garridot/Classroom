@@ -1,39 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{{user.full_name}}{% endblock %}
+{% block title %}{{object.full_name}}{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/profile.css' %}">
 <div class="container-fluid">
     <div class="title">
         <h1>User Profile</h1>
     </div>
-    {% if request.user.is_admin or request.user.email == user.email %}
+    {% if request.user.is_staff or request.user == object.user.email %}
     <div class="update">
-        <a href="{{update_url}}">Update</a>
-        {% if request.user.is_admin %}
-        <a href="{{delete_url}}" id="delete">Delete</a>
-        {% endif %}
+        <a href="{% url 'user_profile_update' request.user %}">Update Account</a>        
+        <a href="{% url 'user_profile_delete' request.user %}" id="delete">Delete</a>        
     </div>
     {% endif %}
     <div class="user-profile">
         <div class="picture col">
-            <img src="{{user.profile_picture.url}}" width="400px">
+            <img src="{{object.profile_picture.url}}" width="400px">
         </div>
         <div class="data col">
-            <h2>{{user.full_name}}</h2>       
+            <h2>{object.full_name}}</h2>       
                  
-            <h5><i class="far fa-envelope"></i> {{user.email}}</h5>  
-            {% if user.course %}
-            <h6>Course : {{user.course}}</h6>
-            {% endif %}
-            {% if user.year %}
-            <h6>Year : {{user.year}}</h6>
-            {% endif %}
-            <h6>Document : {{user.document}}</h6>
-            <h6>Nationality : {{user.nationality}}</h6>
-            {% if user.description %}
-            <p>{{user.description}}</p>
-            {% endif %}
+            <h5><i class="far fa-envelope"></i> {{object.user.email}}</h5>  
+            
+            <h6>{{object.course}}</h6>
+            
+            
+            <h6>{{object.year}}</h6>
+
+            
+            <p>{{object.description}}</p>
+            
         </div>
     </div>
     

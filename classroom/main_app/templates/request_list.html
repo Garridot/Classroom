@@ -13,6 +13,8 @@
         {% endfor %}
     </div>
     {% endif %}
+
+
     <div class="content-title">
         <h3>{{title}}</h3>
 
@@ -23,66 +25,30 @@
     
     <div class="list-users">
         <ul class="list-group">
-            {% if students %}{% for student in students %}
+            {% if objs %}{% for obj in objs %}
             <li class="list-group-item">
-                <a href="{% url 'student' student.email %}">
-                    <img  class="profile_picture" src="{{student.profile_picture.url}}">
-                    <p id="info1">{{student.full_name}}</p>
-                    <p id="info2">{{student.yearl}}</p>
-                </a>
-            </li>{% endfor %}
+                <a href="{{get_data}}{{obj.id}}">
+
+                    <!-- Obj User -->
+                    <img  class="profile_picture" src="{{obj.profile_picture.url}}">
+                    <p id="info1">{{obj.full_name}}</p>                    
+                    
 
 
-            {% elif teachers %}{% for teacher in teachers %}
-            <li class="list-group-item">
-                <a href="{% url 'teacher' teacher.email %}">
-                    <img  class="profile_picture" src="{{teacher.profile_picture.url}}">
-                    <p id="info1">{{teacher.full_name}}</p>
-                    <p id="info2">{{teacher.course}}</p> 
-                </a>
-            </li>{% endfor %}
-
-            {% elif admins %}{% for admin in admins %}
-            <li class="list-group-item">
-                <a href="{% url 'admin' admin.email %}">
-                    <img  class="profile_picture" src="{{admin.profile_picture.url}}">
-                    <p id="info1">{{admin.full_name}}</p>
-                    <p id="info2">{{admin.email}}</p>
-                </a>
-            </li>{% endfor %}
-
-            {% elif admissions %}{% for admission in admissions %}
-            <li class="list-group-item">
-                <a href="{% url 'admission' admission.email %}">
-                    <img  class="profile_picture" src="{{admission.profile_picture.url}}">
-                    <p id="info1">{{admission.full_name}}</p>
-                    <p id="info2">{{admission.email}}</p>
-                </a>
-            </li>{% endfor %}
-            {% elif courses %}{% for course in courses %}
-            <li class="list-group-item">
-                <a href="{% url 'course' course.name course.year %}">
-                    <img  class="profile_picture" src="{{course.course_picture.url}}">
-                    <p id="info1">{{course.name}}</p>
-                    <p id="info2">{{course.year}}</p>
-                </a>
-            </li>{% endfor %}
+                    <!-- Obj Course -->
+                    <img  class="profile_picture" src="{{obj.course_picture.url}}">
+                    <p id="info1">{{obj.name}}</p>
+                    
 
 
-            {% elif years %}{% for year in years %}
-            <li class="list-group-item">
-                <a href="{% url 'year' year.id %}">
-                    <p id="info1">{{year.year}}</p>
-                    <p id="info2">{{year.total_students}} students</p>
-                </a>
-            </li>{% endfor %}
+                    <!-- Obj Year -->
+                    <p id="info1">{{obj.year}}</p>
+                    <p id="info2">{{obj.total_students}}</p>          
 
-            {% elif events %}{% for event in events %}
-            <li class="list-group-item">
-                <a href="{% url 'event' title=event.title date=event.event_date %}">                    
-                    <p id="info1">{{event.title}}</p>
-                    <p id="info1">{{event.year}} year</p>
-                    <p id="info2">{{event.event_date}}</p>
+
+                    <!-- Obj Event -->           
+                    <p id="info1">{{obj.title}}</p>                    
+                    <p id="info2">{{obj.event_date}}</p>
                 </a>
             </li>{% endfor %} 
 

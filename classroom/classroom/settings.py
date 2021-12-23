@@ -39,10 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main_app',
+    'users',
+
+
     'crispy_forms', 
     'django_filters',        
-    'django_countries',    
-    'phonenumber_field'
+    'django_countries', 
+    'django_cleanup.apps.CleanupConfig',  
+    
+    
 ]
 
 MIDDLEWARE = [
@@ -75,7 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'classroom.wsgi.application'
 
-AUTH_USER_MODEL = 'main_app.UserAccount'
+AUTH_USER_MODEL = 'users.UserAccount'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

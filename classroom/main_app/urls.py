@@ -7,79 +7,58 @@ urlpatterns = [
     path('information/',views.Information,name='information'),
     path('contact/',views.Contact,name='contact'),
 
-    path('login/',views.LoginView,name='login'),
-    path('logout/',views.LogoutView,name='logout'),
-
-    path('password_reset/',views.PasswordReset,name='password_reset'),
-    path('password_reset_email_sent/',views.PasswordResetEmailSent,name='password_reset_email_sent'),
-    path('password_reset_form/<str:email>/<token>',views.PasswordResetForm,name='password_reset_form'),
-    path('password_reset_done/<str:email>',views.PasswordResetDone,name='password_reset_done'),
-
-    path('applications_form/',views.ApplicationsFormView,name='applications_form'),
-    
-
     path('home/',views.HomeView,name='home'),
 
-    path('my_grades/email=<str:email>',views.GradesView,name='my_grades'),
-    path('my_grades/work/work_id=<str:work_id>',views.GradeData,name='grade'),
+    path('courses/',views.CoursesList.as_view(),name='courses'),
+    path('courses/create',views.CourseCreate.as_view(),name='course_create'),    
+    path('courses/<str:course_pk>/',views.CourseData.as_view(),name='course_data'),    
+    path('courses/<str:course_pk>/update',views.CourseUpdate.as_view(),name='course_update'),
+    path('courses/<str:course_pk>/delete',views.CourseDelete.as_view(),name='course_delete'),
 
-    path('recent_content/',views.RecentContent),
 
-    path('user_profile/email=<str:email>/',views.UserProfileView,name='user_profile'),
-    path('user_profile_update/email=<str:email>/',views.UserProfileUpdate,name='user_profile_update'),
+    path('courses/<str:course_pk>/topics/<str:topic_pk>/',views.TopicDetail.as_view(),name='topic'),
+    path('courses/<str:course_pk>/topic/create/',views.TopicCreate.as_view(),name='topic_create'),
+    path('courses/<str:course_pk>/topics/<str:topic_pk>/update',views.TopicUpdate.as_view(),name='topic_update'),
+    path('courses/<str:course_pk>/topics/<str:topic_pk>/delete',views.TopicDelete.as_view(),name='topic_delete'),
 
-    path('password_change/email=<str:email>/',views.PasswordsChange,name='password_change'),
 
-   
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/content/create/',views.ContentCreate.as_view(),name='content_create'),
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/content/<str:content_pk>/delete/',views.ContentDelete.as_view(),name='content_delete'),
+
+
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignment/create',views.AssignmentCreate.as_view(),name='assignment_create'),
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignment/<str:assignment_pk>',views.AssignmentData.as_view(),name='assignment_data'),
+    
+
+    path('students',views.StudentsList.as_view(),name='students_list'),
+    path('student_create',views.StudentCreate,name='student_create'),
+    path('students/<str:student_pk>',views.StudentData.as_view(),name='student_data'),
+    path('students/<str:student_pk>/update',views.StudentUpdate.as_view(),name='student_update'),
+    path('students/<str:student_pk>/delete',views.StudentDelete.as_view(),name='student_delete'),
+
+
+    path('teachers',views.TeachersList.as_view(),name='teachers_list'),
+    path('teachers/create',views.TeacherCreate,name='teachers_create'),
+    path('teachers/<str:teacher_pk>',views.TeacherData.as_view(),name='teacher_data'),
+    path('teachers/<str:teacher_pk>/update',views.TeacherUpdate.as_view(),name='teacher_update'),
+    path('teachers/<str:teacher_pk>/delete',views.TeacherDelete.as_view(),name='teacher_delete'),
+
+
+    path('events',views.EventsList.as_view(),name='events_list'),
+    path('events/create',views.EventCreate.as_view(),name='event_create'),
+    path('events/<str:event_pk>',views.EventData.as_view(),name='event_data'),
+    path('events/<str:event_pk>/delete',views.EventDelete.as_view(),name='event_delete'),
+
+
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignments/create',views.AssignmentCreate.as_view(),name='assignment_create'),
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignments/<str:assignment_pk>',views.AssignmentData.as_view(),name='assignments_list'),
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignments/<str:assignment_pk>/students_assignment',views.Students_Assignment_list.as_view(),name='students_assignment'),
+    path('courses/<str:course_pk>/topic/<str:topic_pk>/assignments/<str:assignment_pk>/students_assignment/<str:homework_pk>',views.Students_Assignment_Data.as_view(),name='student_homework'),
+    path('assignment/<str:assignment_pk>/send',views.Students_Assignment_Create,name='send_homework'),
     
     
-
-    path('students/',views.StudentsView,name='students'),
-    path('students/student/email=<str:email>',views.StudentData,name='student'),
-    path('students/student_update/email=<str:email>',views.StudentUpdate,name='student_update'),
-    path('students/student_delete/email=<str:email>',views.StudentDelete,name='student_delete'),
-
-    path('teachers/',views.TeachersView,name='teachers'),
-    path('teachers/teacher_create/',views.TeacherCreate,name='teacher_create'),    
-    path('teachers/teacher/email=<str:email>/',views.TeacherData,name='teacher'),
-    path('teachers/teacher_update/email=<str:email>/',views.TeacherUpdate,name='teacher_update'),
-    path('teacher_delete/<str:email>/',views.TeacherDelete,name='delete_teacher'),
-
-    path('admins/',views.AdminsView,name='admins'),
-    path('admins/admin_create/',views.AdminCreate,name='admin_create'),
-    path('admins/admin/email=<str:email>',views.AdminsData,name='admin'),
-    path('admins/admin_update/email=<str:email>/',views.AdminUpdate,name='admin_update'),
-
-    path('courses/',views.CoursesView,name='courses'),
-    path('courses/course/name=<str:name>/year=<str:year>/',views.CourseData,name='course'),
-    path('courses/course_update/name=<str:name>/year=<str:year>/',views.CourseUpdate,name='course_update'),
-    path('courses/course_delete/name=<str:name>/year=<str:year>/',views.CourseDelete,name='course_delete'),
-    path('courses/course_create/',views.CourseCreate,name='course_create'),
-
-    path('courses/course=<str:course>/topic=<str:topic>/',views.TopicsView,name='topic'),
-    path('courses/course=<str:course>/topic_create/',views.TopicCreate,name='topic_create'),
-    path('courses/course=<str:course>/topic=<str:topic>/topic_update',views.TopicUpdate,name='topic_update'),
-    path('courses/course=<str:course>/topic=<str:topic>/topic_delete',views.TopicDelete,name='topic_delete'),
+    path('grades',views.GradesList.as_view(),name='grades_list'),
     
-    path('courses/course=<str:course>/topic=<str:topic>/assignment_add',views.AssignmentAddForm,name='assignment_add'),
-    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>',views.Assignment,name='assignment'),
-    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>/student_works/',views.StudentWorkList,name='student_works'),
-    path('courses/course=<str:course>/topic=<str:topic>/assignment=<str:assignment>/student_work/work=<str:work_id>',views.StudentWork,name='student_work'),
-
-    path('courses/course=<str:course>/topic=<str:topic>/content_add/',views.ContentAdd,name='content_add'),
-    path('courses/topic=<str:topic>/content=<str:name>/content_delete/<str:id>',views.ContentDelete,name='content_delete'),
-
-    path('years/',views.YearsViews,name='years'),
-    path('years/year=<str:pk>/',views.YearData,name='year'),
-
-    path('events/',views.EventsView,name='events'),
-    path('events/event_create/',views.EventCreate,name='event_create'),
-    path('events/event/title=<str:title>/date=<str:date>',views.EventData,name='event'),
-
-    path('comment_add/event=<str:pk>/',views.CommentAdd,name='comment_add'),
-    path('comment_delete/<str:pk>/',views.CommentDelete,name='comment_delete'),
-
-
-
+    path('recent_content/',views.HistoryView,name=''),
 
 ]

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{account.full_name}}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main_app/css/profile.css' %}">
+<div class="container-fluid">
+    <div class="title">
+        <h1>User Profile</h1>
+    </div>
+    {% if request.user.is_staff or request.user.email == object.email %}    
+    <div class="update">
+        <a href="{% url 'user_update' %}">Update Account</a>              
+    </div>
+    
+    {% endif %}
+    <div class="user-profile">
+        <div class="picture col">
+            <img src="{{account.profile_picture.url}}" width="400px">
+        </div>
+        <div class="data col">
+            <h2>{{account.full_name}}</h2>       
+                 
+            <h5><i class="far fa-envelope"></i> {{object.email}}</h5>  
+            <h6>{{object.course}}</h6>
+            <h6>{{account.year}}</h6>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

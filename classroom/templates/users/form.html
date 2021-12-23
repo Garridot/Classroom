@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{title}}{% endblock %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'main_app/css/form.css' %}">
+
+<div class="container-fluid">
+    <div class="title">
+        <h1>{{title}}</h1>
+    </div>
+    <form method="POST" enctype="multipart/form-data"> 
+
+        {% for m in messages %} {{m.errorlist}} {% endfor %}
+
+        {% csrf_token %} 
+
+        {% if info %}
+        <span class="helptext">
+            <ul>
+                <li>The student needs a password</li>
+                <li>email: {{admission.email}}</li>
+                <li>password: {{admission.first_name}}{{admission.last_name}}{{admission.document}} </li>
+            </ul>
+        </span>        
+        {% endif %}
+
+        {{user_form}}
+          
+        {{form}}        
+        <input type="submit" value="{{title}}" style="margin: 2.5rem 0;">
+    </form>
+</div>
+
+{% endblock %}

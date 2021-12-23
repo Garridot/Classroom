@@ -1,0 +1,72 @@
+{% extends 'base_home.html' %}
+{% load static %}
+{% block title %}My Grades{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'main_app/css/request_list.css' %}">
+
+<div class="content">    
+    <div class="content-title">
+        <h3>My Grades </h3>
+    </div>
+    
+    
+    <div class="list-users">
+        
+        <ul class="list-group">
+            {% for work in works %}
+            <li class="list-group-item">
+                <a >                   
+                    <p id="info1">{{work.assignment}}</p>                    
+                    {% if work.status == 'Passed' %}
+                    <p id="info2" style="color: forestgreen;">{{work.grade}}</p>
+                    <p id="info2" style="color: forestgreen;">{{work.status}}</p>
+                    {% elif work.status == 'Failed' %}
+                    <p id="info2" style="color: rgb(241, 74, 74);">{{work.grade}}</p>
+                    <p id="info2" style="color: rgb(241, 74, 74);" >{{work.status}}</p> 
+                    {% elif work.status == 'Unchecked' %}                    
+                    <p id="info2" style="color: gray;">{{work.status}}</p> 
+                    {% endif %} 
+                </a>
+            </li>
+            {% endfor %}            
+        </ul>
+        <div class="filters">
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <script>
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['passed','failed'],
+                    datasets: [{                        
+                        data: ['{{passeds}}','{{faileds}}'],
+                        backgroundColor: [
+                            'rgb(35, 141, 35,0.3)',
+                            'rgb(241, 74, 74,0.3)',                            
+                        ],
+                        borderColor: [
+                            'rgb(35, 141, 35,0.3)',
+                            'rgb(241, 74, 74,0.3)',
+                            
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            </script>
+            <div class="average" style="padding: 1rem 0; text-align: center;">
+                <h6>Your Average: {{average}}</h6>
+            </div>
+            
+
+        </div>
+    </div>
+</div> 
+{% endblock %}   

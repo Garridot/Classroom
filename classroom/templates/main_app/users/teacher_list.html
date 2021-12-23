@@ -1,0 +1,54 @@
+{% extends 'base_home.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="content">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">            
+            {{message}}
+        </div>        
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="content-title">
+        <h3>Teachers</h3>
+
+        {% if request.user.is_staff %}        
+        <a href="{% url 'teachers_create' %}"><p>Add<i class="fas fa-plus"></i></p></a>
+        {% endif %}
+    </div>
+    
+    <div class="list-users">
+        <ul class="list-group">
+
+            {% if object_list %}{% for obj in object_list %}
+            <li class="list-group-item">
+                <a href="{% url 'teacher_data' obj.id %}">
+                    <p id="info1">{{obj.full_name}}</p> 
+                    <p id="info2">{{obj.course}}</p>                     
+                </a>
+            </li>{% endfor %} {% else %}
+
+            <li class="list-group-item">
+                No Results Found...
+            </li>
+            {% endif %}
+        </ul>
+        {% if filter %}
+        <div class="filters">
+            <div class="row">
+                <i class="fas fa-sliders-h"  id="filter_icon"></i>
+            </div>
+            <form method="GET">
+                {{ filter.form }}
+                <input type="submit" value="Filter">
+            </form>
+        </div>
+        {% endif %}
+    </div> 
+
+</div>
+{% endblock %}
