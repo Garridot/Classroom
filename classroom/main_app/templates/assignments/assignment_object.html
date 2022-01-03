@@ -91,7 +91,7 @@ width: 100%;
         <p>{{object.instructions}}</p> 
         <h4><a href="{{object.file.url}}">View File</a></h4>
         <h4 style="color: rgb(253, 77, 77); padding: 1rem 0;">Deadline: {{object.deadline}}</h4>
-        {%  if request.user.is_staff %}
+        {%  if request.user.is_staff or request.user.groups.values.first.name == 'Teachers' %}
         <h4><a href="{% url 'students_assignment' course_pk=object.topic.course.id topic_pk=object.topic.id assignment_pk=object.id  %}">View Students Works</a></h4>
         {% endif %}
     </div>    

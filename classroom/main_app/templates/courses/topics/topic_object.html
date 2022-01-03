@@ -23,7 +23,7 @@
     {% endif %}
 
 
-    {% if request.user.is_staff %}
+    {% if request.user.is_staff or request.user.groups.values.first.name == 'Teachers' %}
     <div class="update">
         <a href="{% url 'topic_update' course_pk=course.id topic_pk=object.id %}">Update Topic</a>        
         <a href="{% url 'topic_delete' course_pk=course.id topic_pk=object.id %} " id="delete">Delete</a>
@@ -48,7 +48,7 @@
     <div class="content">
         <div class="c-title">
             <h4><i class="far fa-bookmark"></i> Content</h4>
-            {% if request.user.is_staff  %}
+            {% if request.user.is_staff or request.user.groups.values.first.name == 'Teachers' %}
             <a href="{% url 'content_create' course_pk=course.id topic_pk=object.id %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %}
         </div>
@@ -58,7 +58,7 @@
                 <p>{{content.name}}</p>
                 <p>{{content.created}}</p>
             </li></a>
-            {% if request.user.is_staff %}
+            {% if request.user.is_staff or request.user.groups.values.first.name == 'Teachers' %}
             <a href="{% url 'content_delete' course_pk=course.id topic_pk=object.id content_pk=content.id %}" id="delete"><i class="far fa-trash-alt"></i></a>
             {% endif %}
         </div>
@@ -67,6 +67,10 @@
             <p>No content yet...</p>
         </li>
         {% endif %}
+        <h4>
+            
+        </h4>
+        
     </div>
 
 

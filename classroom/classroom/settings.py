@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main_app',
-    'users',
+    'users',    
     'django_filters',        
     'django_countries', 
     'django_cleanup.apps.CleanupConfig',  
+    'email_app'
     
     
     

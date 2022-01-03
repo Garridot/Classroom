@@ -17,8 +17,9 @@
         {% endfor %}
     </div>
     {% endif %}    
+    
 
-    {% if request.user.groups.first == Teachers  %}
+    {% if request.user.is_staff  or request.user.groups.values.first.name == 'Teachers'  %}
     
     <div class="update">
         <a href="{% url 'course_update' object.id  %}">Update Course</a>
@@ -38,7 +39,7 @@
     <div class="categories">  
         <div class="c-title">
             <h1><i class="far fa-bookmark"></i> Topics</h1>
-            {% if request.user.is_staff %}
+            {% if request.user.is_staff or request.user.groups.values.first.name == 'Teachers' %}
             <a href="{% url 'topic_create' course_pk=object.id  %}"><i class="fas fa-plus"></i> Add</a>
             {% endif %} 
         </div> 

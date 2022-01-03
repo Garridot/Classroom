@@ -17,6 +17,8 @@ from users.models import *
 from users.forms import *
 import json
 
+from email_app.views import *
+
 
 # Create your views here.
 
@@ -175,6 +177,8 @@ class TopicCreate(CreateView):
     def form_valid(self,form):
         form.instance.course = TopicCreate.get_object(self)
         form.instance.year   = TopicCreate.get_object(self).year 
+
+        TopicEmail(id=TopicCreate.get_object(self).id)
         return super().form_valid(form) 
 
 
@@ -259,8 +263,11 @@ class ContentCreate(CreateView):
 
     def form_valid(self,form):
 
-        form.instance.topic = get_object_or_404(Topic,id=self.kwargs.get('topic_pk'))
-        messages.success(self.request, f"Content added successfully")               
+        topic = get_object_or_404(Topic,id=self.kwargs.get('topic_pk'))
+
+        form.instance.topic = topic
+        messages.success(self.request, f"Content added successfully") 
+        Contentemail(id=topic.id)              
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -471,8 +478,7 @@ class EventCreate(CreateView):
     template_name = 'form.html'
     success_url = reverse_lazy('events_list')
 
-    def form_valid(self,form):
-
+    def form_valid(self,form):        
         messages.success(self.request, f"Event created successfully")
         return super().form_valid(form) 
 
@@ -481,6 +487,13 @@ class EventCreate(CreateView):
         context = super().get_context_data(**kwargs)               
         context['title']       = 'Create Event'
         return context  
+
+    def get_success_url(self):
+        title = self.request.POST['title']
+        year  = self.request.POST['year']
+        
+        EventEmail(title,year)
+        return reverse_lazy('events_list')
 
 class EventDelete(DeleteView):
     model = Events
@@ -584,6 +597,8 @@ class Students_Assignment_Data(UpdateView):
         grade = self.request.POST['grade'] 
         if int(grade) >= 6: form.instance.status = 'Passed'
         else:  form.instance.status = 'Failed'
+
+        Homeworkemail(id= Students_Assignment_Data.get_object(self).id)
         return super().form_valid(form)  
 
 

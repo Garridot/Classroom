@@ -16,7 +16,7 @@
     <div class="content-title">
         <h3>{{title}}</h3>
 
-        {% if request.user.is_staff   %}        
+        {% if request.user.is_staff or request.user.groups.values.first.name == 'Teachers'  %}        
         <a href="{% url 'event_create' %}"><p>Add<i class="fas fa-plus"></i></p></a>
         {% endif %}
     </div>

@@ -97,6 +97,9 @@ class Events(models.Model):
         verbose_name        = 'Event'
         verbose_name_plural = 'Events'
 
+    def get_absolute_url(self):
+        return f"http://127.0.0.1:8000/academiaweb/events/{self.id}"
+
 class Comments(models.Model):
     event        = models.ForeignKey(Events,on_delete=models.CASCADE, related_name='comments')   
     user         = models.ForeignKey(to='users.UserAccount',on_delete=models.CASCADE) 

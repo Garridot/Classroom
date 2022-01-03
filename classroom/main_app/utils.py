@@ -36,14 +36,16 @@ class UserObjs():
             course = Courses.objects.filter(year=student.year)           
             list2  = School_Assignment.objects.filter(topic__in=Topic.objects.filter(course__in=course))[0:5]
 
-        elif user.groups == 'Teachers':
+        elif user.groups.all()[0].name == 'Teachers':
             teacher = Teachers.objects.get(user=user)
             
 
             user_request['title1'] = 'School assignment'
-            list1  = School_Assignment.objects.filter(course=teacher.course)[0:5]   
+            topic  = Topic.objects.filter(course=teacher.course).all() 
+            
+            list1  = School_Assignment.objects.filter(topic__in=topic)[0:5]  
             user_request['title2'] = 'Homework' 
-            list2  = Students_Assignment.objects.filter()[0:5]  
+            list2  = Students_Assignment.objects.filter(assignment__in=list1)[0:5]  
 
         else:
             

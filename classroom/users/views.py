@@ -13,6 +13,8 @@ from .models import *
 from .utils import RegisterForm,GetAccount
 from .forms import *
 import os
+
+from email_app.views import *
 # Create your views here.
 
 
@@ -48,20 +50,7 @@ def PasswordReset(request):
            messages.info(request,'Email not found.') 
     return render(request,'password_reset/password_reset.html')
 
-def PasswordResetEmail(user): 
-    
-    password_reset_token = PasswordResetTokenGenerator().make_token(user)   
-    context = {'user':user,'token':password_reset_token}
-    template  = get_template('password_reset/password_reset_email.html')
-    content   = template.render(context)
-    email     = EmailMultiAlternatives(
-        'AcademiaWeb',
-        'Password Reset',
-        EMAIL_HOST_USER,
-        [user.email]
-    )
-    email.attach_alternative(content,'text/html')
-    email.send()
+
 
 def PasswordResetEmailSent(request):
     return render(request,'password_reset/password_reset_email_sent.html')             
@@ -104,20 +93,6 @@ def RegisterFormView(request):
     context={'form':form,'title':title,'user_form':user_form}    
     return render(request,'form.html',context)  
 
-def RegisterEMAIL(email):
-    user = UserAccount.objects.get(email=email)  
-    context   = {'email':email,'user':user}     
-    template  = get_template('emails/register_email.html')
-    content   = template.render(context)
-
-    email     = EmailMultiAlternatives(
-        f'Congratulations {user.email}!',
-        'Your register has been successfully accepted.',
-        EMAIL_HOST_USER,
-        [email]
-    )
-    email.attach_alternative(content,'text/html')
-    email.send()
 
 
 
