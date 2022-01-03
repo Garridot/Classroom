@@ -602,7 +602,7 @@ class Students_Assignment_Data(UpdateView):
         if int(grade) >= 6: form.instance.status = 'Passed'
         else:  form.instance.status = 'Failed'
 
-        async_task('emai_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id)
+        async_task('email_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id)
 
         
         return super().form_valid(form)  
