@@ -19,6 +19,10 @@ import json
 
 from email_app.views import *
 
+# django_q
+from django_q.tasks import async_task
+
+
 
 # Create your views here.
 
@@ -598,7 +602,9 @@ class Students_Assignment_Data(UpdateView):
         if int(grade) >= 6: form.instance.status = 'Passed'
         else:  form.instance.status = 'Failed'
 
-        Homeworkemail(id= Students_Assignment_Data.get_object(self).id)
+        async_task('emai_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id)
+
+        # Homeworkemail(id= Students_Assignment_Data.get_object(self).id)
         return super().form_valid(form)  
 
 
