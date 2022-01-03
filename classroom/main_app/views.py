@@ -181,8 +181,8 @@ class TopicCreate(CreateView):
     def form_valid(self,form):
         form.instance.course = TopicCreate.get_object(self)
         form.instance.year   = TopicCreate.get_object(self).year 
-
-        TopicEmail(id=TopicCreate.get_object(self).id)
+        
+        async_task('email_app.views.Contentemail',TopicCreate.get_object(self).id)      
         return super().form_valid(form) 
 
 
@@ -271,7 +271,7 @@ class ContentCreate(CreateView):
 
         form.instance.topic = topic
         messages.success(self.request, f"Content added successfully") 
-        Contentemail(id=topic.id)              
+        async_task('email_app.views.Contentemail',topic.id)                      
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -496,7 +496,8 @@ class EventCreate(CreateView):
         title = self.request.POST['title']
         year  = self.request.POST['year']
         
-        EventEmail(title,year)
+        
+        async_task('email_app.views.EventEmail',title,year)   
         return reverse_lazy('events_list')
 
 class EventDelete(DeleteView):

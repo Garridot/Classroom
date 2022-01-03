@@ -46,7 +46,7 @@ def EventEmail(title,year):
 
     students = Students.objects.filter(year=year).all()  
     
-    event  = Events.objects.filter(title=title,year=year).last()
+    event  = Events.objects.filter(year=year).last()
 
     
 

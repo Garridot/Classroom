@@ -17,6 +17,8 @@ import os
 from email_app.views import *
 # Create your views here.
 
+# django_q
+from django_q.tasks import async_task
 
 def LoginView(request):
     if request.method == 'POST':
@@ -42,8 +44,9 @@ def PasswordReset(request):
         email = request.POST['email']        
         user = UserAccount.objects.filter(email=email)        
         if user:
-            user = UserAccount.objects.get(email=email)  
-            PasswordResetEmail(user)
+            user = UserAccount.objects.get(email=email) 
+            async_task('email_app.views.PasswordResetEmail',user) 
+            
             return redirect('password_reset_email_sent')
                        
         else:            
@@ -83,8 +86,9 @@ def RegisterFormView(request):
         user_form = UserForm(request.POST)
 
         if form.is_valid() and user_form.is_valid():   
-            RegisterForm.is_valid(user_form,form)            
-            RegisterEMAIL(email=user_form.instance.email)            
+            RegisterForm.is_valid(user_form,form)  
+            async_task('email_app.views.RegisterEMAIL',user_form.instance.email)           
+              
             return redirect('login')
         else:
             for msg in form.errors:
