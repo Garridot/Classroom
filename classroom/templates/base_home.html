@@ -38,9 +38,7 @@
                 </div>                
                 <div class="user_and_noti">                          
                     <button id="icon-noti" onclick="toggleNoti()"><i class="far fa-bell"></i></button>
-                    <a href="" id="user">
-                    <img src="{{user.profile_picture.url}}">
-                    </a>
+                    
                 </div>
             </div>
             
@@ -53,7 +51,7 @@
                     
                     <div class="items"><a href="{% url 'teachers_list' %}" id="teachers"><h4> Teachers</h4></a></div>
                     <div class="items"><a href="{% url 'courses' %}" class="course"><h4> Courses</h4></a></div>
-                                        
+                    <div class="items"><a href="{% url 'grades_list' %}" class="grades"><h4> My grades</h4></a></div>                   
                     <div class="items"><a href="{% url 'logout' %}"><h4> Logout</h4></a></div>
                 </div>            
             </div>

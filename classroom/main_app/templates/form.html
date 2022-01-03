@@ -3,7 +3,7 @@
 {% block title %}{{title}}{% endblock %}
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" href="{% static 'main_app/css/form.css' %}">
 
 <div class="container-fluid">
     <div class="title">
@@ -14,20 +14,9 @@
         {% for m in messages %} {{m.errorlist}} {% endfor %}
 
         {% csrf_token %} 
-
-        {% if info %}
-        <span class="helptext">
-            <ul>
-                <li>The student needs a password</li>
-                <li>email: {{admission.email}}</li>
-                <li>password: {{admission.first_name}}{{admission.last_name}}{{admission.document}} </li>
-            </ul>
-        </span>        
-        {% endif %}
-
-        {{user_form}}
           
-        {{form}}        
+        {{form}}
+        {{form_kwargs}}
         <input type="submit" value="{{title}}" style="margin: 2.5rem 0;">
     </form>
 </div>

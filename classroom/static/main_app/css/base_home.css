@@ -22,19 +22,20 @@ left: -100%;
 z-index: 1;
 background: rgb(255,255,255);
 background: linear-gradient(90deg, rgba(255,255,255,1) 40%, rgba(246,246,246,0) 100%);
-width: 30%;
+width: 50%;
 position: fixed;
-transition: all 0.5s;
+transition: all 0.2s;
 }
 .menu.show{
 left: 0;    
 } 
 .menu .list-items{
-padding: 1rem 0;
+padding: 2rem 0;
+height: 100vh;
 }
 .list-items .items{
 transition: all 0.5s;
-padding: 0.5rem 3rem;
+padding: 1rem 3rem;
 }
 .list-items .items:hover{
 transform: translateX(10px);
@@ -54,6 +55,10 @@ font-size: 1.25rem;
 
 .title-pag{
     display: flex;
+    position: fixed;
+    background: white;
+    z-index: 3;
+    top: 0;
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -148,6 +153,7 @@ border-bottom: 1px solid  #e1e1e2;
 }
 
 .content-extends{
+margin: 8rem 0 0 0;
 animation-name: view;
 animation-duration: 1.5s;}
 

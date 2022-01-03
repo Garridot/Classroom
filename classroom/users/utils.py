@@ -14,7 +14,7 @@ class RegisterForm():
             
 class GetAccount():
     def get(user):
-        if Students.objects.filter(user=user).exists(): return Students.objects.filter(user=user).first
+        if Students.objects.filter(user=user).exists(): return Students.objects.get(user=user)
         elif Teachers.objects.filter(user=user).exists(): return Teachers.objects.get(user=user)
         else: return None
         

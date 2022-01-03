@@ -21,7 +21,7 @@ import json
 # Create your views here.
 
 def MainPage(request):
-    return render(request,'main_app/main_page.html')
+    return render(request,'main_page.html')
 def Information(request):
     return render(request,'information.html')
 def Contact(request):    
@@ -44,22 +44,21 @@ def HomeView(request):
 
     calendar = GetCalendar.calendar()   
     events   = Events.objects.filter(event_date__month=timezone.now().month).all() 
-
-    user = request.user
     
-    list1        = UserObjs.request_user(user)['list1']
-    list2        = UserObjs.request_user(user)['list2']
-    user_request = UserObjs.request_user(user)['user_request']
+    list1        = UserObjs.request_user(request.user)['list1']
+    list2        = UserObjs.request_user(request.user)['list2']
+    user_request = UserObjs.request_user(request.user)['user_request']
 
     
     context = {
+                
                 'calendar' : calendar,
                 'events'   : events,
                 'user_request':user_request,
                 'list1'    : list1,
                 'list2'    : list2            
     }
-    return render(request,'main_app/home.html',context) 
+    return render(request,'home.html',context) 
 
 
 
@@ -89,12 +88,14 @@ class LoginRequired(LoginRequiredMixin):
 class CoursesList(FilterView):
     model            = Courses
     filterset_class  = CoursesFilters
-    template_name    = 'main_app/courses/courses_list.html' 
+    template_name    = 'courses/courses_list.html' 
+
+    
 
 class CourseCreate(CreateView):
     model  = Courses
     form_class = CoursesForm    
-    template_name = 'main_app/courses/course_form.html'
+    template_name = 'courses/course_form.html'
     success_url = reverse_lazy('courses')
 
     def form_valid(self,form):
@@ -109,7 +110,7 @@ class CourseCreate(CreateView):
 
 class CourseData(DetailView):
     model         = Courses
-    template_name = 'main_app/courses/course_object.html'
+    template_name = 'courses/course_object.html'
     
     def get_object(self):
         pk_ = self.kwargs.get('course_pk')
@@ -125,7 +126,7 @@ class CourseUpdate(UpdateView):
     model = Courses
     form_class = CoursesForm
     success_url = reverse_lazy('courses')
-    template_name = 'main_app/courses/course_form.html' 
+    template_name = 'courses/course_form.html' 
 
     def get_object(self):
         pk_ = self.kwargs.get('course_pk')
@@ -166,7 +167,7 @@ class TopicCreate(CreateView):
 
     model         = Topic
     form_class    = TopicForm    
-    template_name = 'main_app/courses/course_form.html'     
+    template_name = 'courses/course_form.html'     
 
     def get_object(self):              
         return  get_object_or_404(Courses,id=self.kwargs.get('course_pk'))
@@ -191,7 +192,7 @@ class TopicCreate(CreateView):
 class TopicDetail(DetailView):
 
     model         = Topic
-    template_name = 'main_app/courses/topics/topic_object.html'
+    template_name = 'courses/topics/topic_object.html'
 
     
     def get_object(self): 
@@ -213,7 +214,7 @@ class TopicUpdate(UpdateView):
 
     model = Topic
     form_class = TopicForm    
-    template_name = 'main_app/courses/course_form.html' 
+    template_name = 'courses/course_form.html' 
 
     def get_object(self): 
         return get_object_or_404(Topic,id=self.kwargs.get('topic_pk'))   
@@ -254,7 +255,7 @@ class TopicDelete(DeleteView):
 class ContentCreate(CreateView):
     model         = Content
     form_class    = ContentForm    
-    template_name = 'main_app/courses/course_form.html'
+    template_name = 'courses/course_form.html'
 
     def form_valid(self,form):
 
@@ -296,7 +297,7 @@ class ContentDelete(DeleteView):
 class StudentsList(FilterView):
     model = Students
     filterset_class  = StudentsFilters
-    template_name = 'main_app/users/students_list.html'
+    template_name = 'users/students_list.html'
 
 def StudentCreate(request):    
    
@@ -317,11 +318,11 @@ def StudentCreate(request):
                 messages.error(request,f"{msg}:{form.errors}") 
 
     context = {'form':form,'form_kwargs':form_kwargs,'title':title}
-    return render (request,'main_app/form.html',context)
+    return render (request,'form.html',context)
 
 class StudentData(DetailView):
     model         = Students
-    template_name = 'main_app/users/user_object.html'
+    template_name = 'users/user_object.html'
     
     def get_object(self):
         pk_ = self.kwargs.get('student_pk')
@@ -335,7 +336,7 @@ class StudentUpdate(UpdateView):
     model = Students
     form_class = StudentsForm
     success_url = reverse_lazy('students')
-    template_name = 'main_app/courses/course_form.html' 
+    template_name = 'courses/course_form.html' 
 
     def get_object(self):
         pk_ = self.kwargs.get('student_pk')
@@ -373,7 +374,7 @@ class StudentDelete(DeleteView):
 class TeachersList(FilterView):
     model            = Teachers
     filterset_class  = TeachersFilters
-    template_name    = 'main_app/users/teacher_list.html'
+    template_name    = 'users/teacher_list.html'
 
 def TeacherCreate(request):    
    
@@ -394,11 +395,11 @@ def TeacherCreate(request):
                 messages.error(request,f"{msg}:{form.errors}") 
 
     context = {'form':form,'form_kwargs':form_kwargs,'title':title}
-    return render (request,'main_app/form.html',context) 
+    return render (request,'form.html',context) 
 
 class TeacherData(DetailView):
     model         = Teachers
-    template_name = 'main_app/users/user_object.html'
+    template_name = 'users/user_object.html'
     
     def get_object(self):
         pk_ = self.kwargs.get('teacher_pk')
@@ -412,7 +413,7 @@ class TeacherUpdate(UpdateView):
     model = Teachers
     form_class = TeachersForm
     success_url = reverse_lazy('teachers_list')
-    template_name = 'main_app/courses/course_form.html' 
+    template_name = 'courses/course_form.html' 
 
     def get_object(self):
         pk_ = self.kwargs.get('teacher_pk')
@@ -450,11 +451,11 @@ class TeacherDelete(DeleteView):
 class EventsList(FilterView):
     model            = Events
     filterset_class  = EventsFilters
-    template_name    = 'main_app/events/events_list.html' 
+    template_name    = 'events/events_list.html' 
 
 class EventData(DetailView):
     model         = Events
-    template_name = 'main_app/events/events_object.html'
+    template_name = 'events/events_object.html'
     
     def get_object(self):
         pk_ = self.kwargs.get('event_pk')
@@ -467,7 +468,7 @@ class EventData(DetailView):
 class EventCreate(CreateView):
     model  = Events
     form_class = EventForm    
-    template_name = 'main_app/form.html'
+    template_name = 'form.html'
     success_url = reverse_lazy('events_list')
 
     def form_valid(self,form):
@@ -499,7 +500,7 @@ class EventDelete(DeleteView):
 
 class AssignmentData(DetailView):
     model = School_Assignment
-    template_name = 'main_app/assignments/assignment_object.html'
+    template_name = 'assignments/assignment_object.html'
 
     def get_object(self): 
         return get_object_or_404(School_Assignment,id=self.kwargs.get('assignment_pk')) 
@@ -527,7 +528,7 @@ class AssignmentData(DetailView):
 class AssignmentCreate(CreateView):
     model         = School_Assignment
     form_class    = AssignmentForm    
-    template_name = 'main_app/form.html'    
+    template_name = 'form.html'    
 
     def get_object(self):              
         return  get_object_or_404(Topic,id=self.kwargs.get('topic_pk'))
@@ -549,7 +550,7 @@ class AssignmentCreate(CreateView):
 
 class Students_Assignment_list(ListView):
     model = Students_Assignment
-    template_name = 'main_app/assignments/s_assignment_list.html'
+    template_name = 'assignments/s_assignment_list.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -573,7 +574,7 @@ class Students_Assignment_list(ListView):
 class Students_Assignment_Data(UpdateView):
     model = Students_Assignment
     form_class  = ReviewForm
-    template_name = 'main_app/form.html'
+    template_name = 'form.html'
 
     def get_object(self):
         pk_ = self.kwargs.get('homework_pk')
@@ -608,7 +609,7 @@ def Students_Assignment_Create(request,assignment_pk):
 
 class GradesList(ListView):
     model = Students_Assignment    
-    template_name = 'main_app/grades/grades_list.html'
+    template_name = 'grades/grades_list.html'
 
     def get_context_data(self, **kwargs):
 

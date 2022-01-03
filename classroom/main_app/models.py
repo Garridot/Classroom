@@ -129,7 +129,7 @@ class School_Assignment(models.Model):
         super().delete(*args,**kwargs)
 
     def get_absolute_url(self):        
-        return f"courses/{self.topic.course.id}/topic/{self.topic.id}/assignments/{self.id}"     
+        return f"academiaweb/courses/{self.topic.course.id}/topic/{self.topic.id}/assignments/{self.id}"     
     
     
 class Students_Assignment(models.Model):
@@ -144,6 +144,6 @@ class Students_Assignment(models.Model):
         return f"{self.assignment.title}"
 
     def get_absolute_url(self):        
-        return f"courses/{self.assignment.topic.course.id}/topic/{self.assignment.topic.id}/assignments/{self.assignment.id}/students_assignment/{self.id}"             
+        return f"academiaweb/courses/{self.assignment.topic.course.id}/topic/{self.assignment.topic.id}/assignments/{self.assignment.id}/students_assignment/{self.id}"             
 
     

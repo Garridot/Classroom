@@ -1,5 +1,4 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponse, request
 from django.contrib.auth.forms import  PasswordChangeForm
 from classroom.settings  import  EMAIL_HOST_USER
 from django.core.mail import EmailMultiAlternatives
@@ -11,7 +10,7 @@ from django.contrib import messages
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.views.generic import *
 from .models import *
-from .utils import GetAccount, RegisterForm
+from .utils import RegisterForm,GetAccount
 from .forms import *
 import os
 # Create your views here.
@@ -27,7 +26,7 @@ def LoginView(request):
             return redirect('home')            
         else:           
             messages.info(request,'Email or password is incorrect.') 
-    return render(request,'users/login.html')
+    return render(request,'login.html')
 
 def LogoutView(request):     
     logout(request)
@@ -47,7 +46,7 @@ def PasswordReset(request):
                        
         else:            
            messages.info(request,'Email not found.') 
-    return render(request,'users/password_reset/password_reset.html')
+    return render(request,'password_reset/password_reset.html')
 
 def PasswordResetEmail(user): 
     
@@ -79,11 +78,8 @@ def PasswordResetForm(request,email,token):
         else:
             for msg in form.errors:
                 messages.info(request,f"{msg}:{form.errors}")
-    return render(request,'users/password_reset/password_reset_form.html',{'form':form})                
+    return render(request,'password_reset/password_reset_form.html',{'form':form})                
 
-
-
-   
 
 
 # Register
@@ -98,23 +94,20 @@ def RegisterFormView(request):
         user_form = UserForm(request.POST)
 
         if form.is_valid() and user_form.is_valid():   
-            RegisterForm.is_valid(user_form,form)
-            try:
-                RegisterEMAIL(email=user_form.instance.email)
-            except:
-                None
+            RegisterForm.is_valid(user_form,form)            
+            RegisterEMAIL(email=user_form.instance.email)            
             return redirect('login')
         else:
             for msg in form.errors:
                 return messages.error(request,f"{msg}:{form.errors}")      
         
     context={'form':form,'title':title,'user_form':user_form}    
-    return render(request,'users/form.html',context)  
+    return render(request,'form.html',context)  
 
 def RegisterEMAIL(email):
     user = UserAccount.objects.get(email=email)  
     context   = {'email':email,'user':user}     
-    template  = get_template('users/emails/register_email.html')
+    template  = get_template('emails/register_email.html')
     content   = template.render(context)
 
     email     = EmailMultiAlternatives(
@@ -130,9 +123,11 @@ def RegisterEMAIL(email):
 
 # UserProfile
 
+
+
 class UserProfileView(DetailView):
     model         = UserAccount
-    template_name = 'users/profile.html' 
+    template_name = 'profile.html' 
 
     def get_object(self):       
         return self.request.user
@@ -148,7 +143,7 @@ class UserProfileView(DetailView):
 #     def get(self,request):
 #         context = {}        
 #         context['form'] = GetAccount.get_instance(self.request.user)
-#         return render(request,'users/user_update_form.html',context)
+#         return render(request,'user_update_form.html',context)
 
 #     def post(self,form):
 #         return UserProfileUpdate.form_valid(form)
@@ -168,7 +163,7 @@ class UserProfileUpdate(UpdateView):
     success_url   = reverse_lazy('user_profile')
     model         = UserAccount
     form_class    = UserAccountForm
-    template_name = 'users/user_update_form.html'
+    template_name = 'user_update_form.html'
 
     def get_object(self):
         user = self.request.user
@@ -226,6 +221,6 @@ def PasswordsChange(request,email):
             for msg in form.errors:
                 messages.error(request,f"{msg}:{form.errors}") 
     context = {'form':form,'title':title}
-    return render(request,'users/form.html',context)        
+    return render(request,'form.html',context)        
 
 

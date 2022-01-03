@@ -10,14 +10,14 @@ function toggleMenu(){
         menu.style.left = '0';   
         icon_noti.disabled = true  
         icon_menu.classList.add('selected')   
-        document.querySelector('.content-extends').style.filter= 'blur(1px)'; 
+        document.querySelector('.content').style.filter= 'opacity(0.5)'; 
         toggle = 1;  
 
     } else if(toggle == 1){
         menu.style.left = '-100%';
         icon_noti.disabled = false 
         icon_menu.classList.remove('selected') 
-        document.querySelector('.content-extends').style.filter= 'blur(0px)';        
+        document.querySelector('.content').style.filter= 'opacity(1)';        
         toggle = 0;    
     } 
 }
@@ -28,7 +28,7 @@ function toggleNoti(){
         icon_noti.classList.add('selected')
         icon_menu.disabled = true
                
-        document.querySelector('.content-extends').style.filter= 'blur(1px)';
+        document.querySelector('.content').style.filter= 'opacity(0.5)';
         status = 1; 
 
     } else if(status == 1){
@@ -36,7 +36,7 @@ function toggleNoti(){
         noti.style.opacity = '0';
         icon_noti.classList.remove('selected')
         icon_menu.disabled = false 
-        document.querySelector('.content-extends').style.filter= 'blur(0px)';
+        document.querySelector('.content').style.filter= 'opacity(1)';
         status = 0;    
     }
 }
@@ -47,20 +47,3 @@ icon_noti.addEventListener('click',function(){
 
 
 
-document.querySelector(".main").addEventListener("wheel", myFunction);
-menu.addEventListener("wheel", myFunction);
-
-function myFunction() {
-    menu.style.left = '-100%';
-    icon_noti.disabled = false 
-    icon_menu.classList.remove('selected') 
-    document.querySelector('.content-extends').style.filter= 'blur(0px)';   
-    toggle = 0; 
-    noti.style.visibility = 'hidden'
-    noti.style.opacity = '0';
-    icon_noti.classList.remove('selected')
-    icon_menu.disabled = false 
-    document.querySelector('.content-extends').style.filter= 'blur(0px)';
-    status = 0;      
-   
-}

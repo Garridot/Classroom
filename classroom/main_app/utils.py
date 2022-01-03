@@ -3,6 +3,14 @@ from .forms import *
 from calendar import HTMLCalendar
 from users.models import *
 
+
+class GetAccount():
+    def get(user):
+        if Students.objects.filter(user=user).exists(): return Students.objects.get(user=user)
+        elif Teachers.objects.filter(user=user).exists(): return Teachers.objects.get(user=user)
+        else: return None
+        
+
 class GetCalendar():
     def calendar():
         year     = timezone.now().year

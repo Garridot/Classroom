@@ -40,12 +40,10 @@ INSTALLED_APPS = [
 
     'main_app',
     'users',
-
-
-    'crispy_forms', 
     'django_filters',        
     'django_countries', 
     'django_cleanup.apps.CleanupConfig',  
+    
     
     
 ]
