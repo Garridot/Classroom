@@ -141,13 +141,14 @@ MEDIA_URL  =  '/media/'
 
 
 # smtp Configuration
- 
+
+# EMAIL_BACKEND       = 'django_q_email.backends.DjangoQBackend'
 EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = '587'
 EMAIL_USE_TLS       = True
 EMAIL_HOST_USER     = 'academiaweb101@gmail.com'
-EMAIL_HOST_PASSWORD = 'academiaweb101academiaweb101academiaweb101'
+EMAIL_HOST_PASSWORD = '69i57j69i59j0i271l2j69i60l3'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -156,7 +157,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 Q_CLUSTER = {
     'name': 'web_academy',
-    'workers': 1,
+    'workers': 8,
     'recycle': 500,
     'timeout': 60,
     'compress': True,

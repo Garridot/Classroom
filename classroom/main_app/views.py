@@ -496,8 +496,8 @@ class EventCreate(CreateView):
         title = self.request.POST['title']
         year  = self.request.POST['year']
         
-        
-        async_task('email_app.views.EventEmail',title,year)   
+        EventEmail(title,year)
+        # async_task('email_app.views.EventEmail',title,year)   
         return reverse_lazy('events_list')
 
 class EventDelete(DeleteView):
@@ -603,7 +603,8 @@ class Students_Assignment_Data(UpdateView):
         if int(grade) >= 6: form.instance.status = 'Passed'
         else:  form.instance.status = 'Failed'
 
-        async_task('email_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id)
+        async_task('email_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id) 
+
 
         
         return super().form_valid(form)  
