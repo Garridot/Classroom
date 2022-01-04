@@ -65,7 +65,7 @@ def EventEmail(title,year):
 
 def TopicEmail(id):
     course   = Courses.objects.get(id=id)
-    url = f"http://127.0.0.1:8000/academiaweb/courses/{course.id}/" 
+    url = f"https://web-academy-heroku.herokuapp.com/courses/{course.id}/" 
     
     students = Students.objects.filter(year=course.year).all()       
     for student in students:   
@@ -81,7 +81,7 @@ def TopicEmail(id):
 
 def Contentemail(id):
     topic = Topic.objects.get(id=id)
-    url = f"http://127.0.0.1:8000/academiaweb/courses/{topic.course.id}/topics/{topic.id}/" 
+    url = f"https://web-academy-heroku.herokuapp.com/courses/{topic.course.id}/topics/{topic.id}/" 
 
     students = Students.objects.filter(year=topic.course.year).all()    
     for student in students:   
@@ -99,7 +99,7 @@ def Contentemail(id):
 def Homeworkemail(id):
     homework=Students_Assignment.objects.get(id=id)  
     student = Students.objects.get(id=homework.student.id) 
-    url  = 'http://127.0.0.1:8000/academiaweb/grades'
+    url  = 'https://web-academy-heroku.herokuapp.com/academiaweb/grades'
     subject = f'Homework: {homework.assignment}'
     message = f"Hi {student.full_name}, your homework has been review.\nLink: {url}"
     

@@ -98,7 +98,7 @@ class Events(models.Model):
         verbose_name_plural = 'Events'
 
     def get_absolute_url(self):
-        return f"http://127.0.0.1:8000/academiaweb/events/{self.id}"
+        return f"https://web-academy-heroku.herokuapp.com/events/{self.id}"
 
 class Comments(models.Model):
     event        = models.ForeignKey(Events,on_delete=models.CASCADE, related_name='comments')   
@@ -132,7 +132,7 @@ class School_Assignment(models.Model):
         super().delete(*args,**kwargs)
 
     def get_absolute_url(self):        
-        return f"academiaweb/courses/{self.topic.course.id}/topic/{self.topic.id}/assignments/{self.id}"     
+        return f"https://web-academy-heroku.herokuapp.com/courses/{self.topic.course.id}/topic/{self.topic.id}/assignments/{self.id}"     
     
     
 class Students_Assignment(models.Model):
@@ -147,6 +147,6 @@ class Students_Assignment(models.Model):
         return f"{self.assignment.title}"
 
     def get_absolute_url(self):        
-        return f"academiaweb/courses/{self.assignment.topic.course.id}/topic/{self.assignment.topic.id}/assignments/{self.assignment.id}/students_assignment/{self.id}"             
+        return f"https://web-academy-heroku.herokuapp.com/courses/{self.assignment.topic.course.id}/topic/{self.assignment.topic.id}/assignments/{self.assignment.id}/students_assignment/{self.id}"             
 
     
