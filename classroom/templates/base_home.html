@@ -51,7 +51,9 @@
                     
                     <div class="items"><a href="{% url 'teachers_list' %}" id="teachers"><h4> Teachers</h4></a></div>
                     <div class="items"><a href="{% url 'courses' %}" class="course"><h4> Courses</h4></a></div>
+                    {% if  request.user.groups.values.first.name == 'Students'  %}
                     <div class="items"><a href="{% url 'grades_list' %}" class="grades"><h4> My grades</h4></a></div>                   
+                    {% endif %}
                     <div class="items"><a href="{% url 'logout' %}"><h4> Logout</h4></a></div>
                 </div>            
             </div>

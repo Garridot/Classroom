@@ -7,19 +7,29 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout , authenticate
 from django.contrib import messages
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.views.generic import *
 from .models import *
 from .utils import RegisterForm,GetAccount
 from .forms import *
 import os
-
 from email_app.views import *
 # Create your views here.
 
 # django_q
+
 from django_q.tasks import async_task
 
+
+def unauthenticated_user(view_func):
+	def wrapper_func(request, *args, **kwargs):
+		if request.user.is_authenticated:
+			return redirect('home')
+		else:
+			return view_func(request, *args, **kwargs)
+	return wrapper_func
+
+
+@unauthenticated_user
 def LoginView(request):
     if request.method == 'POST':
         email = request.POST.get('email')

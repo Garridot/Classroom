@@ -1,4 +1,4 @@
-from classroom.settings  import  EMAIL_HOST_USER
+# django
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.views.generic import *
@@ -8,6 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django_filters.views import FilterView
 from django.utils import timezone 
+
+
+
 from .models import * 
 from .forms import *
 from .utils import *
@@ -15,21 +18,41 @@ from .filters import*
 from .decorators import *
 from users.models import *
 from users.forms import *
+
+
 import json
 
+from classroom.settings  import  EMAIL_HOST_USER
 from email_app.views import *
 
 # django_q
+
 from django_q.tasks import async_task
-
-
 
 # Create your views here.
 
+def unauthenticated_user(view_func):
+	def wrapper_func(request, *args, **kwargs):
+		if request.user.is_authenticated:
+			return redirect('home')
+		else:
+			return view_func(request, *args, **kwargs)
+	return wrapper_func
+
+class LoginRequired(LoginRequiredMixin):
+    login_url = reverse_lazy('login')
+    redirect_field_name = 'nextpage'
+
+
+@unauthenticated_user
 def MainPage(request):
     return render(request,'main_page.html')
+
+@unauthenticated_user
 def Information(request):
     return render(request,'information.html')
+
+@unauthenticated_user
 def Contact(request):    
     if request.method == 'POST':
         name    = request.POST['name']
@@ -67,7 +90,7 @@ def HomeView(request):
     return render(request,'home.html',context) 
 
 
-
+@login_required(login_url='login')
 def HistoryView(request):    
     data = json.load(request)['content']        
     if request.user.groups.all()[0].name == 'Students':    
@@ -83,38 +106,35 @@ def HistoryView(request):
 
     return None        
 
-
-class LoginRequired(LoginRequiredMixin):
-    login_url = reverse_lazy('login')
-    redirect_field_name = 'redirect_to'
-    
+   
 
 #  Courses
 
-class CoursesList(FilterView):
+class CoursesList(LoginRequired,FilterView):
     model            = Courses
     filterset_class  = CoursesFilters
     template_name    = 'courses/courses_list.html' 
 
     
 
-class CourseCreate(CreateView):
+class CourseCreate(LoginRequired,CreateView):  
+    
     model  = Courses
     form_class = CoursesForm    
     template_name = 'courses/course_form.html'
     success_url = reverse_lazy('courses')
-
+    
     def form_valid(self,form):
         messages.success(self.request, f"Course created successfully")
         return super().form_valid(form) 
-
+     
     def get_context_data(self, **kwargs):
 
         context = super().get_context_data(**kwargs)               
-        context['title']       = 'Create Course'
+        context['title']  = 'Create Course'        
         return context     
 
-class CourseData(DetailView):
+class CourseData(LoginRequired,DetailView):
     model         = Courses
     template_name = 'courses/course_object.html'
     
@@ -128,7 +148,7 @@ class CourseData(DetailView):
         context['topics'] = Topic.objects.filter(course=pk_)
         return context    
 
-class CourseUpdate(UpdateView):
+class CourseUpdate(LoginRequired,UpdateView):
     model = Courses
     form_class = CoursesForm
     success_url = reverse_lazy('courses')
@@ -151,7 +171,7 @@ class CourseUpdate(UpdateView):
         context['title']       = 'Update Course'
         return context      
 
-class CourseDelete(DeleteView):
+class CourseDelete(LoginRequired,DeleteView):
     model = Courses  
 
     def get(self, *args, **kwargs):
@@ -169,7 +189,7 @@ class CourseDelete(DeleteView):
 
 # Topics
 
-class TopicCreate(CreateView):
+class TopicCreate(LoginRequired,CreateView):
 
     model         = Topic
     form_class    = TopicForm    
@@ -196,7 +216,7 @@ class TopicCreate(CreateView):
         context['title']       = 'Create Topic'
         return context 
 
-class TopicDetail(DetailView):
+class TopicDetail(LoginRequired,DetailView):
 
     model         = Topic
     template_name = 'courses/topics/topic_object.html'
@@ -217,7 +237,7 @@ class TopicDetail(DetailView):
         
         return context
 
-class TopicUpdate(UpdateView):
+class TopicUpdate(LoginRequired,UpdateView):
 
     model = Topic
     form_class = TopicForm    
@@ -241,7 +261,7 @@ class TopicUpdate(UpdateView):
         context['title']       = 'Update Topic'
         return context     
 
-class TopicDelete(DeleteView):
+class TopicDelete(LoginRequired,DeleteView):
 
     model = Topic
 
@@ -259,7 +279,7 @@ class TopicDelete(DeleteView):
 
 # Contents
 
-class ContentCreate(CreateView):
+class ContentCreate(LoginRequired,CreateView):
     model         = Content
     form_class    = ContentForm    
     template_name = 'courses/course_form.html'
@@ -285,7 +305,7 @@ class ContentCreate(CreateView):
         context['title']       = 'Add Content'
         return context        
 
-class ContentDelete(DeleteView):
+class ContentDelete(LoginRequired,DeleteView):
     model         = Content
 
     def get(self, *args, **kwargs):
@@ -304,11 +324,12 @@ class ContentDelete(DeleteView):
 
 # Students
 
-class StudentsList(FilterView):
+class StudentsList(LoginRequired,FilterView):
     model = Students
     filterset_class  = StudentsFilters
     template_name = 'users/students_list.html'
 
+@login_required(login_url='login')
 def StudentCreate(request):    
    
     form        = UserForm
@@ -330,7 +351,7 @@ def StudentCreate(request):
     context = {'form':form,'form_kwargs':form_kwargs,'title':title}
     return render (request,'form.html',context)
 
-class StudentData(DetailView):
+class StudentData(LoginRequired,DetailView):
     model         = Students
     template_name = 'users/user_object.html'
     
@@ -342,7 +363,7 @@ class StudentData(DetailView):
         context = super().get_context_data(**kwargs) 
         return context    
 
-class StudentUpdate(UpdateView):
+class StudentUpdate(LoginRequired,UpdateView):
     model = Students
     form_class = StudentsForm
     success_url = reverse_lazy('students')
@@ -365,7 +386,7 @@ class StudentUpdate(UpdateView):
         context['title']       = 'Update Student'
         return context      
 
-class StudentDelete(DeleteView):
+class StudentDelete(LoginRequired,DeleteView):
     model = UserAccount
 
     def get(self, *args, **kwargs):
@@ -381,11 +402,12 @@ class StudentDelete(DeleteView):
 
 # Teachers
 
-class TeachersList(FilterView):
+class TeachersList(LoginRequired,FilterView):
     model            = Teachers
     filterset_class  = TeachersFilters
     template_name    = 'users/teacher_list.html'
 
+@login_required(login_url='login')
 def TeacherCreate(request):    
    
     form        = UserForm
@@ -407,7 +429,7 @@ def TeacherCreate(request):
     context = {'form':form,'form_kwargs':form_kwargs,'title':title}
     return render (request,'form.html',context) 
 
-class TeacherData(DetailView):
+class TeacherData(LoginRequired,DetailView):
     model         = Teachers
     template_name = 'users/user_object.html'
     
@@ -419,7 +441,7 @@ class TeacherData(DetailView):
         context = super().get_context_data(**kwargs) 
         return context   
 
-class TeacherUpdate(UpdateView):
+class TeacherUpdate(LoginRequired,UpdateView):
     model = Teachers
     form_class = TeachersForm
     success_url = reverse_lazy('teachers_list')
@@ -442,7 +464,7 @@ class TeacherUpdate(UpdateView):
         context['title']       = 'Update Teacher'
         return context 
 
-class TeacherDelete(DeleteView):
+class TeacherDelete(LoginRequired,DeleteView):
     model = UserAccount
 
     def get(self, *args, **kwargs):
@@ -458,12 +480,12 @@ class TeacherDelete(DeleteView):
 
 # Events
 
-class EventsList(FilterView):
+class EventsList(LoginRequired,FilterView):
     model            = Events
     filterset_class  = EventsFilters
     template_name    = 'events/events_list.html' 
 
-class EventData(DetailView):
+class EventData(LoginRequired,DetailView):
     model         = Events
     template_name = 'events/events_object.html'
     
@@ -475,7 +497,7 @@ class EventData(DetailView):
         context = super().get_context_data(**kwargs) 
         return context   
 
-class EventCreate(CreateView):
+class EventCreate(LoginRequired,CreateView):
     model  = Events
     form_class = EventForm    
     template_name = 'form.html'
@@ -499,7 +521,7 @@ class EventCreate(CreateView):
         async_task('email_app.views.EventEmail',title,year)   
         return reverse_lazy('events_list')
 
-class EventDelete(DeleteView):
+class EventDelete(LoginRequired,DeleteView):
     model = Events
 
     def get(self, *args, **kwargs):
@@ -515,7 +537,7 @@ class EventDelete(DeleteView):
 
 # Assignment
 
-class AssignmentData(DetailView):
+class AssignmentData(LoginRequired,DetailView):
     model = School_Assignment
     template_name = 'assignments/assignment_object.html'
 
@@ -542,7 +564,7 @@ class AssignmentData(DetailView):
         
         return context    
 
-class AssignmentCreate(CreateView):
+class AssignmentCreate(LoginRequired,CreateView):
     model         = School_Assignment
     form_class    = AssignmentForm    
     template_name = 'form.html'    
@@ -565,7 +587,7 @@ class AssignmentCreate(CreateView):
         context['title']   = 'Add Assignment'
         return context 
 
-class Students_Assignment_list(ListView):
+class Students_Assignment_list(LoginRequired,ListView):
     model = Students_Assignment
     template_name = 'assignments/s_assignment_list.html'
     
@@ -588,7 +610,7 @@ class Students_Assignment_list(ListView):
         context['total_students'] = total_students
         return context
 
-class Students_Assignment_Data(UpdateView):
+class Students_Assignment_Data(LoginRequired,UpdateView):
     model = Students_Assignment
     form_class  = ReviewForm
     template_name = 'form.html'
@@ -620,6 +642,7 @@ class Students_Assignment_Data(UpdateView):
         context['title']       = 'Review Homework'
         return context       
 
+@login_required(login_url='login')
 def Students_Assignment_Create(request,assignment_pk):    
     student = Students.objects.get(user=request.user)
     assignment = School_Assignment.objects.get(id=assignment_pk)
@@ -629,7 +652,7 @@ def Students_Assignment_Create(request,assignment_pk):
 
 # Grades
 
-class GradesList(ListView):
+class GradesList(LoginRequired,ListView):
     model = Students_Assignment    
     template_name = 'grades/grades_list.html'
 
