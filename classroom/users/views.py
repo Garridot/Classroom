@@ -126,27 +126,6 @@ class UserProfileView(DetailView):
         context['account'] = GetAccount.get(self.request.user)
         return context
 
-# class UserProfileUpdate(View):        
-#     success_url   = reverse_lazy('user_profile')     
-
-#     def get(self,request):
-#         context = {}        
-#         context['form'] = GetAccount.get_instance(self.request.user)
-#         return render(request,'user_update_form.html',context)
-
-#     def post(self,form):
-#         return UserProfileUpdate.form_valid(form)
-
-#     def form_valid(self, form):
-#         # profile_picture = self.request.FILES['profile_picture']
-#         # print(form)
-#         # if len(profile_picture)!= 0:            
-#         #     if len(profile_picture)> 0:
-#         #         os.remove(form.profile_picture.path)
-#         #     form.profile_picture = request.FILES['profile_picture']    
-#         return reverse_lazy('user_profile') 
-
-
 
 class UserProfileUpdate(UpdateView):
     success_url   = reverse_lazy('user_profile')
@@ -167,26 +146,7 @@ class UserProfileUpdate(UpdateView):
         return super().form_valid(form)    
     
         
-    
-
-# @login_required(login_url='login')
-# def UserProfileUpdate(request,email):
-    
-#     user = UserAccount.objects.get(email=email)        
-#     form = UpdateUserForm(instance=user)
-
-#     if request.method == 'POST':
-#         form  = UpdateUserForm(request.POST,instance=user)
-#         profile_picture = request.FILES['profile_picture']
-#         if form.is_valid():       
-#             form.save()  
-#             Updatepicture.update(profile_picture,account)          
-#             account.save()
-#             messages.success(request,'Account successfully update!')
-#             return redirect('home')
-#     context = {'user':user,'account':account,'form':form}
-#     return render (request,'user_update_form.html',context)
-
+ 
 @login_required(login_url='login')
 def UserProfileDelete(request,email):
     user = UserAccount.objects.get(email=email)

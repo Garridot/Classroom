@@ -22,7 +22,7 @@ from users.forms import *
 
 import json
 
-from classroom.settings  import  EMAIL_HOST_USER
+
 from email_app.views import *
 
 
