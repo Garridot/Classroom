@@ -1,2 +1,2 @@
 web: gunicorn classroom.wsgi:application --log-file - 
-worker: python manage.py qcluster 
+
