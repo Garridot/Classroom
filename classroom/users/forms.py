@@ -5,7 +5,7 @@ from .models import *
 
 class DateInput(forms.DateInput):
     input_type = 'date'
-class UserForm(UserCreationForm):    
+class CreateUserForm(UserCreationForm):    
     class Meta:               
         model  = UserAccount
         exclude = ('password','user_permissions','groups','is_active','is_staff','is_superuser',)
