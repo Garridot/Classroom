@@ -55,7 +55,7 @@ def PasswordReset(request):
         user = UserAccount.objects.filter(email=email)        
         if user:
             user = UserAccount.objects.get(email=email)             
-            
+             
             return redirect('password_reset_email_sent')
                        
         else:            
