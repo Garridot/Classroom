@@ -14,7 +14,7 @@
         {% for m in messages %} {{m.errorlist}} {% endfor %}
 
         {% csrf_token %} 
-          
+        {{user_form}}  
         {{form}}
         {{form_kwargs}}
         <input type="submit" value="{{title}}" style="margin: 2.5rem 0;">
