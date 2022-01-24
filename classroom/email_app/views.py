@@ -41,3 +41,4 @@ def RegisterEMAIL(email):
     email.attach_alternative(content,'text/html')
     email.send()
 
+ 
