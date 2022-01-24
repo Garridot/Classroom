@@ -17,7 +17,7 @@ from email_app.views import *
 
 # django_q
 
-from django_q.tasks import async_task
+
 
 
 def unauthenticated_user(view_func):
@@ -54,8 +54,7 @@ def PasswordReset(request):
         email = request.POST['email']        
         user = UserAccount.objects.filter(email=email)        
         if user:
-            user = UserAccount.objects.get(email=email) 
-            async_task('email_app.views.PasswordResetEmail',user) 
+            user = UserAccount.objects.get(email=email)             
             
             return redirect('password_reset_email_sent')
                        
@@ -94,11 +93,8 @@ def RegisterFormView(request):
         
         form = StudentsForm(request.POST,request.FILES)
         user_form = CreateUserForm(request.POST)
-
         if form.is_valid() and user_form.is_valid():   
-            RegisterForm.is_valid(user_form,form)  
-            async_task('email_app.views.RegisterEMAIL',user_form.instance.email)           
-              
+            RegisterForm.is_valid(user_form,form)               
             return redirect('login')
         else:
             for msg in form.errors:
