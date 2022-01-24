@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django_countries', 
     'django_cleanup.apps.CleanupConfig',  
     'email_app',
-    'django_q'
+    
     
     
     
