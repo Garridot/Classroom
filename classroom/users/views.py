@@ -70,9 +70,9 @@ def PasswordResetEmailSent(request):
 
 def PasswordResetForm(request,email,token):
     user = UserAccount.objects.get(email= email)
-    form = UserForm(instance=user)
+    form = CreateUserForm(instance=user)
     if request.method == 'POST':
-        form = UserForm(request.POST,instance=user)
+        form = CreateUserForm(request.POST,instance=user)
         if form.is_valid():                     
             form.save()    
             messages.success(request,'Password successfully restored')              
@@ -87,13 +87,13 @@ def PasswordResetForm(request,email,token):
 # Register
 
 def RegisterFormView(request):
-    user_form = UserForm()
+    user_form = CreateUserForm()
     form = StudentsForm()
     title = 'Apply Form'
     if request.method == 'POST':
         
         form = StudentsForm(request.POST,request.FILES)
-        user_form = UserForm(request.POST)
+        user_form = CreateUserForm(request.POST)
 
         if form.is_valid() and user_form.is_valid():   
             RegisterForm.is_valid(user_form,form)  

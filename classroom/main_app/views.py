@@ -332,12 +332,12 @@ class StudentsList(LoginRequired,FilterView):
 @login_required(login_url='login')
 def StudentCreate(request):    
    
-    form        = UserForm
+    form        = CreateUserForm
     title       = 'Create Students'
     form_kwargs = StudentsForm
 
     if request.method == 'POST':
-        form        = UserForm(request.POST)
+        form        = CreateUserForm(request.POST)
         form_kwargs = StudentsForm(request.POST,request.FILES)        
 
         if form.is_valid() and form_kwargs.is_valid(): 
@@ -410,12 +410,12 @@ class TeachersList(LoginRequired,FilterView):
 @login_required(login_url='login')
 def TeacherCreate(request):    
    
-    form        = UserForm
+    form        = CreateUserForm
     title       = 'Create Teacher'
     form_kwargs = TeachersForm
 
     if request.method == 'POST':
-        form        = UserForm(request.POST)
+        form        = CreateUserForm(request.POST)
         form_kwargs = TeachersForm(request.POST,request.FILES)        
 
         if form.is_valid() and form_kwargs.is_valid(): 
