@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django_countries', 
     'django_cleanup.apps.CleanupConfig',  
     'email_app',
-    'django_q'
+    
     
     
     
@@ -143,35 +143,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL  =  '/media/'
 
 
-# smtp Configuration
-
-# EMAIL_BACKEND       = 'django_q_email.backends.DjangoQBackend'
-EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = '587'
-EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = 'academiaweb101@gmail.com'
-EMAIL_HOST_PASSWORD = '69i57j69i59j0i271l2j69i60l3'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-Q_CLUSTER = {
-    'name': 'web_academy',
-    'workers': 8,
-    'recycle': 500,
-    'timeout': 60,
-    'compress': True,
-    'save_limit': 250,
-    'queue_limit': 500,
-    'cpu_affinity': 1,
-    'label': 'Django Q',
-    'redis': {
-        'host': 'ec2-3-95-81-139.compute-1.amazonaws.com',
-        'password':'p5b558397de51c9962b78c4509089b95933762940e9bef96faae55a1f9c274cbc',
-        'port': 12299,
-        'db': 0, }
-}
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'academiaweb101@gmail.com'
+EMAIL_HOST_PASSWORD = 'academiaweb101academiaweb101academiaweb101academiaweb101'

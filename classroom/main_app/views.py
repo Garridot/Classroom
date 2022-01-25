@@ -22,12 +22,12 @@ from users.forms import *
 
 import json
 
-from classroom.settings  import  EMAIL_HOST_USER
+
 from email_app.views import *
 
-# django_q
 
-from django_q.tasks import async_task
+
+
 
 # Create your views here.
 
@@ -205,7 +205,7 @@ class TopicCreate(LoginRequired,CreateView):
 
 
     def get_success_url(self):
-        async_task('email_app.views.Contentemail',TopicCreate.get_object(self).id)
+        
         messages.success(self.request, f"Topic created successfully")         
         return reverse_lazy('course_data', kwargs={'course_pk': TopicCreate.get_object(self).id }) 
 
@@ -290,7 +290,7 @@ class ContentCreate(LoginRequired,CreateView):
 
         form.instance.topic = topic
         messages.success(self.request, f"Content added successfully") 
-        async_task('email_app.views.Contentemail',topic.id)                      
+                           
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -332,12 +332,12 @@ class StudentsList(LoginRequired,FilterView):
 @login_required(login_url='login')
 def StudentCreate(request):    
    
-    form        = UserForm
+    form        = CreateUserForm
     title       = 'Create Students'
     form_kwargs = StudentsForm
 
     if request.method == 'POST':
-        form        = UserForm(request.POST)
+        form        = CreateUserForm(request.POST)
         form_kwargs = StudentsForm(request.POST,request.FILES)        
 
         if form.is_valid() and form_kwargs.is_valid(): 
@@ -410,12 +410,12 @@ class TeachersList(LoginRequired,FilterView):
 @login_required(login_url='login')
 def TeacherCreate(request):    
    
-    form        = UserForm
+    form        = CreateUserForm
     title       = 'Create Teacher'
     form_kwargs = TeachersForm
 
     if request.method == 'POST':
-        form        = UserForm(request.POST)
+        form        = CreateUserForm(request.POST)
         form_kwargs = TeachersForm(request.POST,request.FILES)        
 
         if form.is_valid() and form_kwargs.is_valid(): 
@@ -518,7 +518,7 @@ class EventCreate(LoginRequired,CreateView):
         year  = self.request.POST['year']
         
         
-        async_task('email_app.views.EventEmail',title,year)   
+        
         return reverse_lazy('events_list')
 
 class EventDelete(LoginRequired,DeleteView):
@@ -624,7 +624,7 @@ class Students_Assignment_Data(LoginRequired,UpdateView):
         if int(grade) >= 6: form.instance.status = 'Passed'
         else:  form.instance.status = 'Failed'
 
-        async_task('email_app.views.Homeworkemail',Students_Assignment_Data.get_object(self).id) 
+        
 
 
         

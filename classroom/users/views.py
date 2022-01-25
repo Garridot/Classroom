@@ -17,7 +17,7 @@ from email_app.views import *
 
 # django_q
 
-from django_q.tasks import async_task
+
 
 
 def unauthenticated_user(view_func):
@@ -54,9 +54,8 @@ def PasswordReset(request):
         email = request.POST['email']        
         user = UserAccount.objects.filter(email=email)        
         if user:
-            user = UserAccount.objects.get(email=email) 
-            async_task('email_app.views.PasswordResetEmail',user) 
-            
+            user = UserAccount.objects.get(email=email)             
+             
             return redirect('password_reset_email_sent')
                        
         else:            
@@ -70,9 +69,9 @@ def PasswordResetEmailSent(request):
 
 def PasswordResetForm(request,email,token):
     user = UserAccount.objects.get(email= email)
-    form = UserForm(instance=user)
+    form = CreateUserForm(instance=user)
     if request.method == 'POST':
-        form = UserForm(request.POST,instance=user)
+        form = CreateUserForm(request.POST,instance=user)
         if form.is_valid():                     
             form.save()    
             messages.success(request,'Password successfully restored')              
@@ -87,18 +86,15 @@ def PasswordResetForm(request,email,token):
 # Register
 
 def RegisterFormView(request):
-    user_form = UserForm()
+    user_form = CreateUserForm()
     form = StudentsForm()
     title = 'Apply Form'
     if request.method == 'POST':
         
         form = StudentsForm(request.POST,request.FILES)
-        user_form = UserForm(request.POST)
-
+        user_form = CreateUserForm(request.POST)
         if form.is_valid() and user_form.is_valid():   
-            RegisterForm.is_valid(user_form,form)  
-            async_task('email_app.views.RegisterEMAIL',user_form.instance.email)           
-              
+            RegisterForm.is_valid(user_form,form)               
             return redirect('login')
         else:
             for msg in form.errors:
@@ -126,27 +122,6 @@ class UserProfileView(DetailView):
         context['account'] = GetAccount.get(self.request.user)
         return context
 
-# class UserProfileUpdate(View):        
-#     success_url   = reverse_lazy('user_profile')     
-
-#     def get(self,request):
-#         context = {}        
-#         context['form'] = GetAccount.get_instance(self.request.user)
-#         return render(request,'user_update_form.html',context)
-
-#     def post(self,form):
-#         return UserProfileUpdate.form_valid(form)
-
-#     def form_valid(self, form):
-#         # profile_picture = self.request.FILES['profile_picture']
-#         # print(form)
-#         # if len(profile_picture)!= 0:            
-#         #     if len(profile_picture)> 0:
-#         #         os.remove(form.profile_picture.path)
-#         #     form.profile_picture = request.FILES['profile_picture']    
-#         return reverse_lazy('user_profile') 
-
-
 
 class UserProfileUpdate(UpdateView):
     success_url   = reverse_lazy('user_profile')
@@ -167,26 +142,7 @@ class UserProfileUpdate(UpdateView):
         return super().form_valid(form)    
     
         
-    
-
-# @login_required(login_url='login')
-# def UserProfileUpdate(request,email):
-    
-#     user = UserAccount.objects.get(email=email)        
-#     form = UpdateUserForm(instance=user)
-
-#     if request.method == 'POST':
-#         form  = UpdateUserForm(request.POST,instance=user)
-#         profile_picture = request.FILES['profile_picture']
-#         if form.is_valid():       
-#             form.save()  
-#             Updatepicture.update(profile_picture,account)          
-#             account.save()
-#             messages.success(request,'Account successfully update!')
-#             return redirect('home')
-#     context = {'user':user,'account':account,'form':form}
-#     return render (request,'user_update_form.html',context)
-
+ 
 @login_required(login_url='login')
 def UserProfileDelete(request,email):
     user = UserAccount.objects.get(email=email)
