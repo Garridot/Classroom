@@ -1,3 +1,4 @@
+from unicodedata import name
 from .models import *
 from .forms import *
 from calendar import HTMLCalendar
@@ -57,17 +58,28 @@ class UserObjs():
         return {'user_request':user_request,'list1':list1,'list2':list2}     
               
 class Create_Teacher():
-    def create(form,form_kwargs):         
+    def create(form,form_kwargs):                       
         form.save()
-        email = form['email'].value()    
-        form_kwargs.instance.user = UserAccount.objects.get(email = email)             
+
+        email = form['email'].value() 
+        user = UserAccount.objects.get(email = email) 
+
+        group = Group.objects.get(name='Teachers')
+        group.user_set.add(user)
+
+        form_kwargs.instance.user = user             
         form_kwargs.save() 
                
 
 class Create_Student():
     def create(form,form_kwargs):
         form.instance.is_student = True    
-        form.save()    
+        form.save() 
+
+        group = Group.objects.get(name='Students')
+        group.user_set.add(UserAccount.objects.get(email= form['email']))
+          
+
         form_kwargs.instance.user = UserAccount.objects.get(email= form['email'])             
         form_kwargs.save()     
 
