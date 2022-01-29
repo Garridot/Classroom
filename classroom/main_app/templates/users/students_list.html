@@ -17,7 +17,7 @@
         <h3>Student</h3>
 
         {% if request.user.is_staff %}        
-        <a href="{% url 'students_create' %}"><p>Add<i class="fas fa-plus"></i></p></a>
+        <a href="{% url 'student_create' %}"><p>Add<i class="fas fa-plus"></i></p></a>
         {% endif %}
     </div>
     

@@ -92,7 +92,8 @@ def HomeView(request):
 
 @login_required(login_url='login')
 def HistoryView(request):    
-    data = json.load(request)['content']        
+    data = json.load(request)['content'] 
+    print(data)       
     if request.user.groups.all()[0].name == 'Students':    
 
         student = Students.objects.get(user=request.user)
@@ -550,15 +551,16 @@ class AssignmentData(LoginRequired,DetailView):
         
         context = super().get_context_data(**kwargs) 
 
-               
         try:
             id_ = AssignmentData.get_object(self) 
-            s_  = Students.objects.get(user=self.request.user).id             
-            if Students_Assignment.objects.filter(student=s_,assignment=id_):
-                
+            s_  = Students.objects.get(user=self.request.user).id
+
+            if Students_Assignment.objects.filter(student=s_,assignment=id_):                
                 context['File_was_already_sent']  = True            
         except:
             context['File_was_already_sent']  = False 
+
+        context['today'] = date.today()    
 
         
         

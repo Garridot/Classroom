@@ -68,7 +68,7 @@ class Account(models.Model):
 
 class Students(Account):
     year            = models.ForeignKey(to='main_app.SchoolYears',on_delete=models.CASCADE,blank=True,null=True)
-    profile_picture = models.ImageField(upload_to=location_students,blank=True,null=True)    
+     
     
 
     class Meta():
@@ -91,10 +91,6 @@ class Students(Account):
     def age(self):
         age = date.today().year - self.date_of_birth.year
         return age 
-
-    def delete(self,*args,**kwargs):
-        self.profile_picture.delete()        
-        super().delete(*args,**kwargs)  
 
 
 class Teachers(Account):

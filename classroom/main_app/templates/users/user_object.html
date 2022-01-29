@@ -24,8 +24,10 @@
             <h6>{{object.year}}</h6>            
         </div>
     </div>
+    {% if request.user.email == object.email  %}
     <div class="grades" style="text-align: center;">
         <a href="{% url  'grades_list'  %}">Grades</a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

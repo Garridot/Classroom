@@ -99,7 +99,7 @@ width: 100%;
     {% if File_was_already_sent %}
     <h5 style="text-align: center; color: forestgreen;">Your work was uploaded successfully </h5>
     {% else  %}    
-    {% if object.deadline == deadline %}
+    {% if  today >= object.deadline %}
     <h6 style="text-align: center;">Time was over for assignment submission</h6>
     {% else %}    
     <form  method="POST" action="{% url 'send_homework' object.id %}" enctype="multipart/form-data">
