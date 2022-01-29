@@ -64,8 +64,8 @@ class Create_Teacher():
         email = form['email'].value() 
         user = UserAccount.objects.get(email = email) 
 
-        group = Group.objects.get(name='Teachers')
-        group.user_set.add(user)
+        group = Group.objects.get(name='Teachers')        
+        user.groups.add(group)
 
         form_kwargs.instance.user = user             
         form_kwargs.save() 
@@ -75,8 +75,13 @@ class Create_Student():
     def create(form,form_kwargs):
         form.instance.is_student = True    
         form.save() 
+        
+        email = form['email'].value() 
+        user = UserAccount.objects.get(email = email)
 
         group = Group.objects.get(name='Students')
+        user.groups.add(group)
+
         group.user_set.add(UserAccount.objects.get(email= form['email']))
           
 
